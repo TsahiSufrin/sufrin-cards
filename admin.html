@@ -603,6 +603,80 @@ body {
 
 .photo-upload-input { display: none; }
 
+.logo-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px dashed var(--line-strong);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.logo-upload.dragging {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+}
+
+.logo-preview {
+  min-width: 120px;
+  height: 64px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.logo-preview img {
+  max-height: 100%;
+  max-width: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.logo-preview-empty {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.logo-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.logo-action-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.logo-action-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.logo-action-btn.danger:hover {
+  border-color: var(--error);
+  color: var(--error);
+}
+
 .checkbox-row {
   display: flex;
   align-items: center;
@@ -933,6 +1007,8 @@ let companySettings = null;
 let editingEmployee = null;
 let pendingPhotoFile = null;
 let pendingPhotoRemove = false;
+let pendingLogoFile = null;
+let pendingLogoRemove = false;
 
 // ============================================
 // AUTH
@@ -1319,6 +1395,9 @@ async function loadCompanySettings() {
 
 function renderSettings() {
   const c = companySettings;
+  pendingLogoFile = null;
+  pendingLogoRemove = false;
+  
   document.getElementById('settings-content').innerHTML = `
     <form id="settings-form">
       
@@ -1341,9 +1420,25 @@ function renderSettings() {
         </div>
         
         <div class="form-group">
-          <label class="form-label">לוגו (URL)</label>
-          <input class="form-input" type="url" id="set-logo" value="${escapeHtml(c.logo_url || '')}" dir="ltr" placeholder="https://...">
-          <p style="font-size:11px;color:var(--muted);margin-top:4px;">השאר ריק כדי להציג את שם החברה כטקסט במקום לוגו</p>
+          <label class="form-label">לוגו החברה</label>
+          <div class="logo-upload" id="logo-upload" onclick="document.getElementById('logo-input').click()">
+            <div class="logo-preview" id="logo-preview">
+              ${c.logo_url 
+                ? `<img src="${escapeHtml(c.logo_url)}" alt="לוגו">` 
+                : `<span class="logo-preview-empty">אין לוגו</span>`
+              }
+            </div>
+            <div class="photo-upload-text">
+              <div class="photo-upload-title">גרור לוגו לכאן או לחץ לבחירה</div>
+              <div class="photo-upload-hint">PNG / SVG / JPG / WebP - עד 5MB. רקע שקוף מומלץ.</div>
+              ${c.logo_url ? `
+                <div class="logo-actions">
+                  <button type="button" class="logo-action-btn danger" onclick="event.stopPropagation(); removeLogo();">הסר לוגו</button>
+                </div>
+              ` : ''}
+            </div>
+            <input type="file" id="logo-input" class="photo-upload-input" accept="image/jpeg,image/png,image/webp,image/svg+xml">
+          </div>
         </div>
       </div>
       
@@ -1374,6 +1469,64 @@ function renderSettings() {
   `;
   
   document.getElementById('settings-form').addEventListener('submit', saveSettings);
+  setupLogoUpload();
+}
+
+function setupLogoUpload() {
+  const logoUpload = document.getElementById('logo-upload');
+  const logoInput = document.getElementById('logo-input');
+  if (!logoUpload || !logoInput) return;
+  
+  logoInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) handleLogoSelected(e.target.files[0]);
+  });
+  
+  logoUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    logoUpload.classList.add('dragging');
+  });
+  
+  logoUpload.addEventListener('dragleave', () => {
+    logoUpload.classList.remove('dragging');
+  });
+  
+  logoUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    logoUpload.classList.remove('dragging');
+    if (e.dataTransfer.files[0]) handleLogoSelected(e.dataTransfer.files[0]);
+  });
+}
+
+function handleLogoSelected(file) {
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+  if (!validTypes.includes(file.type)) {
+    showToast('סוג קובץ לא נתמך. השתמש ב-PNG/SVG/JPG/WebP', 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('הקובץ גדול מדי. עד 5MB', 'error');
+    return;
+  }
+  
+  pendingLogoFile = file;
+  pendingLogoRemove = false;
+  
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('logo-preview').innerHTML = `<img src="${e.target.result}" alt="לוגו">`;
+  };
+  reader.readAsDataURL(file);
+  
+  showToast('הלוגו ייעלה כשתלחץ "שמור הגדרות"', 'success');
+}
+
+function removeLogo() {
+  if (!confirm('להסיר את הלוגו? במקומו יוצג שם החברה כטקסט.')) return;
+  pendingLogoRemove = true;
+  pendingLogoFile = null;
+  document.getElementById('logo-preview').innerHTML = '<span class="logo-preview-empty">אין לוגו</span>';
+  showToast('הלוגו יוסר כשתלחץ "שמור הגדרות"', 'success');
 }
 
 async function saveSettings(e) {
@@ -1383,11 +1536,36 @@ async function saveSettings(e) {
   btn.innerHTML = '<div class="spinner"></div>';
   
   try {
+    let logoUrl = companySettings.logo_url || null;
+    
+    // Handle logo upload
+    if (pendingLogoFile) {
+      const ext = pendingLogoFile.name.split('.').pop().toLowerCase();
+      const fileName = `company/logo-${Date.now()}.${ext}`;
+      
+      const { data: uploadData, error: uploadError } = await sb.storage
+        .from(PHOTOS_BUCKET)
+        .upload(fileName, pendingLogoFile, { cacheControl: '3600', upsert: false });
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: urlData } = sb.storage.from(PHOTOS_BUCKET).getPublicUrl(uploadData.path);
+      logoUrl = urlData.publicUrl;
+      
+      // Delete old logo if exists
+      if (companySettings.logo_url) {
+        await deleteOldPhoto(companySettings.logo_url);
+      }
+    } else if (pendingLogoRemove && companySettings.logo_url) {
+      await deleteOldPhoto(companySettings.logo_url);
+      logoUrl = null;
+    }
+    
     const data = {
       company_name: document.getElementById('set-name').value.trim(),
       company_name_en: document.getElementById('set-name-en').value.trim() || null,
       website_url: document.getElementById('set-website').value.trim() || null,
-      logo_url: document.getElementById('set-logo').value.trim() || null,
+      logo_url: logoUrl,
       instagram_url: document.getElementById('set-instagram').value.trim() || null,
       facebook_url: document.getElementById('set-facebook').value.trim() || null,
       linkedin_url: document.getElementById('set-linkedin').value.trim() || null
