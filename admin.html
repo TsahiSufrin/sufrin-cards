@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1628">
+<title>ניהול | קבוצת סופרין</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a1628'/%3E%3Ctext x='50' y='68' font-size='52' font-family='serif' font-weight='500' fill='%23c9b885' text-anchor='middle'%3Eצ%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg-page: #f5f3ec;
+  --bg-card: #ffffff;
+  --bg-soft: #fafaf7;
+  --ink: #0a1628;
+  --ink-soft: #1e3a5f;
+  --muted: #6b6555;
+  --gold: #c9b885;
+  --gold-soft: rgba(201, 184, 133, 0.12);
+  --line: rgba(10, 22, 40, 0.08);
+  --line-strong: rgba(10, 22, 40, 0.15);
+  --error: #dc2626;
+  --error-soft: #fef2f2;
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 22, 40, 0.06);
+  --shadow-lg: 0 20px 60px -20px rgba(10, 22, 40, 0.15), 0 0 0 1px rgba(10, 22, 40, 0.04);
+}
+
+html, body {
+  font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(201, 184, 133, 0.1), transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(30, 58, 95, 0.05), transparent 50%),
+    var(--bg-page);
+}
+
+.hidden { display: none !important; }
+
+/* ================================================
+   LOGIN SCREEN
+   ================================================ */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--gold);
+  font-family: serif;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--bg-soft);
+  color: var(--ink);
+  transition: all 0.2s ease;
+  direction: rtl;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--ink-soft);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+}
+
+.form-input[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+.form-error {
+  background: var(--error-soft);
+  color: var(--error);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.form-error.show { display: block; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg-card);
+  width: 100%;
+  padding: 14px;
+}
+
+.btn-primary:hover { background: var(--ink-soft); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-secondary {
+  background: var(--bg-soft);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card);
+  border-color: var(--line-strong);
+}
+
+.btn-danger {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.btn-danger:hover { background: #fee2e2; }
+
+.btn-icon {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+}
+
+/* ================================================
+   ADMIN LAYOUT
+   ================================================ */
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand-logo {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--gold);
+  font-family: serif;
+  font-weight: 500;
+}
+
+.admin-brand-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-user-email {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.admin-tabs {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.admin-tab {
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: transparent;
+  border-right: none;
+  border-left: none;
+  border-top: none;
+  font-family: inherit;
+}
+
+.admin-tab:hover { color: var(--ink); }
+
+.admin-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ================================================
+   EMPLOYEES LIST
+   ================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.section-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.employees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.employee-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--line-strong);
+}
+
+.employee-card.inactive {
+  opacity: 0.55;
+}
+
+.employee-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 500;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.employee-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.employee-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.employee-title {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.employee-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.tag-active {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.tag-inactive {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.tag-username {
+  background: var(--gold-soft);
+  color: #7a6a3d;
+  font-family: 'Consolas', monospace;
+}
+
+/* ================================================
+   EMPTY STATE
+   ================================================ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 1px dashed var(--line-strong);
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--gold-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.empty-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* ================================================
+   MODAL (employee form, settings)
+   ================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 540px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.modal-body { padding: 20px 24px; }
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-card);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+
+/* ================================================
+   PHOTO UPLOAD
+   ================================================ */
+.photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px dashed var(--line-strong);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.photo-upload.dragging {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+}
+
+.photo-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-upload-text {
+  flex: 1;
+}
+
+.photo-upload-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.photo-upload-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.photo-upload-input { display: none; }
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox-row label {
+  flex: 1;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ================================================
+   COMPANY SETTINGS
+   ================================================ */
+.settings-section {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+}
+
+.settings-section-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+/* ================================================
+   TOAST
+   ================================================ */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--ink);
+  color: var(--bg-card);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.error { background: var(--error); }
+.toast.success { background: var(--success); }
+
+/* ================================================
+   SPINNER
+   ================================================ */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold-soft);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ================================================
+   ANIMATIONS
+   ================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .admin-content { padding: 16px; }
+  .admin-tabs { padding: 0 16px; }
+  .admin-header { padding: 12px 16px; }
+  .employees-grid { grid-template-columns: 1fr; }
+  .modal { max-height: 100vh; border-radius: 0; }
+  .modal-overlay { padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     LOGIN SCREEN
+     ============================================ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">צ</div>
+    <h1 class="login-title">ניהול כרטיסי ביקור</h1>
+    <p class="login-subtitle">קבוצת סופרין</p>
+    
+    <div class="form-error" id="login-error"></div>
+    
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">אימייל</label>
+        <input class="form-input" type="email" id="login-email" dir="ltr" required autocomplete="email">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="login-password">סיסמה</label>
+        <input class="form-input" type="password" id="login-password" dir="ltr" required autocomplete="current-password">
+      </div>
+      
+      <button type="submit" class="btn btn-primary" id="login-btn">
+        <span id="login-btn-text">התחבר</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================
+     ADMIN LAYOUT
+     ============================================ -->
+<div class="admin-layout hidden" id="admin-layout">
+  
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="admin-brand-logo">צ</div>
+      <div class="admin-brand-title">ניהול כרטיסי ביקור</div>
+    </div>
+    <div class="admin-user">
+      <span class="admin-user-email" id="admin-user-email">—</span>
+      <button class="btn btn-secondary" onclick="logout()">התנתק</button>
+    </div>
+  </header>
+  
+  <nav class="admin-tabs">
+    <button class="admin-tab active" data-tab="employees" onclick="switchTab('employees')">עובדים</button>
+    <button class="admin-tab" data-tab="settings" onclick="switchTab('settings')">הגדרות חברה</button>
+  </nav>
+  
+  <main class="admin-content">
+    
+    <!-- Employees Tab -->
+    <div id="tab-employees">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">עובדים</h2>
+          <p class="section-subtitle" id="employees-count">—</p>
+        </div>
+        <button class="btn btn-primary" style="width:auto;" onclick="openEmployeeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף עובד
+        </button>
+      </div>
+      
+      <div id="employees-list">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p style="color: var(--muted); font-size: 13px;">טוען עובדים...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Tab -->
+    <div id="tab-settings" class="hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">הגדרות חברה</h2>
+          <p class="section-subtitle">קישורים גלובליים שמופיעים בכרטיס של כל עובד</p>
+        </div>
+      </div>
+      
+      <div id="settings-content">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+        </div>
+      </div>
+    </div>
+    
+  </main>
+  
+</div>
+
+<!-- ============================================
+     EMPLOYEE MODAL
+     ============================================ -->
+<div class="modal-overlay hidden" id="employee-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="employee-modal-title">עובד חדש</h3>
+      <button class="modal-close" onclick="closeEmployeeModal()" aria-label="סגור">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    
+    <form id="employee-form">
+      <div class="modal-body">
+        <input type="hidden" id="emp-id">
+        
+        <!-- Photo Upload -->
+        <div class="form-group">
+          <label class="form-label">תמונת פרופיל</label>
+          <div class="photo-upload" id="photo-upload" onclick="document.getElementById('photo-input').click()">
+            <div class="photo-preview" id="photo-preview">
+              <span id="photo-letter">צ</span>
+            </div>
+            <div class="photo-upload-text">
+              <div class="photo-upload-title">גרור תמונה לכאן או לחץ לבחירה</div>
+              <div class="photo-upload-hint">JPG / PNG / WebP - עד 5MB</div>
+            </div>
+            <input type="file" id="photo-input" class="photo-upload-input" accept="image/jpeg,image/png,image/webp">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-username">שם משתמש (URL) <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-username" dir="ltr" required pattern="[a-z0-9_-]+" minlength="2" maxlength="30" placeholder="tsahi">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">אותיות קטנות באנגלית, מספרים, מקפים. למשל: card.sufrin.io/?u=<strong id="username-preview">tsahi</strong></p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-name">שם מלא <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-name" required maxlength="100" placeholder="צחי סופרין">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-title">תפקיד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-title" required maxlength="100" placeholder="יו״ר דירקטוריון">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-phone">טלפון נייד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="tel" id="emp-phone" dir="ltr" required placeholder="+972544242504">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-email">אימייל <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="email" id="emp-email" dir="ltr" required placeholder="tsahi@sufrin.io">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-order">סדר תצוגה</label>
+          <input class="form-input" type="number" id="emp-order" dir="ltr" min="1" max="9999" value="999">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">מספר נמוך = מופיע ראשון. ברירת מחדל: 999</p>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="emp-active" checked>
+            <label for="emp-active">העובד פעיל (כרטיסו מוצג)</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger hidden" id="btn-delete-employee" onclick="deleteEmployee()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+          מחק
+        </button>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-secondary" onclick="closeEmployeeModal()">ביטול</button>
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-employee">שמור</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================
+     TOAST
+     ============================================ -->
+<div class="toast" id="toast"></div>
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ============================================
+// CONFIGURATION
+// ============================================
+const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
+const PHOTOS_BUCKET = 'employee-photos';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
+
+// State
+let currentUser = null;
+let employees = [];
+let companySettings = null;
+let editingEmployee = null;
+let pendingPhotoFile = null;
+let pendingPhotoRemove = false;
+
+// ============================================
+// AUTH
+// ============================================
+
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    showAdmin();
+  } else {
+    showLogin();
+  }
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const btnText = document.getElementById('login-btn-text');
+  const errorEl = document.getElementById('login-error');
+  
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  btnText.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    currentUser = data.user;
+    showAdmin();
+  } catch (error) {
+    errorEl.textContent = translateAuthError(error.message);
+    errorEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'התחבר';
+  }
+});
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  employees = [];
+  companySettings = null;
+  showLogin();
+}
+
+function translateAuthError(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'אימייל או סיסמה שגויים';
+  if (m.includes('email not confirmed')) return 'האימייל טרם אומת';
+  if (m.includes('too many')) return 'יותר מדי ניסיונות. נסה שוב בעוד כמה דקות';
+  if (m.includes('network')) return 'בעיית חיבור לאינטרנט';
+  return 'שגיאה: ' + msg;
+}
+
+// ============================================
+// SCREEN MANAGEMENT
+// ============================================
+
+function showLogin() {
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('admin-layout').classList.add('hidden');
+}
+
+function showAdmin() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('admin-layout').classList.remove('hidden');
+  document.getElementById('admin-user-email').textContent = currentUser.email;
+  loadEmployees();
+  loadCompanySettings();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('tab-employees').classList.toggle('hidden', tab !== 'employees');
+  document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
+}
+
+// ============================================
+// EMPLOYEES
+// ============================================
+
+async function loadEmployees() {
+  try {
+    const { data, error } = await sb
+      .from('employees')
+      .select('*')
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    employees = data || [];
+    renderEmployees();
+  } catch (error) {
+    console.error('Load employees error:', error);
+    showToast('שגיאה בטעינת עובדים', 'error');
+  }
+}
+
+function renderEmployees() {
+  const list = document.getElementById('employees-list');
+  const count = document.getElementById('employees-count');
+  
+  count.textContent = `${employees.length} עובדים במערכת`;
+  
+  if (employees.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7a6a3d" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <h3 class="empty-title">אין עובדים עדיין</h3>
+        <p class="empty-subtitle">הוסף עובד ראשון כדי להתחיל</p>
+        <button class="btn btn-primary" style="width:auto;" onclick="openEmployeeModal()">הוסף עובד ראשון</button>
+      </div>
+    `;
+    return;
+  }
+  
+  list.innerHTML = '<div class="employees-grid">' + employees.map(emp => `
+    <div class="employee-card ${!emp.is_active ? 'inactive' : ''}" onclick="openEmployeeModal('${emp.id}')">
+      <div class="employee-avatar">
+        ${emp.photo_url 
+          ? `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(emp.full_name)}">` 
+          : `<span>${escapeHtml(emp.full_name.charAt(0))}</span>`
+        }
+      </div>
+      <div class="employee-info">
+        <div class="employee-name">${escapeHtml(emp.full_name)}</div>
+        <div class="employee-title">${escapeHtml(emp.title)}</div>
+        <div class="employee-meta">
+          <span class="tag tag-username">${escapeHtml(emp.username)}</span>
+          ${emp.is_active 
+            ? '<span class="tag tag-active">פעיל</span>'
+            : '<span class="tag tag-inactive">מושבת</span>'
+          }
+        </div>
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+
+// ============================================
+// EMPLOYEE MODAL
+// ============================================
+
+function openEmployeeModal(empId = null) {
+  editingEmployee = empId ? employees.find(e => e.id === empId) : null;
+  pendingPhotoFile = null;
+  pendingPhotoRemove = false;
+  
+  const modal = document.getElementById('employee-modal');
+  const title = document.getElementById('employee-modal-title');
+  const deleteBtn = document.getElementById('btn-delete-employee');
+  
+  if (editingEmployee) {
+    title.textContent = 'עריכת עובד';
+    deleteBtn.classList.remove('hidden');
+    fillEmployeeForm(editingEmployee);
+  } else {
+    title.textContent = 'עובד חדש';
+    deleteBtn.classList.add('hidden');
+    clearEmployeeForm();
+  }
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEmployeeModal() {
+  document.getElementById('employee-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  editingEmployee = null;
+  pendingPhotoFile = null;
+}
+
+function fillEmployeeForm(emp) {
+  document.getElementById('emp-id').value = emp.id;
+  document.getElementById('emp-username').value = emp.username;
+  document.getElementById('emp-name').value = emp.full_name;
+  document.getElementById('emp-title').value = emp.title;
+  document.getElementById('emp-phone').value = emp.phone;
+  document.getElementById('emp-email').value = emp.email;
+  document.getElementById('emp-order').value = emp.display_order;
+  document.getElementById('emp-active').checked = emp.is_active;
+  document.getElementById('username-preview').textContent = emp.username;
+  
+  const preview = document.getElementById('photo-preview');
+  if (emp.photo_url) {
+    preview.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="">`;
+  } else {
+    preview.innerHTML = `<span>${escapeHtml(emp.full_name.charAt(0) || '?')}</span>`;
+  }
+}
+
+function clearEmployeeForm() {
+  document.getElementById('emp-id').value = '';
+  document.getElementById('emp-username').value = '';
+  document.getElementById('emp-name').value = '';
+  document.getElementById('emp-title').value = '';
+  document.getElementById('emp-phone').value = '';
+  document.getElementById('emp-email').value = '';
+  document.getElementById('emp-order').value = '999';
+  document.getElementById('emp-active').checked = true;
+  document.getElementById('username-preview').textContent = 'username';
+  document.getElementById('photo-preview').innerHTML = '<span>?</span>';
+}
+
+// Live preview of username
+document.getElementById('emp-username').addEventListener('input', (e) => {
+  const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  e.target.value = val;
+  document.getElementById('username-preview').textContent = val || 'username';
+});
+
+// Save employee
+document.getElementById('employee-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const btn = document.getElementById('btn-save-employee');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    let photoUrl = editingEmployee?.photo_url || null;
+    
+    // Handle photo upload first
+    if (pendingPhotoFile) {
+      const username = document.getElementById('emp-username').value.trim();
+      const fileName = `${username}-${Date.now()}.${pendingPhotoFile.name.split('.').pop().toLowerCase()}`;
+      
+      const { data: uploadData, error: uploadError } = await sb.storage
+        .from(PHOTOS_BUCKET)
+        .upload(fileName, pendingPhotoFile, { cacheControl: '3600', upsert: false });
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: urlData } = sb.storage.from(PHOTOS_BUCKET).getPublicUrl(uploadData.path);
+      photoUrl = urlData.publicUrl;
+      
+      // Delete old photo if exists
+      if (editingEmployee?.photo_url) {
+        await deleteOldPhoto(editingEmployee.photo_url);
+      }
+    } else if (pendingPhotoRemove && editingEmployee?.photo_url) {
+      await deleteOldPhoto(editingEmployee.photo_url);
+      photoUrl = null;
+    }
+    
+    const data = {
+      username: document.getElementById('emp-username').value.trim(),
+      full_name: document.getElementById('emp-name').value.trim(),
+      title: document.getElementById('emp-title').value.trim(),
+      phone: document.getElementById('emp-phone').value.trim(),
+      email: document.getElementById('emp-email').value.trim(),
+      display_order: parseInt(document.getElementById('emp-order').value) || 999,
+      is_active: document.getElementById('emp-active').checked,
+      photo_url: photoUrl
+    };
+    
+    let result;
+    if (editingEmployee) {
+      result = await sb.from('employees').update(data).eq('id', editingEmployee.id);
+    } else {
+      result = await sb.from('employees').insert(data);
+    }
+    
+    if (result.error) throw result.error;
+    
+    showToast(editingEmployee ? 'העובד עודכן' : 'העובד נוסף', 'success');
+    closeEmployeeModal();
+    loadEmployees();
+    
+  } catch (error) {
+    console.error('Save error:', error);
+    let msg = 'שגיאה בשמירה';
+    if (error.message?.includes('username_format')) msg = 'שם משתמש לא תקין (אותיות קטנות, מספרים, מקפים, 2-30 תווים)';
+    else if (error.message?.includes('email_format')) msg = 'כתובת אימייל לא תקינה';
+    else if (error.message?.includes('phone_format')) msg = 'מספר טלפון קצר מדי';
+    else if (error.message?.includes('duplicate') || error.code === '23505') msg = 'שם המשתמש כבר תפוס';
+    else if (error.message) msg += ': ' + error.message;
+    showToast(msg, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'שמור';
+  }
+});
+
+async function deleteOldPhoto(url) {
+  try {
+    const path = url.split(`/${PHOTOS_BUCKET}/`).pop();
+    if (path) await sb.storage.from(PHOTOS_BUCKET).remove([path]);
+  } catch (e) {
+    console.warn('Could not delete old photo:', e);
+  }
+}
+
+async function deleteEmployee() {
+  if (!editingEmployee) return;
+  if (!confirm(`למחוק את ${editingEmployee.full_name}? לא ניתן לשחזר.`)) return;
+  
+  try {
+    if (editingEmployee.photo_url) await deleteOldPhoto(editingEmployee.photo_url);
+    
+    const { error } = await sb.from('employees').delete().eq('id', editingEmployee.id);
+    if (error) throw error;
+    
+    showToast('העובד נמחק', 'success');
+    closeEmployeeModal();
+    loadEmployees();
+  } catch (error) {
+    console.error('Delete error:', error);
+    showToast('שגיאה במחיקה: ' + error.message, 'error');
+  }
+}
+
+// ============================================
+// PHOTO UPLOAD (drag & drop + click)
+// ============================================
+
+const photoUpload = document.getElementById('photo-upload');
+const photoInput = document.getElementById('photo-input');
+
+photoInput.addEventListener('change', (e) => {
+  if (e.target.files[0]) handlePhotoSelected(e.target.files[0]);
+});
+
+photoUpload.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  photoUpload.classList.add('dragging');
+});
+
+photoUpload.addEventListener('dragleave', () => {
+  photoUpload.classList.remove('dragging');
+});
+
+photoUpload.addEventListener('drop', (e) => {
+  e.preventDefault();
+  photoUpload.classList.remove('dragging');
+  if (e.dataTransfer.files[0]) handlePhotoSelected(e.dataTransfer.files[0]);
+});
+
+function handlePhotoSelected(file) {
+  // Validate
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    showToast('סוג קובץ לא נתמך. השתמש ב-JPG/PNG/WebP', 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('הקובץ גדול מדי. עד 5MB', 'error');
+    return;
+  }
+  
+  pendingPhotoFile = file;
+  pendingPhotoRemove = false;
+  
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('photo-preview').innerHTML = `<img src="${e.target.result}" alt="">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ============================================
+// COMPANY SETTINGS
+// ============================================
+
+async function loadCompanySettings() {
+  try {
+    const { data, error } = await sb.from('company_settings').select('*').single();
+    if (error) throw error;
+    companySettings = data;
+    renderSettings();
+  } catch (error) {
+    console.error('Load settings error:', error);
+    showToast('שגיאה בטעינת הגדרות', 'error');
+  }
+}
+
+function renderSettings() {
+  const c = companySettings;
+  document.getElementById('settings-content').innerHTML = `
+    <form id="settings-form">
+      
+      <div class="settings-section">
+        <h3 class="settings-section-title">פרטי חברה</h3>
+        
+        <div class="form-group">
+          <label class="form-label">שם החברה (עברית)</label>
+          <input class="form-input" type="text" id="set-name" value="${escapeHtml(c.company_name || '')}" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">שם החברה (אנגלית)</label>
+          <input class="form-input" type="text" id="set-name-en" value="${escapeHtml(c.company_name_en || '')}" dir="ltr">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">אתר החברה</label>
+          <input class="form-input" type="url" id="set-website" value="${escapeHtml(c.website_url || '')}" dir="ltr" placeholder="https://www.sufrin.io">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">לוגו (URL)</label>
+          <input class="form-input" type="url" id="set-logo" value="${escapeHtml(c.logo_url || '')}" dir="ltr" placeholder="https://...">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">השאר ריק כדי להציג את שם החברה כטקסט במקום לוגו</p>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="settings-section-title">רשתות חברתיות (אחיד לכולם)</h3>
+        
+        <div class="form-group">
+          <label class="form-label">Instagram</label>
+          <input class="form-input" type="url" id="set-instagram" value="${escapeHtml(c.instagram_url || '')}" dir="ltr" placeholder="https://www.instagram.com/...">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Facebook</label>
+          <input class="form-input" type="url" id="set-facebook" value="${escapeHtml(c.facebook_url || '')}" dir="ltr" placeholder="https://www.facebook.com/...">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">LinkedIn</label>
+          <input class="form-input" type="url" id="set-linkedin" value="${escapeHtml(c.linkedin_url || '')}" dir="ltr" placeholder="https://www.linkedin.com/...">
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-settings">שמור הגדרות</button>
+      </div>
+      
+    </form>
+  `;
+  
+  document.getElementById('settings-form').addEventListener('submit', saveSettings);
+}
+
+async function saveSettings(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-save-settings');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    const data = {
+      company_name: document.getElementById('set-name').value.trim(),
+      company_name_en: document.getElementById('set-name-en').value.trim() || null,
+      website_url: document.getElementById('set-website').value.trim() || null,
+      logo_url: document.getElementById('set-logo').value.trim() || null,
+      instagram_url: document.getElementById('set-instagram').value.trim() || null,
+      facebook_url: document.getElementById('set-facebook').value.trim() || null,
+      linkedin_url: document.getElementById('set-linkedin').value.trim() || null
+    };
+    
+    const { error } = await sb.from('company_settings').update(data).eq('id', companySettings.id);
+    if (error) throw error;
+    
+    showToast('ההגדרות נשמרו', 'success');
+    await loadCompanySettings();
+  } catch (error) {
+    console.error('Save settings error:', error);
+    showToast('שגיאה בשמירה: ' + error.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'שמור הגדרות';
+  }
+}
+
+// ============================================
+// HELPERS
+// ============================================
+
+function showToast(message, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'toast ' + type;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// ============================================
+// START
+// ============================================
+checkAuth();
+</script>
+
+</body>
+</html>
