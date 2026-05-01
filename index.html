@@ -544,8 +544,25 @@ html[lang="en"] .name {
   letter-spacing: 0;
 }
 
-html[lang="en"] body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* Keep the same Heebo font in English to maintain consistent proportions */
+/* (Heebo supports both Hebrew and Latin characters beautifully) */
+
+/* Keep button order fixed regardless of direction */
+html[lang="en"] .btn-grid {
+  direction: ltr;
+}
+
+html[lang="he"] .btn-grid {
+  direction: rtl;
+}
+
+/* Keep socials in same order */
+html[lang="en"] .socials {
+  direction: ltr;
+}
+
+html[lang="he"] .socials {
+  direction: rtl;
 }
 </style>
 </head>
