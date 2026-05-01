@@ -75,18 +75,41 @@ body {
 }
 
 .login-logo {
-  width: 64px;
-  height: 64px;
+  height: 48px;
   margin: 0 auto 24px;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
-  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Fallback gradient box - shown when no logo */
+  width: 64px;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  border-radius: 16px;
   font-size: 30px;
   font-weight: 500;
   color: var(--gold);
   font-family: serif;
+  transition: all 0.2s ease;
+}
+
+.login-logo.has-image {
+  width: auto;
+  max-width: 200px;
+  background: transparent;
+  border-radius: 0;
+}
+
+.login-logo img {
+  max-height: 48px;
+  width: auto;
+  display: block;
+}
+
+.login-logo-fallback {
+  display: block;
+}
+
+.login-logo.has-image .login-logo-fallback {
+  display: none;
 }
 
 .login-title {
@@ -235,17 +258,47 @@ body {
 }
 
 .admin-brand-logo {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
-  border-radius: 10px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Fallback gradient box - shown when no logo */
+  width: 36px;
+  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  border-radius: 10px;
   font-size: 18px;
   color: var(--gold);
   font-family: serif;
   font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.admin-brand-logo.has-image {
+  width: auto;
+  max-width: 130px;
+  background: transparent;
+  border-radius: 0;
+}
+
+.admin-brand-logo img {
+  max-height: 30px;
+  width: auto;
+  display: block;
+}
+
+.admin-brand-logo-fallback {
+  display: block;
+}
+
+.admin-brand-logo.has-image .admin-brand-logo-fallback {
+  display: none;
+}
+
+.admin-brand-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--line);
+  margin: 0 4px;
 }
 
 .admin-brand-title {
@@ -807,7 +860,9 @@ body {
      ============================================ -->
 <div class="login-screen" id="login-screen">
   <div class="login-card">
-    <div class="login-logo">צ</div>
+    <div class="login-logo" id="login-logo">
+      <span class="login-logo-fallback">צ</span>
+    </div>
     <h1 class="login-title">ניהול כרטיסי ביקור</h1>
     <p class="login-subtitle">קבוצת סופרין</p>
     
@@ -838,7 +893,10 @@ body {
   
   <header class="admin-header">
     <div class="admin-brand">
-      <div class="admin-brand-logo">צ</div>
+      <div class="admin-brand-logo" id="admin-brand-logo">
+        <span class="admin-brand-logo-fallback">צ</span>
+      </div>
+      <div class="admin-brand-divider"></div>
       <div class="admin-brand-title">ניהול כרטיסי ביקור</div>
     </div>
     <div class="admin-user">
@@ -1009,6 +1067,48 @@ let pendingPhotoFile = null;
 let pendingPhotoRemove = false;
 let pendingLogoFile = null;
 let pendingLogoRemove = false;
+
+// ============================================
+// LOGO MANAGEMENT
+// ============================================
+
+async function loadLogoForLoginScreen() {
+  // Load logo BEFORE auth (uses anon access to company_settings)
+  try {
+    const { data, error } = await sb
+      .from('company_settings')
+      .select('logo_url')
+      .single();
+    
+    if (!error && data?.logo_url) {
+      applyLogoToLogin(data.logo_url);
+    }
+  } catch (e) {
+    console.warn('Could not load logo:', e);
+  }
+}
+
+function applyLogoToLogin(logoUrl) {
+  if (!logoUrl) return;
+  const loginLogo = document.getElementById('login-logo');
+  if (loginLogo) {
+    loginLogo.classList.add('has-image');
+    loginLogo.innerHTML = `<img src="${escapeHtml(logoUrl)}" alt="לוגו">`;
+  }
+}
+
+function applyLogoToAdmin(logoUrl) {
+  const adminLogo = document.getElementById('admin-brand-logo');
+  if (!adminLogo) return;
+  
+  if (logoUrl) {
+    adminLogo.classList.add('has-image');
+    adminLogo.innerHTML = `<img src="${escapeHtml(logoUrl)}" alt="לוגו">`;
+  } else {
+    adminLogo.classList.remove('has-image');
+    adminLogo.innerHTML = '<span class="admin-brand-logo-fallback">צ</span>';
+  }
+}
 
 // ============================================
 // AUTH
@@ -1386,6 +1486,7 @@ async function loadCompanySettings() {
     const { data, error } = await sb.from('company_settings').select('*').single();
     if (error) throw error;
     companySettings = data;
+    applyLogoToAdmin(data.logo_url);
     renderSettings();
   } catch (error) {
     console.error('Load settings error:', error);
@@ -1607,6 +1708,7 @@ function escapeHtml(str) {
 // ============================================
 // START
 // ============================================
+loadLogoForLoginScreen();
 checkAuth();
 </script>
 
