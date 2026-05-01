@@ -64,6 +64,67 @@ body {
   max-width: 420px;
 }
 
+.hidden { display: none !important; }
+
+/* ============== Language Toggle ============== */
+.lang-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: var(--shadow-sm);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.lang-toggle button {
+  background: transparent;
+  border: none;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.lang-toggle button.active {
+  background: var(--ink);
+  color: var(--bg-card);
+}
+
+.lang-toggle button:not(.active):hover {
+  color: var(--ink);
+}
+
+/* When in English - move toggle to right */
+html[lang="en"] .lang-toggle {
+  left: auto;
+  right: 16px;
+}
+
+html[lang="en"] .name {
+  letter-spacing: 0;
+}
+
+/* Keep button order fixed (always WhatsApp left, Call right) regardless of direction */
+.btn-grid {
+  direction: rtl;
+}
+
+.socials {
+  direction: rtl;
+}
+
 /* ================ Loading State ================ */
 .loading-state {
   text-align: center;
@@ -169,6 +230,7 @@ body {
   align-items: center;
   padding: 22px 26px 0;
   z-index: 2;
+  direction: rtl;
 }
 
 .brand-tag {
@@ -487,83 +549,6 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
-
-.hidden { display: none !important; }
-
-/* ============== Language Toggle ============== */
-.lang-toggle {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 50;
-  display: flex;
-  background: var(--bg-card);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 3px;
-  box-shadow: var(--shadow-sm);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
-
-.lang-toggle button {
-  background: transparent;
-  border: none;
-  padding: 5px 11px;
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-}
-
-.lang-toggle button.active {
-  background: var(--ink);
-  color: var(--bg-card);
-}
-
-.lang-toggle button:not(.active):hover {
-  color: var(--ink);
-}
-
-/* ============== LTR Adjustments ============== */
-html[lang="en"] {
-  direction: ltr;
-}
-
-html[lang="en"] .lang-toggle {
-  left: auto;
-  right: 16px;
-}
-
-html[lang="en"] .name {
-  letter-spacing: 0;
-}
-
-/* Keep the same Heebo font in English to maintain consistent proportions */
-/* (Heebo supports both Hebrew and Latin characters beautifully) */
-
-/* Keep button order fixed regardless of direction */
-html[lang="en"] .btn-grid {
-  direction: ltr;
-}
-
-html[lang="he"] .btn-grid {
-  direction: rtl;
-}
-
-/* Keep socials in same order */
-html[lang="en"] .socials {
-  direction: ltr;
-}
-
-html[lang="he"] .socials {
-  direction: rtl;
-}
 </style>
 </head>
 <body>
@@ -637,14 +622,14 @@ html[lang="he"] .socials {
         <div class="divider-line"></div>
       </div>
 
-      <button class="btn-primary" onclick="saveContact()" aria-label="שמור באנשי קשר">
+      <button class="btn-primary" id="btn-save-contact" onclick="saveContact()" aria-label="שמור באנשי קשר">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
           <circle cx="8.5" cy="7" r="4"/>
           <line x1="20" y1="8" x2="20" y2="14"/>
           <line x1="23" y1="11" x2="17" y2="11"/>
         </svg>
-        שמור באנשי קשר
+        <span id="btn-save-contact-text">שמור באנשי קשר</span>
       </button>
 
       <div class="btn-grid">
@@ -652,13 +637,13 @@ html[lang="he"] .socials {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366">
             <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/>
           </svg>
-          WhatsApp
+          <span id="whatsapp-text">WhatsApp</span>
         </a>
         <a class="btn-secondary" id="phone-link" href="#" aria-label="התקשר">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.4 21 3 14.6 3 6.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.4.6 3.5.1.3 0 .7-.2 1z"/>
           </svg>
-          התקשר
+          <span id="phone-text">התקשר</span>
         </a>
       </div>
 
@@ -677,7 +662,7 @@ html[lang="he"] .socials {
         </a>
       </div>
 
-      <p class="footer-tag">DIGITAL BUSINESS CARD</p>
+      <p class="footer-tag" id="footer-tag">DIGITAL BUSINESS CARD</p>
 
     </div>
   </div>
@@ -696,7 +681,6 @@ html[lang="he"] .socials {
 const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
 
-// Initialize Supabase client
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
@@ -711,12 +695,9 @@ let currentLang = 'he';
 const i18n = {
   he: {
     loading: 'טוען...',
-    digitalCard: 'DIGITAL CARD',
-    online: 'ONLINE',
     saveContact: 'שמור באנשי קשר',
     whatsapp: 'WhatsApp',
     call: 'התקשר',
-    digitalBusinessCard: 'DIGITAL BUSINESS CARD',
     errorNotFoundTitle: 'כרטיס לא נמצא',
     errorNotFoundMsg: 'העובד שאתה מחפש לא קיים או אינו פעיל במערכת',
     errorNoUserTitle: 'לא צוין עובד',
@@ -728,17 +709,13 @@ const i18n = {
     errorLoadTitle: 'שגיאה בטעינה',
     errorLoadMsg: 'לא ניתן לטעון את הכרטיס. בדוק את החיבור לאינטרנט ונסה שוב',
     errorAction: 'לאתר קבוצת סופרין',
-    contactSaved: 'איש הקשר נשמר',
-    pageTitle: 'כרטיס ביקור'
+    contactSaved: 'איש הקשר נשמר'
   },
   en: {
     loading: 'Loading...',
-    digitalCard: 'DIGITAL CARD',
-    online: 'ONLINE',
     saveContact: 'Save Contact',
     whatsapp: 'WhatsApp',
     call: 'Call',
-    digitalBusinessCard: 'DIGITAL BUSINESS CARD',
     errorNotFoundTitle: 'Card Not Found',
     errorNotFoundMsg: 'The employee you are looking for does not exist or is not active',
     errorNoUserTitle: 'No User Specified',
@@ -750,8 +727,7 @@ const i18n = {
     errorLoadTitle: 'Loading Error',
     errorLoadMsg: 'Unable to load card. Check your internet connection and try again',
     errorAction: 'Visit Sufrin Group',
-    contactSaved: 'Contact saved',
-    pageTitle: 'Business Card'
+    contactSaved: 'Contact saved'
   }
 };
 
@@ -763,11 +739,6 @@ function t(key) {
 // LANGUAGE MANAGEMENT
 // ============================================
 
-function detectInitialLanguage() {
-  // Default to Hebrew (this is an Israeli company)
-  return 'he';
-}
-
 function setLanguage(lang) {
   if (lang !== 'he' && lang !== 'en') return;
   currentLang = lang;
@@ -776,40 +747,28 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
   
-  // Update toggle buttons
+  // Update toggle buttons active state
   document.getElementById('lang-he').classList.toggle('active', lang === 'he');
   document.getElementById('lang-en').classList.toggle('active', lang === 'en');
   
-  // Re-render if data is loaded
-  if (currentEmployee && currentCompany) {
-    renderCard();
-  }
+  // Update all translatable static texts
+  document.querySelector('.loading-text').textContent = t('loading');
+  document.getElementById('btn-save-contact-text').textContent = t('saveContact');
+  document.getElementById('whatsapp-text').textContent = t('whatsapp');
+  document.getElementById('phone-text').textContent = t('call');
   
-  // If error state is visible, re-translate
+  // Update error if visible
   const errorEl = document.getElementById('error');
-  if (!errorEl.classList.contains('hidden')) {
-    const titleKey = errorEl.dataset.titleKey;
-    const messageKey = errorEl.dataset.messageKey;
-    if (titleKey && messageKey) {
-      document.getElementById('error-title').textContent = t(titleKey);
-      document.getElementById('error-message').textContent = t(messageKey);
-      document.querySelector('.error-action').textContent = t('errorAction');
-    }
+  if (!errorEl.classList.contains('hidden') && errorEl.dataset.titleKey) {
+    document.getElementById('error-title').textContent = t(errorEl.dataset.titleKey);
+    document.getElementById('error-message').textContent = t(errorEl.dataset.messageKey);
+    document.querySelector('.error-action').textContent = t('errorAction');
   }
   
-  // Update static texts
-  updateStaticTexts();
-}
-
-function updateStaticTexts() {
-  const loadingText = document.querySelector('.loading-text');
-  if (loadingText) loadingText.textContent = t('loading');
-  
-  const errorAction = document.querySelector('.error-action');
-  if (errorAction) errorAction.textContent = t('errorAction');
-  
-  const toast = document.getElementById('toast');
-  if (toast) toast.textContent = t('contactSaved');
+  // Re-render employee data if loaded
+  if (currentEmployee && currentCompany) {
+    renderEmployeeData();
+  }
 }
 
 // ============================================
@@ -817,7 +776,6 @@ function updateStaticTexts() {
 // ============================================
 async function loadCard() {
   try {
-    // Get username from URL: ?u=tsahi
     const params = new URLSearchParams(window.location.search);
     const username = params.get('u');
 
@@ -826,25 +784,16 @@ async function loadCard() {
       return;
     }
 
-    // Validate username format (security)
     if (!/^[a-z0-9_-]+$/i.test(username) || username.length > 30) {
       showError('errorInvalidTitle', 'errorInvalidMsg');
       return;
     }
 
-    // Fetch employee + company settings in parallel
     const [employeeResult, companyResult] = await Promise.all([
-      sb.from('employees')
-        .select('*')
-        .eq('username', username)
-        .eq('is_active', true)
-        .single(),
-      sb.from('company_settings')
-        .select('*')
-        .single()
+      sb.from('employees').select('*').eq('username', username).eq('is_active', true).single(),
+      sb.from('company_settings').select('*').single()
     ]);
 
-    // Handle employee fetch errors
     if (employeeResult.error || !employeeResult.data) {
       showError('errorNotFoundTitle', 'errorNotFoundMsg');
       return;
@@ -858,7 +807,11 @@ async function loadCard() {
     currentEmployee = employeeResult.data;
     currentCompany = companyResult.data;
 
-    renderCard();
+    renderEmployeeData();
+    
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('card').classList.remove('hidden');
+    document.getElementById('lang-toggle').classList.remove('hidden');
 
   } catch (error) {
     console.error('Error loading card:', error);
@@ -867,69 +820,35 @@ async function loadCard() {
 }
 
 // ============================================
-// Render the card with employee + company data
+// Render employee + company data
 // ============================================
-function renderCard() {
+function renderEmployeeData() {
   const emp = currentEmployee;
   const company = currentCompany;
   
-  // Decide which language to use for display
-  // Fall back to Hebrew if English fields are missing
+  // Decide which language fields to use (fallback to Hebrew)
   const displayName = (currentLang === 'en' && emp.full_name_en) ? emp.full_name_en : emp.full_name;
   const displayTitle = (currentLang === 'en' && emp.title_en) ? emp.title_en : emp.title;
   const displayCompany = (currentLang === 'en' && company.company_name_en) ? company.company_name_en : company.company_name;
 
-  // Update page title
+  // Page title and Open Graph
   document.title = `${displayName} | ${displayCompany}`;
   document.querySelector('meta[property="og:title"]').setAttribute('content', `${displayName} | ${displayCompany}`);
   document.querySelector('meta[property="og:description"]').setAttribute('content', displayTitle);
 
   // Avatar
-  const avatarLetter = document.getElementById('avatar-letter');
+  const avatar = document.getElementById('avatar');
   if (emp.photo_url) {
-    document.getElementById('avatar').innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(displayName)}">`;
+    avatar.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(displayName)}">`;
   } else {
-    avatarLetter.textContent = displayName.charAt(0);
+    avatar.innerHTML = `<span id="avatar-letter">${escapeHtml(displayName.charAt(0))}</span>`;
   }
 
   // Name & title
   document.getElementById('employee-name').textContent = displayName;
   document.getElementById('employee-title').textContent = displayTitle;
 
-  // Static texts (translated)
-  document.querySelector('.brand-tag').textContent = t('digitalCard');
-  document.querySelector('.status-text').textContent = t('online');
-  document.querySelector('.footer-tag').textContent = t('digitalBusinessCard');
-  
-  // Save contact button
-  const saveBtn = document.querySelector('.btn-primary');
-  if (saveBtn) {
-    saveBtn.setAttribute('aria-label', t('saveContact'));
-    // Update button text (preserve the SVG icon)
-    const saveBtnSvg = saveBtn.querySelector('svg');
-    saveBtn.innerHTML = '';
-    if (saveBtnSvg) saveBtn.appendChild(saveBtnSvg);
-    saveBtn.appendChild(document.createTextNode(' ' + t('saveContact')));
-  }
-  
-  // WhatsApp / Call buttons
-  const whatsappBtn = document.getElementById('whatsapp-link');
-  if (whatsappBtn) {
-    const whatsappSvg = whatsappBtn.querySelector('svg');
-    whatsappBtn.innerHTML = '';
-    if (whatsappSvg) whatsappBtn.appendChild(whatsappSvg);
-    whatsappBtn.appendChild(document.createTextNode(' ' + t('whatsapp')));
-  }
-  
-  const phoneBtn = document.getElementById('phone-link');
-  if (phoneBtn) {
-    const phoneSvg = phoneBtn.querySelector('svg');
-    phoneBtn.innerHTML = '';
-    if (phoneSvg) phoneBtn.appendChild(phoneSvg);
-    phoneBtn.appendChild(document.createTextNode(' ' + t('call')));
-  }
-
-  // Company logo (or text fallback)
+  // Company logo
   const logoLink = document.getElementById('company-logo-link');
   const logoImg = document.getElementById('company-logo-img');
   const logoText = document.getElementById('company-logo-text');
@@ -946,39 +865,40 @@ function renderCard() {
     logoText.textContent = displayCompany;
   }
 
-  // Phone & WhatsApp (clean phone for WhatsApp - remove + and dashes)
+  // Phone & WhatsApp
   const cleanPhone = emp.phone.replace(/[^0-9]/g, '');
   document.getElementById('whatsapp-link').href = `https://wa.me/${cleanPhone}`;
   document.getElementById('phone-link').href = `tel:${emp.phone}`;
-
+  
   // Email
   document.getElementById('email-link').href = `mailto:${emp.email}`;
 
-  // Social links (from company settings)
+  // Social links
   if (company.instagram_url) document.getElementById('instagram-link').href = company.instagram_url;
   if (company.facebook_url) document.getElementById('facebook-link').href = company.facebook_url;
   if (company.linkedin_url) document.getElementById('linkedin-link').href = company.linkedin_url;
-
-  // Show the card and the language toggle, hide loading
-  document.getElementById('loading').classList.add('hidden');
-  document.getElementById('card').classList.remove('hidden');
-  document.getElementById('lang-toggle').classList.remove('hidden');
+  
+  // Update translatable button texts
+  document.getElementById('btn-save-contact-text').textContent = t('saveContact');
+  document.getElementById('whatsapp-text').textContent = t('whatsapp');
+  document.getElementById('phone-text').textContent = t('call');
 }
 
 // ============================================
 // Show error state
 // ============================================
 function showError(titleKey, messageKey) {
+  const errorEl = document.getElementById('error');
+  errorEl.dataset.titleKey = titleKey;
+  errorEl.dataset.messageKey = messageKey;
+  
   document.getElementById('error-title').textContent = t(titleKey);
   document.getElementById('error-message').textContent = t(messageKey);
   document.querySelector('.error-action').textContent = t('errorAction');
-  document.getElementById('loading').classList.add('hidden');
-  document.getElementById('error').classList.remove('hidden');
-  document.getElementById('lang-toggle').classList.remove('hidden');
   
-  // Save which error keys are showing, in case language changes
-  document.getElementById('error').dataset.titleKey = titleKey;
-  document.getElementById('error').dataset.messageKey = messageKey;
+  document.getElementById('loading').classList.add('hidden');
+  errorEl.classList.remove('hidden');
+  document.getElementById('lang-toggle').classList.remove('hidden');
 }
 
 // ============================================
@@ -990,12 +910,10 @@ function saveContact() {
   const emp = currentEmployee;
   const company = currentCompany;
   
-  // Decide which name/title to use based on current language
   const displayName = (currentLang === 'en' && emp.full_name_en) ? emp.full_name_en : emp.full_name;
   const displayTitle = (currentLang === 'en' && emp.title_en) ? emp.title_en : emp.title;
   const displayCompany = (currentLang === 'en' && company.company_name_en) ? company.company_name_en : company.company_name;
 
-  // Split full name into first/last (best effort)
   const nameParts = displayName.split(' ');
   const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
   const firstName = nameParts.slice(0, -1).join(' ') || nameParts[0];
@@ -1020,11 +938,12 @@ function saveContact() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  // Use Latin chars for the filename if English mode, otherwise use the Hebrew name
+  
   const fileName = (currentLang === 'en' && emp.full_name_en)
     ? emp.full_name_en.replace(/\s+/g, '-')
     : displayName.replace(/\s+/g, '-');
   link.download = `${fileName}.vcf`;
+  
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -1052,10 +971,7 @@ function escapeHtml(str) {
 // ============================================
 // Start
 // ============================================
-
-// Set initial language (default Hebrew)
-setLanguage(detectInitialLanguage());
-
+setLanguage('he');
 loadCard();
 </script>
 
