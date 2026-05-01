@@ -996,8 +996,18 @@ body {
         </div>
         
         <div class="form-group">
+          <label class="form-label" for="emp-name-en">שם מלא באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="emp-name-en" dir="ltr" maxlength="100" placeholder="Tsahi Sufrin">
+        </div>
+        
+        <div class="form-group">
           <label class="form-label" for="emp-title">תפקיד <span style="color:var(--error)">*</span></label>
           <input class="form-input" type="text" id="emp-title" required maxlength="100" placeholder="יו״ר דירקטוריון">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-title-en">תפקיד באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="emp-title-en" dir="ltr" maxlength="100" placeholder="Chairman of the Board">
         </div>
         
         <div class="form-group">
@@ -1293,7 +1303,9 @@ function fillEmployeeForm(emp) {
   document.getElementById('emp-id').value = emp.id;
   document.getElementById('emp-username').value = emp.username;
   document.getElementById('emp-name').value = emp.full_name;
+  document.getElementById('emp-name-en').value = emp.full_name_en || '';
   document.getElementById('emp-title').value = emp.title;
+  document.getElementById('emp-title-en').value = emp.title_en || '';
   document.getElementById('emp-phone').value = emp.phone;
   document.getElementById('emp-email').value = emp.email;
   document.getElementById('emp-order').value = emp.display_order;
@@ -1312,7 +1324,9 @@ function clearEmployeeForm() {
   document.getElementById('emp-id').value = '';
   document.getElementById('emp-username').value = '';
   document.getElementById('emp-name').value = '';
+  document.getElementById('emp-name-en').value = '';
   document.getElementById('emp-title').value = '';
+  document.getElementById('emp-title-en').value = '';
   document.getElementById('emp-phone').value = '';
   document.getElementById('emp-email').value = '';
   document.getElementById('emp-order').value = '999';
@@ -1365,7 +1379,9 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
     const data = {
       username: document.getElementById('emp-username').value.trim(),
       full_name: document.getElementById('emp-name').value.trim(),
+      full_name_en: document.getElementById('emp-name-en').value.trim() || null,
       title: document.getElementById('emp-title').value.trim(),
+      title_en: document.getElementById('emp-title-en').value.trim() || null,
       phone: document.getElementById('emp-phone').value.trim(),
       email: document.getElementById('emp-email').value.trim(),
       display_order: parseInt(document.getElementById('emp-order').value) || 999,
