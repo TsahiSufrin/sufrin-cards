@@ -433,13 +433,11 @@ body {
 .employee-card {
   background: var(--bg-card);
   border-radius: 14px;
-  padding: 16px;
   border: 1px solid var(--line);
   transition: all 0.2s ease;
-  cursor: pointer;
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .employee-card:hover {
@@ -450,6 +448,105 @@ body {
 
 .employee-card.inactive {
   opacity: 0.55;
+}
+
+.employee-card-main {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.employee-share {
+  border-top: 1px solid var(--line);
+  padding: 10px 14px;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-url {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2px;
+  direction: ltr;
+  overflow: hidden;
+}
+
+.share-url svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.share-url-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  flex: 1;
+  justify-content: center;
+}
+
+.share-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.share-btn:active {
+  transform: translateY(0);
+}
+
+.share-btn svg {
+  flex-shrink: 0;
+}
+
+.share-btn-whatsapp:hover {
+  border-color: rgba(37, 211, 102, 0.4);
+  background: rgba(37, 211, 102, 0.08);
+  color: #1ea952;
+}
+
+@media (max-width: 480px) {
+  .share-buttons {
+    flex-direction: column;
+  }
+  
+  .share-btn {
+    width: 100%;
+  }
+  
+  .share-btn span {
+    display: inline;
+  }
 }
 
 .employee-avatar {
@@ -1897,27 +1994,103 @@ function renderEmployees() {
     return;
   }
   
-  list.innerHTML = '<div class="employees-grid">' + employees.map(emp => `
-    <div class="employee-card ${!emp.is_active ? 'inactive' : ''}" onclick="openEmployeeModal('${emp.id}')">
-      <div class="employee-avatar">
-        ${emp.photo_url 
-          ? `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(emp.full_name)}">` 
-          : `<span>${escapeHtml(emp.full_name.charAt(0))}</span>`
-        }
-      </div>
-      <div class="employee-info">
-        <div class="employee-name">${escapeHtml(emp.full_name)}</div>
-        <div class="employee-title">${escapeHtml(emp.title)}</div>
-        <div class="employee-meta">
-          <span class="tag tag-username">${escapeHtml(emp.username)}</span>
-          ${emp.is_active 
-            ? '<span class="tag tag-active">פעיל</span>'
-            : '<span class="tag tag-inactive">מושבת</span>'
+  list.innerHTML = '<div class="employees-grid">' + employees.map(emp => {
+    const cardUrl = `https://card.sufrin.io/?u=${encodeURIComponent(emp.username)}`;
+    const shareText = `${emp.full_name} - ${emp.title}`;
+    
+    return `
+    <div class="employee-card ${!emp.is_active ? 'inactive' : ''}">
+      <div class="employee-card-main" onclick="openEmployeeModal('${emp.id}')">
+        <div class="employee-avatar">
+          ${emp.photo_url 
+            ? `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(emp.full_name)}">` 
+            : `<span>${escapeHtml(emp.full_name.charAt(0))}</span>`
           }
+        </div>
+        <div class="employee-info">
+          <div class="employee-name">${escapeHtml(emp.full_name)}</div>
+          <div class="employee-title">${escapeHtml(emp.title)}</div>
+          <div class="employee-meta">
+            <span class="tag tag-username">${escapeHtml(emp.username)}</span>
+            ${emp.is_active 
+              ? '<span class="tag tag-active">פעיל</span>'
+              : '<span class="tag tag-inactive">מושבת</span>'
+            }
+          </div>
+        </div>
+      </div>
+      <div class="employee-share">
+        <div class="share-url" title="${escapeHtml(cardUrl)}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <span class="share-url-text">card.sufrin.io/?u=${escapeHtml(emp.username)}</span>
+        </div>
+        <div class="share-buttons">
+          <button class="share-btn" onclick="copyEmployeeLink(event, '${escapeHtml(cardUrl)}')" title="העתק קישור">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>העתק</span>
+          </button>
+          <button class="share-btn share-btn-whatsapp" onclick="shareViaWhatsApp(event, '${escapeHtml(cardUrl)}', '${escapeHtml(shareText)}')" title="שתף ב-WhatsApp">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366">
+              <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </button>
+          <button class="share-btn" onclick="shareViaEmail(event, '${escapeHtml(cardUrl)}', '${escapeHtml(shareText)}')" title="שלח באימייל">
+            <svg width="14" height="14" viewBox="0 0 24 24"><defs><linearGradient id="mail-share-${escapeHtml(emp.id)}" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#mail-share-${escapeHtml(emp.id)})" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span>אימייל</span>
+          </button>
         </div>
       </div>
     </div>
-  `).join('') + '</div>';
+  `;
+  }).join('') + '</div>';
+}
+
+// ============================================
+// SHARE FUNCTIONS
+// ============================================
+
+async function copyEmployeeLink(event, url) {
+  event.stopPropagation();
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('הקישור הועתק!', 'success');
+  } catch (err) {
+    // Fallback for older browsers
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      showToast('הקישור הועתק!', 'success');
+    } catch (e) {
+      showToast('שגיאה בהעתקה', 'error');
+    }
+    document.body.removeChild(textarea);
+  }
+}
+
+function shareViaWhatsApp(event, url, text) {
+  event.stopPropagation();
+  const message = `${text}\n${url}`;
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+}
+
+function shareViaEmail(event, url, text) {
+  event.stopPropagation();
+  const subject = `כרטיס ביקור דיגיטלי - ${text}`;
+  const body = `שלום,\n\nמצורף קישור לכרטיס הביקור הדיגיטלי שלי:\n${url}\n\nתודה!`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 // ============================================
