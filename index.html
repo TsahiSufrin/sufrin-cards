@@ -360,6 +360,82 @@ html[lang="en"] .name {
   display: block;
 }
 
+/* ============== Office Address ============== */
+.office-section {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: rgba(201, 184, 133, 0.08);
+  border: 1px solid rgba(201, 184, 133, 0.25);
+  border-radius: 14px;
+  text-align: right;
+  direction: rtl;
+}
+
+.office-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.office-icon {
+  color: var(--gold);
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.office-text {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.office-text .office-city {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.office-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.office-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  background: var(--bg-white);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.office-btn:hover {
+  border-color: rgba(10, 22, 40, 0.18);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.office-btn:active {
+  transform: scale(0.97);
+}
+
+.office-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .divider {
   display: flex;
   align-items: center;
@@ -613,6 +689,24 @@ html[lang="en"] .name {
         <span id="company-logo-text" style="font-size: 13px; color: var(--muted);">קבוצת סופרין</span>
       </a>
 
+      <!-- Office Address Section (shown only if employee has office_location_id) -->
+      <div class="office-section hidden" id="office-section">
+        <div class="office-row">
+          <span class="office-icon">📍</span>
+          <div class="office-text" id="office-address">—</div>
+        </div>
+        <div class="office-buttons">
+          <a href="#" target="_blank" rel="noopener" class="office-btn" id="office-waze">
+            <svg viewBox="0 0 24 24" fill="#33CCFF"><path d="M20.54 6.63c.69 1.36 1.07 2.91 1.07 4.55 0 5.39-4.18 9.78-9.46 10.15-.06.49-.41 1.66-1.95 1.66-1.41 0-1.95-.97-1.95-1.66v-.13c-1.13-.31-2.16-.79-3.07-1.41-.5.32-1.36.66-2.16-.07-1.04-.96-.16-1.97.16-2.32C2.45 16.16 2 14.79 2 13.31c0-.84.16-1.66.45-2.43C2.61 7.42 5.91 4 10.32 4c.84 0 1.65.13 2.42.36C13.97 4.13 15.27 4 16.61 4c2.46 0 4.61.78 6.04 2.13.27.34-.05.5-.04.5h-.07zM10.32 5.5c-3.59 0-6.5 2.91-6.5 6.5 0 1.43.46 2.75 1.24 3.82l-.71.71a1 1 0 0 0 .71 1.71h.04c.5 0 1-.07 1.46-.21l.16-.05c1.07.71 2.36 1.13 3.75 1.13.27 0 .54-.02.8-.05.5-.04.91.41.91.91 0 .27.21.5.48.5.27 0 .48-.23.48-.5 0-.91-.59-1.66-1.41-1.93l-.95-.32c-.41-.13-.84-.21-1.27-.21-1.13 0-2.16-.34-3.04-.91l-1-.66c-.16-.11-.34-.21-.55-.27 1.07-.7 2.34-1.11 3.75-1.11 3.59 0 6.5-2.91 6.5-6.5S20.5 5 16.91 5h-6.59zm-2 8.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm6 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <span>Waze</span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="office-btn" id="office-maps">
+            <svg viewBox="0 0 24 24" fill="#4285F4"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>Maps</span>
+          </a>
+        </div>
+      </div>
+
       <div class="divider">
         <div class="divider-line left"></div>
         <div class="divider-dot"></div>
@@ -684,6 +778,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 // State
 let currentEmployee = null;
 let currentCompany = null;
+let currentOffice = null;
 let currentLang = 'he';
 
 // ============================================
@@ -695,6 +790,8 @@ const i18n = {
     saveContact: 'שמור באנשי קשר',
     whatsapp: 'WhatsApp',
     call: 'התקשר',
+    waze: 'Waze',
+    maps: 'Maps',
     errorNotFoundTitle: 'כרטיס לא נמצא',
     errorNotFoundMsg: 'העובד שאתה מחפש לא קיים או אינו פעיל במערכת',
     errorNoUserTitle: 'לא צוין עובד',
@@ -713,6 +810,8 @@ const i18n = {
     saveContact: 'Save Contact',
     whatsapp: 'WhatsApp',
     call: 'Call',
+    waze: 'Waze',
+    maps: 'Maps',
     errorNotFoundTitle: 'Card Not Found',
     errorNotFoundMsg: 'The employee you are looking for does not exist or is not active',
     errorNoUserTitle: 'No User Specified',
@@ -803,6 +902,22 @@ async function loadCard() {
 
     currentEmployee = employeeResult.data;
     currentCompany = companyResult.data;
+    
+    // Load office if employee has one assigned
+    if (currentEmployee.office_location_id) {
+      try {
+        const { data: officeData, error: officeError } = await sb
+          .from('office_locations')
+          .select('*')
+          .eq('id', currentEmployee.office_location_id)
+          .single();
+        if (!officeError && officeData) {
+          currentOffice = officeData;
+        }
+      } catch (e) {
+        console.warn('Could not load office:', e);
+      }
+    }
 
     renderEmployeeData();
     
@@ -879,6 +994,45 @@ function renderEmployeeData() {
   document.getElementById('btn-save-contact-text').textContent = t('saveContact');
   document.getElementById('whatsapp-text').textContent = t('whatsapp');
   document.getElementById('phone-text').textContent = t('call');
+  
+  // Render office address if available
+  renderOfficeSection();
+}
+
+// ============================================
+// Render office address section
+// ============================================
+function renderOfficeSection() {
+  const officeSection = document.getElementById('office-section');
+  
+  if (!currentOffice) {
+    officeSection.classList.add('hidden');
+    return;
+  }
+  
+  // Build the address text
+  const addressEl = document.getElementById('office-address');
+  addressEl.innerHTML = `
+    ${escapeHtml(currentOffice.address_line)}<br>
+    <span class="office-city">${escapeHtml(currentOffice.city)}</span>
+  `;
+  
+  // Build navigation URLs
+  // Use the FULL address (including city) for accurate navigation
+  const fullAddress = `${currentOffice.address_line}, ${currentOffice.city}`;
+  const encodedAddress = encodeURIComponent(fullAddress);
+  
+  // Waze: opens in app on mobile, web on desktop
+  const wazeUrl = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`;
+  
+  // Google Maps: works on all devices
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+  
+  document.getElementById('office-waze').href = wazeUrl;
+  document.getElementById('office-maps').href = mapsUrl;
+  
+  // Show the section
+  officeSection.classList.remove('hidden');
 }
 
 // ============================================
