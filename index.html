@@ -93,7 +93,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 12px;
   background:
     radial-gradient(circle at 20% 0%, rgba(201, 184, 133, 0.15), transparent 50%),
     radial-gradient(circle at 80% 100%, rgba(30, 58, 95, 0.08), transparent 50%),
@@ -311,16 +311,16 @@ html[lang="en"] .name {
 
 .card-body {
   position: relative;
-  padding: 60px 28px 32px;
+  padding: 50px 28px 24px;
   text-align: center;
   z-index: 2;
 }
 
 .avatar-wrap {
   position: relative;
-  width: 132px;
-  height: 132px;
-  margin: 0 auto 24px;
+  width: 124px;
+  height: 124px;
+  margin: 0 auto 18px;
 }
 
 .avatar-ring {
@@ -334,14 +334,14 @@ html[lang="en"] .name {
 
 .avatar {
   position: relative;
-  width: 132px;
-  height: 132px;
+  width: 124px;
+  height: 124px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 42px;
+  font-size: 40px;
   font-weight: 500;
   color: var(--bg-card);
   border: 4px solid var(--bg-card);
@@ -355,15 +355,15 @@ html[lang="en"] .name {
 }
 
 .name {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 500;
   color: var(--ink);
   letter-spacing: 0.2px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .title-row {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .title-tag {
@@ -396,15 +396,15 @@ html[lang="en"] .name {
 }
 
 .company-logo img {
-  height: 32px;
+  height: 28px;
   width: auto;
   display: block;
 }
 
 /* ============== Office Address ============== */
 .office-section {
-  margin-top: 24px;
-  padding: 18px 16px 14px;
+  margin-top: 18px;
+  padding: 14px 14px 12px;
   background: rgba(201, 184, 133, 0.06);
   border: 1px solid rgba(201, 184, 133, 0.2);
   border-radius: 14px;
@@ -519,7 +519,7 @@ html[lang="en"] .office-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 28px 0;
+  margin: 20px 0;
 }
 
 .divider-line {
@@ -545,7 +545,7 @@ html[lang="en"] .office-row {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-color);
   border: none;
-  padding: 16px;
+  padding: 14px;
   border-radius: 14px;
   font-size: 15px;
   font-weight: 500;
@@ -553,7 +553,7 @@ html[lang="en"] .office-row {
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -578,21 +578,21 @@ html[lang="en"] .office-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 12px;
 }
 
 /* Full-width email button - same style as btn-secondary but full width */
 .btn-email-full {
   width: 100%;
-  margin-bottom: 22px;
-  padding: 14px;
+  margin-bottom: 14px;
+  padding: 12px;
 }
 
 .btn-secondary {
   background: var(--bg-white);
   color: var(--ink);
   border: 1px solid var(--line);
-  padding: 13px;
+  padding: 12px;
   border-radius: 14px;
   font-size: 13px;
   font-weight: 500;
@@ -621,8 +621,8 @@ html[lang="en"] .office-row {
 }
 
 .social-link {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   background: var(--bg-white);
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -641,12 +641,12 @@ html[lang="en"] .office-row {
 }
 
 .social-link svg {
-  width: 21px;
-  height: 21px;
+  width: 19px;
+  height: 19px;
 }
 
 .footer-tag {
-  margin-top: 28px;
+  margin-top: 18px;
   font-size: 9px;
   color: #a8a193;
   letter-spacing: 2px;
@@ -697,9 +697,20 @@ html[lang="en"] .office-row {
 }
 
 @media (max-width: 380px) {
-  .card-body { padding: 56px 22px 28px; }
-  .name { font-size: 24px; }
-  .avatar-wrap, .avatar { width: 116px; height: 116px; }
+  body { padding: 8px; }
+  .card-body { padding: 44px 22px 20px; }
+  .name { font-size: 22px; margin-bottom: 6px; }
+  .title-row { margin-bottom: 8px; }
+  .avatar-wrap, .avatar { width: 108px; height: 108px; margin-bottom: 14px; }
+  .avatar { font-size: 36px; }
+  .divider { margin: 14px 0; }
+  .btn-primary { padding: 12px; margin-bottom: 8px; }
+  .btn-secondary { padding: 10px; }
+  .btn-grid { margin-bottom: 10px; gap: 6px; }
+  .btn-email-full { margin-bottom: 12px; padding: 11px; }
+  .social-link { width: 40px; height: 40px; }
+  .office-section { margin-top: 14px; padding: 12px 12px 10px; }
+  .footer-tag { margin-top: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
