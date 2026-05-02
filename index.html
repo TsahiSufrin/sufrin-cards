@@ -384,7 +384,10 @@ html[lang="en"] .name {
 }
 
 .company-logo {
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   opacity: 0.95;
@@ -409,7 +412,7 @@ html[lang="en"] .name {
 }
 
 .company-logo img {
-  height: 40px;
+  height: 44px;
   width: auto;
   display: block;
   transition: filter 0.2s ease;
@@ -442,6 +445,22 @@ html[lang="en"] .name {
 
 .company-logo:hover #company-logo-text {
   color: var(--ink) !important;
+}
+
+/* Tagline below logo - subtle hint that it's clickable */
+.company-logo-tagline {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  font-weight: 500;
+  opacity: 0.75;
+  transition: all 0.2s ease;
+}
+
+.company-logo:hover .company-logo-tagline {
+  opacity: 1;
+  color: var(--gold);
+  letter-spacing: 1.5px;
 }
 
 /* ============== Office Address ============== */
@@ -833,6 +852,7 @@ html[lang="en"] .office-row {
             <polyline points="7 7 17 7 17 17"/>
           </svg>
         </span>
+        <span class="company-logo-tagline" id="company-logo-tagline">לאתר הבית »</span>
       </a>
 
       <div class="divider">
@@ -945,6 +965,7 @@ const i18n = {
     call: 'התקשר',
     sendEmail: 'שלח אימייל',
     ourOffice: 'המשרד שלנו',
+    websiteTagline: 'לאתר הבית »',
     waze: 'Waze',
     maps: 'Maps',
     errorNotFoundTitle: 'כרטיס לא נמצא',
@@ -967,6 +988,7 @@ const i18n = {
     call: 'Call',
     sendEmail: 'Send Email',
     ourOffice: 'OUR OFFICE',
+    websiteTagline: 'Visit Website »',
     waze: 'Waze',
     maps: 'Maps',
     errorNotFoundTitle: 'Card Not Found',
@@ -1011,6 +1033,7 @@ function setLanguage(lang) {
   document.getElementById('phone-text').textContent = t('call');
   document.getElementById('email-text').textContent = t('sendEmail');
   document.getElementById('office-section-label').textContent = t('ourOffice');
+  document.getElementById('company-logo-tagline').textContent = t('websiteTagline');
   
   // Update error if visible
   const errorEl = document.getElementById('error');
@@ -1125,12 +1148,17 @@ function renderEmployeeData() {
   const logoImg = document.getElementById('company-logo-img');
   const logoText = document.getElementById('company-logo-text');
   const logoExternal = document.querySelector('.company-logo-external');
+  const logoTagline = document.getElementById('company-logo-tagline');
   
   logoLink.href = company.website_url || '#';
   
-  // Show external icon only if there's a real website to navigate to
+  // Show external icon and tagline only if there's a real website to navigate to
+  const hasWebsite = !!company.website_url;
   if (logoExternal) {
-    logoExternal.style.display = company.website_url ? 'inline-block' : 'none';
+    logoExternal.style.display = hasWebsite ? 'inline-block' : 'none';
+  }
+  if (logoTagline) {
+    logoTagline.style.display = hasWebsite ? 'inline-block' : 'none';
   }
   
   if (company.logo_url) {
@@ -1162,6 +1190,7 @@ function renderEmployeeData() {
   document.getElementById('phone-text').textContent = t('call');
   document.getElementById('email-text').textContent = t('sendEmail');
   document.getElementById('office-section-label').textContent = t('ourOffice');
+  document.getElementById('company-logo-tagline').textContent = t('websiteTagline');
   
   // Render office address if available
   renderOfficeSection();
