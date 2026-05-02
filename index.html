@@ -2,15 +2,11 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#efece4" media="(prefers-color-scheme: light)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f3ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d121b" media="(prefers-color-scheme: dark)">
-<title>קבוצת סופרין | כרטיס ביקור</title>
-<meta name="description" content="כרטיס ביקור דיגיטלי - קבוצת סופרין">
-
-<meta property="og:title" content="קבוצת סופרין">
-<meta property="og:description" content="כרטיס ביקור דיגיטלי">
-<meta property="og:type" content="profile">
+<title>ניהול | קבוצת סופרין</title>
+<meta name="robots" content="noindex, nofollow">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a1628'/%3E%3Ctext x='50' y='68' font-size='52' font-family='serif' font-weight='500' fill='%23c9b885' text-anchor='middle'%3Eצ%3C/text%3E%3C/svg%3E">
 
@@ -22,30 +18,32 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg-page: #efece4;
-  --bg-card: #fafaf7;
-  --bg-soft: #f0ede4;
-  --bg-white: #ffffff;
+  --bg-page: #f5f3ec;
+  --bg-card: #ffffff;
+  --bg-soft: #fafaf7;
   --ink: #0a1628;
   --ink-soft: #1e3a5f;
   --muted: #6b6555;
   --gold: #c9b885;
   --gold-soft: rgba(201, 184, 133, 0.12);
-  --gold-border: rgba(201, 184, 133, 0.3);
   --line: rgba(10, 22, 40, 0.08);
-  --line-soft: rgba(10, 22, 40, 0.05);
+  --line-strong: rgba(10, 22, 40, 0.15);
+  --error: #dc2626;
+  --error-soft: #fef2f2;
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
   --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 22, 40, 0.06);
   --shadow-lg: 0 20px 60px -20px rgba(10, 22, 40, 0.15), 0 0 0 1px rgba(10, 22, 40, 0.04);
   
-  /* Card-specific colors that change in dark mode */
-  --card-top-start: #f0ede4;
-  --card-top-end: #fafaf7;
-  --btn-primary-bg: #0a1628;
-  --btn-primary-color: #fafaf7;
+  /* Variables that change in dark mode */
   --avatar-bg-start: #1e3a5f;
   --avatar-bg-end: #0a1628;
-  --status-online: #16a34a;
-  --address-color: #1e3a5f;
+  --btn-primary-bg: #0a1628;
+  --btn-primary-color: #ffffff;
+  --btn-primary-hover: #1e3a5f;
+  --input-bg: #fafaf7;
+  --input-bg-focus: #ffffff;
 }
 
 /* ============== DARK MODE ============== */
@@ -54,27 +52,29 @@
     --bg-page: #0d121b;
     --bg-card: #131a26;
     --bg-soft: #1a2230;
-    --bg-white: rgba(255, 255, 255, 0.05);
     --ink: #f0ede4;
     --ink-soft: #d6d4cc;
     --muted: #a1a098;
     --gold: #d4c490;
     --gold-soft: rgba(212, 196, 144, 0.1);
-    --gold-border: rgba(212, 196, 144, 0.3);
     --line: rgba(255, 255, 255, 0.08);
-    --line-soft: rgba(255, 255, 255, 0.05);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --line-strong: rgba(255, 255, 255, 0.15);
+    --error: #f87171;
+    --error-soft: rgba(220, 38, 38, 0.15);
+    --success: #4ade80;
+    --success-soft: rgba(22, 163, 74, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
     
-    /* Card-specific in dark mode */
-    --card-top-start: #1e2738;
-    --card-top-end: #131a26;
-    --btn-primary-bg: #d4c490;
-    --btn-primary-color: #131a26;
+    /* Dark mode specific */
     --avatar-bg-start: #2a3a55;
     --avatar-bg-end: #131a26;
-    --status-online: #4ade80;
-    --address-color: #d6d4cc;
+    --btn-primary-bg: #d4c490;
+    --btn-primary-color: #131a26;
+    --btn-primary-hover: #c9b885;
+    --input-bg: #1a2230;
+    --input-bg-focus: #20283a;
   }
 }
 
@@ -83,638 +83,874 @@ html, body {
   background: var(--bg-page);
   color: var(--ink);
   min-height: 100vh;
-  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
   background:
-    radial-gradient(circle at 20% 0%, rgba(201, 184, 133, 0.15), transparent 50%),
-    radial-gradient(circle at 80% 100%, rgba(30, 58, 95, 0.08), transparent 50%),
+    radial-gradient(circle at 20% 0%, rgba(201, 184, 133, 0.1), transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(30, 58, 95, 0.05), transparent 50%),
     var(--bg-page);
-}
-
-.container {
-  width: 100%;
-  max-width: 420px;
 }
 
 .hidden { display: none !important; }
 
-/* ============== Language Toggle ============== */
-.lang-toggle {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 50;
+/* ================================================
+   LOGIN SCREEN
+   ================================================ */
+.login-screen {
+  min-height: 100vh;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
   background: var(--bg-card);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 3px;
-  box-shadow: var(--shadow-sm);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  /* Always RTL: עב on the right, EN on the left */
-  direction: rtl;
-}
-
-.lang-toggle button {
-  background: transparent;
-  border: none;
-  padding: 5px 11px;
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-}
-
-.lang-toggle button.active {
-  background: var(--ink);
-  color: var(--bg-card);
-}
-
-.lang-toggle button:not(.active):hover {
-  color: var(--ink);
-}
-
-/* When in English */
-html[lang="en"] .name {
-  letter-spacing: 0;
-}
-
-/* Keep button order fixed (always WhatsApp left, Call right) regardless of direction */
-.btn-grid {
-  direction: rtl;
-}
-
-.socials {
-  direction: rtl;
-}
-
-/* ================ Loading State ================ */
-.loading-state {
-  text-align: center;
-  padding: 60px 20px;
-  animation: fadeIn 0.3s ease;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--gold-border);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  animation: spin 0.8s linear infinite;
-}
-
-.loading-text {
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-}
-
-/* ================ Error State ================ */
-.error-state {
-  text-align: center;
-  padding: 60px 30px;
-  background: var(--bg-card);
-  border-radius: 24px;
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
   box-shadow: var(--shadow-lg);
   animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.error-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 20px;
-  background: rgba(220, 38, 38, 0.08);
-  border-radius: 50%;
+.login-logo {
+  height: 48px;
+  margin: 0 auto 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Fallback gradient box - shown when no logo */
+  width: 64px;
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+  border-radius: 16px;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--gold);
+  font-family: serif;
+  transition: all 0.2s ease;
 }
 
-.error-title {
-  font-size: 20px;
+.login-logo.has-image {
+  width: auto;
+  max-width: 200px;
+  background: transparent;
+  border-radius: 0;
+}
+
+.login-logo img {
+  max-height: 48px;
+  width: auto;
+  display: block;
+}
+
+.login-logo-fallback {
+  display: block;
+}
+
+.login-logo.has-image .login-logo-fallback {
+  display: none;
+}
+
+.login-title {
+  font-size: 22px;
   font-weight: 500;
   color: var(--ink);
-  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 6px;
 }
 
-.error-message {
-  font-size: 14px;
+.login-subtitle {
+  font-size: 13px;
   color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
+  text-align: center;
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
 }
 
-.error-action {
-  display: inline-block;
-  padding: 10px 24px;
-  background: var(--ink);
-  color: var(--bg-card);
-  text-decoration: none;
-  border-radius: 12px;
-  font-size: 14px;
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
   font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
 }
 
-/* ================ Card (Main UI) ================ */
-.card {
-  position: relative;
-  background: var(--bg-card);
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  animation: fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.card-top {
-  position: absolute;
-  top: 0; right: 0; left: 0;
-  height: 160px;
-  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-card) 100%);
-  pointer-events: none;
-}
-
-.card-top::after {
-  content: "";
-  position: absolute;
-  top: 0; right: 0; left: 0; height: 100%;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(201, 184, 133, 0.15) 0px, transparent 1px),
-    radial-gradient(circle at 80% 60%, rgba(201, 184, 133, 0.1) 0px, transparent 1px);
-  background-size: 30px 30px, 50px 50px;
-  opacity: 0.6;
-}
-
-.card-header {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 26px 0;
-  z-index: 2;
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--input-bg);
+  color: var(--ink);
+  transition: all 0.2s ease;
   direction: rtl;
 }
 
-.brand-tag {
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  color: #8a8270;
-  font-weight: 500;
+.form-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--input-bg-focus);
+  box-shadow: 0 0 0 3px var(--gold-soft);
 }
 
-.status {
+.form-input[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+.form-error {
+  background: var(--error-soft);
+  color: var(--error);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.form-error.show { display: block; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  width: 100%;
+  padding: 14px;
+}
+
+.btn-primary:hover { background: var(--btn-primary-hover); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-secondary {
+  background: var(--bg-soft);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card);
+  border-color: var(--line-strong);
+}
+
+.btn-danger {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.btn-danger:hover { background: var(--error-soft); filter: brightness(1.15); }
+
+.btn-icon {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+}
+
+/* ================================================
+   ADMIN LAYOUT
+   ================================================ */
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 24px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--status-online);
-  border-radius: 50%;
-  position: relative;
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.status-dot::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: var(--status-online);
-  opacity: 0.3;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-text {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.card-body {
-  position: relative;
-  padding: 50px 28px 24px;
-  text-align: center;
-  z-index: 2;
-}
-
-.avatar-wrap {
-  position: relative;
-  width: 124px;
-  height: 124px;
-  margin: 0 auto 18px;
-}
-
-.avatar-ring {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: conic-gradient(from 135deg, var(--gold) 0deg, transparent 90deg, var(--gold) 180deg, transparent 270deg, var(--gold) 360deg);
-  opacity: 0.6;
-  animation: spin 20s linear infinite;
-}
-
-.avatar {
-  position: relative;
-  width: 124px;
-  height: 124px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+.admin-brand-logo {
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  /* Fallback gradient box - shown when no logo */
+  width: 36px;
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+  border-radius: 10px;
+  font-size: 18px;
+  color: var(--gold);
+  font-family: serif;
   font-weight: 500;
-  color: var(--bg-card);
-  border: 4px solid var(--bg-card);
+  transition: all 0.2s ease;
+}
+
+.admin-brand-logo.has-image {
+  width: auto;
+  max-width: 130px;
+  background: transparent;
+  border-radius: 0;
+}
+
+.admin-brand-logo img {
+  max-height: 30px;
+  width: auto;
+  display: block;
+}
+
+.admin-brand-logo-fallback {
+  display: block;
+}
+
+.admin-brand-logo.has-image .admin-brand-logo-fallback {
+  display: none;
+}
+
+.admin-brand-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--line);
+  margin: 0 4px;
+}
+
+.admin-brand-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-user-email {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.admin-tabs {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.admin-tab {
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: transparent;
+  border-right: none;
+  border-left: none;
+  border-top: none;
+  font-family: inherit;
+}
+
+.admin-tab:hover { color: var(--ink); }
+
+.admin-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ================================================
+   EMPLOYEES LIST
+   ================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.section-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.employees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.employee-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-.avatar img {
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--line-strong);
+}
+
+.employee-card.inactive {
+  opacity: 0.55;
+}
+
+.employee-card-main {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.employee-share {
+  border-top: 1px solid var(--line);
+  padding: 10px 14px;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-url {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2px;
+  direction: ltr;
+  overflow: hidden;
+}
+
+.share-url svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.share-url-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  flex: 1;
+  justify-content: center;
+}
+
+.share-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.share-btn:active {
+  transform: translateY(0);
+}
+
+.share-btn svg {
+  flex-shrink: 0;
+}
+
+.share-btn-whatsapp:hover {
+  border-color: rgba(37, 211, 102, 0.4);
+  background: rgba(37, 211, 102, 0.08);
+  color: #1ea952;
+}
+
+@media (max-width: 480px) {
+  .share-buttons {
+    flex-direction: column;
+  }
+  
+  .share-btn {
+    width: 100%;
+  }
+  
+  .share-btn span {
+    display: inline;
+  }
+}
+
+.employee-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 500;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.employee-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.name {
-  font-size: 26px;
+.employee-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size: 15px;
   font-weight: 500;
   color: var(--ink);
-  letter-spacing: 0.2px;
-  margin-bottom: 8px;
-}
-
-.title-row {
-  margin-bottom: 10px;
-}
-
-.title-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  background: var(--gold-soft);
-  border: 1px solid var(--gold-border);
-  border-radius: 20px;
-}
-
-.title-text {
-  font-size: 11px;
-  color: #7a6a3d;
-  letter-spacing: 1px;
-  font-weight: 500;
-}
-
-.company-logo {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  text-decoration: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  opacity: 0.95;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.company-logo-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-}
-
-.company-logo:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.company-logo:active {
-  transform: translateY(0);
-}
-
-.company-logo img {
-  height: 40px;
-  width: auto;
-  display: block;
-  transition: filter 0.2s ease;
-}
-
-.company-logo:hover img {
-  filter: drop-shadow(0 2px 8px rgba(10, 22, 40, 0.12));
-}
-
-/* External link icon - subtle but visible */
-.company-logo-external {
-  width: 13px;
-  height: 13px;
-  color: var(--muted);
-  opacity: 0.6;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.company-logo:hover .company-logo-external {
-  opacity: 1;
-  color: var(--gold);
-  transform: translate(2px, -2px);
-}
-
-/* Logo when displayed as text (no image set) */
-.company-logo #company-logo-text {
-  transition: color 0.2s ease;
-}
-
-.company-logo:hover #company-logo-text {
-  color: var(--ink) !important;
-}
-
-/* Tagline below logo - subtle hint that it's clickable */
-.company-logo-tagline {
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  color: var(--muted);
-  font-weight: 500;
-  opacity: 0.75;
-  transition: all 0.2s ease;
-}
-
-.company-logo:hover .company-logo-tagline {
-  opacity: 1;
-  color: var(--gold);
-  letter-spacing: 1.5px;
-}
-
-/* ============== Office Address ============== */
-.office-section {
-  margin-top: 18px;
-  padding: 14px 14px 12px;
-  background: rgba(201, 184, 133, 0.06);
-  border: 1px solid rgba(201, 184, 133, 0.2);
-  border-radius: 14px;
-  text-align: right;
-  direction: rtl;
-}
-
-/* Office section header with "המשרד שלנו" label and divider lines */
-.office-section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-  direction: rtl;
-}
-
-.office-section-line {
-  flex: 1;
-  height: 1px;
-  background: rgba(201, 184, 133, 0.3);
-}
-
-.office-section-label {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--gold);
-  font-weight: 500;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* When in English - flip the office section to LTR */
-html[lang="en"] .office-section {
-  direction: ltr;
-  text-align: left;
-}
-
-html[lang="en"] .office-section-header {
-  direction: ltr;
-}
-
-/* In English: icon stays on the left (natural LTR flow) */
-html[lang="en"] .office-row {
-  flex-direction: row;
-}
-
-.office-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.office-icon {
-  color: var(--gold);
-  font-size: 14px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.office-text {
+.employee-title {
   font-size: 12px;
-  color: var(--address-color);
-  line-height: 1.6;
-  flex: 1;
-}
-
-.office-text .office-city {
   color: var(--muted);
-  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.office-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
-
-.office-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 8px 10px;
-  background: var(--bg-white);
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.office-btn:hover {
-  border-color: rgba(10, 22, 40, 0.18);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.office-btn:active {
-  transform: scale(0.97);
-}
-
-.office-btn svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.divider {
+.employee-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 20px 0;
+  gap: 6px;
+  margin-top: 4px;
 }
 
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(10, 22, 40, 0.12));
-}
-
-.divider-line.left {
-  background: linear-gradient(-90deg, transparent, rgba(10, 22, 40, 0.12));
-}
-
-.divider-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--gold);
-  border-radius: 50%;
-  transform: rotate(45deg);
-}
-
-.btn-primary {
-  width: 100%;
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
-  border: none;
-  padding: 14px;
-  border-radius: 14px;
-  font-size: 15px;
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
   font-weight: 500;
   letter-spacing: 0.3px;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 8px;
+}
+
+.tag-active {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.tag-inactive {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.tag-username {
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-family: 'Consolas', monospace;
+}
+
+/* ================================================
+   EMPTY STATE
+   ================================================ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 1px dashed var(--line-strong);
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--gold-soft);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.empty-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* ================================================
+   MODAL (employee form, settings)
+   ================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 540px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.modal-body { padding: 20px 24px; }
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
   gap: 8px;
-  position: relative;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-card);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+
+/* ================================================
+   PHOTO UPLOAD
+   ================================================ */
+.photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px dashed var(--line-strong);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.photo-upload.dragging {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+}
+
+.photo-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  flex-shrink: 0;
   overflow: hidden;
 }
 
-.btn-primary::before {
-  content: "";
-  position: absolute;
-  top: 0; right: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(201, 184, 133, 0.2), transparent);
-  transition: right 0.6s ease;
-}
-
-.btn-primary:hover::before { right: 100%; }
-.btn-primary:active { transform: scale(0.98); }
-
-.btn-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-/* Full-width email button - same style as btn-secondary but full width */
-.btn-email-full {
+.photo-preview img {
   width: 100%;
-  margin-bottom: 14px;
-  padding: 12px;
+  height: 100%;
+  object-fit: cover;
 }
 
-.btn-secondary {
-  background: var(--bg-white);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  padding: 12px;
-  border-radius: 14px;
+.photo-upload-text {
+  flex: 1;
+}
+
+.photo-upload-title {
   font-size: 13px;
   font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.photo-upload-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.photo-upload-input { display: none; }
+
+.logo-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px dashed var(--line-strong);
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-}
-
-.btn-secondary:hover {
-  border-color: rgba(10, 22, 40, 0.2);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-secondary:active { transform: scale(0.97); }
-
-.socials {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.social-link {
-  width: 44px;
-  height: 44px;
-  background: var(--bg-white);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  text-decoration: none;
 }
 
-.social-link:hover {
-  transform: translateY(-2px);
-  border-color: rgba(10, 22, 40, 0.18);
-  box-shadow: var(--shadow-sm);
+.logo-upload.dragging {
+  background: var(--gold-soft);
+  border-color: var(--gold);
 }
 
-.social-link svg {
-  width: 19px;
-  height: 19px;
+.logo-preview {
+  min-width: 120px;
+  height: 64px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
-.footer-tag {
-  margin-top: 18px;
-  font-size: 9px;
-  color: #a8a193;
-  letter-spacing: 2px;
+.logo-preview img {
+  max-height: 100%;
+  max-width: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.logo-preview-empty {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.logo-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.logo-action-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.logo-action-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.logo-action-btn.danger:hover {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.photo-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.photo-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 5px 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
   font-weight: 500;
+  transition: all 0.15s ease;
 }
 
+.photo-action-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
+.photo-action-btn.danger:hover {
+  border-color: var(--error);
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.photo-action-btn svg {
+  flex-shrink: 0;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox-row label {
+  flex: 1;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ================================================
+   COMPANY SETTINGS
+   ================================================ */
+.settings-section {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+}
+
+.settings-section-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+/* ================================================
+   TOAST
+   ================================================ */
 .toast {
   position: fixed;
   bottom: 30px;
@@ -729,7 +965,7 @@ html[lang="en"] .office-row {
   box-shadow: var(--shadow-lg);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  z-index: 100;
+  z-index: 1000;
   pointer-events: none;
 }
 
@@ -738,7 +974,374 @@ html[lang="en"] .office-row {
   opacity: 1;
 }
 
-/* ================ Animations ================ */
+.toast.error { background: var(--error); }
+.toast.success { background: var(--success); }
+
+/* ================================================
+   SPINNER
+   ================================================ */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ================================================
+   ROLE BADGE
+   ================================================ */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.role-badge.super-admin {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.role-badge.editor {
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+.role-badge svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ================================================
+   IMAGE CROPPER MODAL
+   ================================================ */
+.cropper-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.cropper-modal {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 540px;
+  width: 100%;
+  max-height: 92vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--line);
+}
+
+.cropper-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cropper-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cropper-modal-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.cropper-container-wrap {
+  background: var(--bg-soft);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cropper-image-target {
+  display: block;
+  max-width: 100%;
+  max-height: 380px;
+  margin: 0 auto;
+}
+
+/* Cropper.js overrides for circular preview */
+.cropper-view-box,
+.cropper-face {
+  border-radius: 50%;
+}
+
+.cropper-view-box {
+  outline: 0;
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.cropper-line, .cropper-point {
+  background-color: var(--gold) !important;
+}
+
+.cropper-point {
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 1 !important;
+}
+
+.cropper-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cropper-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cropper-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  transform: translateY(-1px);
+}
+
+.cropper-btn:active {
+  transform: translateY(0);
+}
+
+.cropper-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cropper-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.cropper-modal-tip {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cropper-modal-tip-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .cropper-modal {
+    padding: 20px 16px;
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+  .cropper-image-target {
+    max-height: 280px;
+  }
+  .cropper-controls {
+    gap: 6px;
+  }
+  .cropper-btn {
+    padding: 7px 11px;
+    font-size: 11px;
+  }
+}
+
+/* ================================================
+   LOCKED / READ-ONLY MODE
+   ================================================ */
+.lock-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.lock-banner-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.lock-banner-text {
+  flex: 1;
+}
+
+.lock-banner-text strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.locked-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+  cursor: default;
+  position: relative;
+}
+
+.locked-card::after {
+  content: "🔒";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+html[lang="en"] .locked-card::after,
+html[dir="ltr"] .locked-card::after {
+  left: auto;
+  right: 12px;
+}
+
+.locked-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.locked-row:last-child { margin-bottom: 0; }
+
+.locked-icon {
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.locked-content {
+  flex: 1;
+}
+
+.locked-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.locked-value {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.locked-value-en {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+  direction: ltr;
+}
+
+.locked-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-right: 6px;
+}
+
+.locked-logo {
+  height: 50px;
+  width: auto;
+  display: block;
+  margin-top: 4px;
+}
+
+.locked-link {
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.locked-link:hover {
+  text-decoration: underline;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold-soft);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ================================================
+   ANIMATIONS
+   ================================================ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -749,205 +1352,392 @@ html[lang="en"] .office-row {
   to { opacity: 1; }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.4); opacity: 0; }
-}
-
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-@media (max-width: 380px) {
-  body { padding: 8px; }
-  .card-body { padding: 44px 22px 20px; }
-  .name { font-size: 22px; margin-bottom: 6px; }
-  .title-row { margin-bottom: 8px; }
-  .avatar-wrap, .avatar { width: 108px; height: 108px; margin-bottom: 14px; }
-  .avatar { font-size: 36px; }
-  .divider { margin: 14px 0; }
-  .btn-primary { padding: 12px; margin-bottom: 8px; }
-  .btn-secondary { padding: 10px; }
-  .btn-grid { margin-bottom: 10px; gap: 6px; }
-  .btn-email-full { margin-bottom: 12px; padding: 11px; }
-  .social-link { width: 40px; height: 40px; }
-  .office-section { margin-top: 14px; padding: 12px 12px 10px; }
-  .footer-tag { margin-top: 14px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+@media (max-width: 600px) {
+  .admin-content { padding: 16px; }
+  .admin-tabs { padding: 0 16px; }
+  .admin-header { padding: 12px 16px; }
+  .employees-grid { grid-template-columns: 1fr; }
+  .modal { max-height: 100vh; border-radius: 0; }
+  .modal-overlay { padding: 0; }
 }
 </style>
 </head>
 <body>
 
-<div class="container" id="app">
-  
-  <!-- Language Toggle -->
-  <div class="lang-toggle hidden" id="lang-toggle">
-    <button id="lang-he" onclick="setLanguage('he')">עב</button>
-    <button id="lang-en" onclick="setLanguage('en')">EN</button>
-  </div>
-  
-  <!-- Loading State -->
-  <div class="loading-state" id="loading">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">טוען...</div>
-  </div>
-
-  <!-- Error State (hidden by default) -->
-  <div class="error-state hidden" id="error">
-    <div class="error-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
+<!-- ============================================
+     LOGIN SCREEN
+     ============================================ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo" id="login-logo">
+      <span class="login-logo-fallback">צ</span>
     </div>
-    <div class="error-title" id="error-title">כרטיס לא נמצא</div>
-    <div class="error-message" id="error-message">העובד שאתה מחפש לא קיים או אינו פעיל במערכת</div>
-    <a href="https://www.sufrin.io" class="error-action">לאתר קבוצת סופרין</a>
-  </div>
-
-  <!-- Card (hidden by default) -->
-  <div class="card hidden" id="card">
-
-    <div class="card-top"></div>
-
-    <div class="card-header">
-      <div class="brand-tag">DIGITAL CARD</div>
-      <div class="status">
-        <div class="status-dot"></div>
-        <span class="status-text">ONLINE</span>
+    <h1 class="login-title">ניהול כרטיסי ביקור דיגיטליים</h1>
+    <p class="login-subtitle">קבוצת סופרין</p>
+    
+    <div class="form-error" id="login-error"></div>
+    
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">אימייל</label>
+        <input class="form-input" type="email" id="login-email" dir="ltr" required autocomplete="email">
       </div>
-    </div>
-
-    <div class="card-body">
-
-      <div class="avatar-wrap">
-        <div class="avatar-ring"></div>
-        <div class="avatar" id="avatar">
-          <span id="avatar-letter">צ</span>
-        </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="login-password">סיסמה</label>
+        <input class="form-input" type="password" id="login-password" dir="ltr" required autocomplete="current-password">
       </div>
-
-      <h1 class="name" id="employee-name">—</h1>
-
-      <div class="title-row">
-        <div class="title-tag">
-          <span class="title-text" id="employee-title">—</span>
-        </div>
-      </div>
-
-      <a href="#" target="_blank" rel="noopener" class="company-logo" id="company-logo-link" aria-label="קבוצת סופרין - לאתר החברה">
-        <span class="company-logo-inner">
-          <img id="company-logo-img" src="" alt="Sufrin Group" style="display:none;">
-          <span id="company-logo-text" style="font-size: 13px; color: var(--muted);">קבוצת סופרין</span>
-          <svg class="company-logo-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M7 17L17 7"/>
-            <polyline points="7 7 17 7 17 17"/>
-          </svg>
-        </span>
-        <span class="company-logo-tagline" id="company-logo-tagline">לאתר הבית »</span>
-      </a>
-
-      <div class="divider">
-        <div class="divider-line left"></div>
-        <div class="divider-dot"></div>
-        <div class="divider-line"></div>
-      </div>
-
-      <button class="btn-primary" id="btn-save-contact" onclick="saveContact()" aria-label="שמור באנשי קשר">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="8.5" cy="7" r="4"/>
-          <line x1="20" y1="8" x2="20" y2="14"/>
-          <line x1="23" y1="11" x2="17" y2="11"/>
-        </svg>
-        <span id="btn-save-contact-text">שמור באנשי קשר</span>
+      
+      <button type="submit" class="btn btn-primary" id="login-btn">
+        <span id="login-btn-text">התחבר</span>
       </button>
-
-      <div class="btn-grid">
-        <a class="btn-secondary" id="whatsapp-link" href="#" target="_blank" rel="noopener" aria-label="פתח WhatsApp">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/>
-          </svg>
-          <span id="whatsapp-text">WhatsApp</span>
-        </a>
-        <a class="btn-secondary" id="phone-link" href="#" aria-label="התקשר">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.4 21 3 14.6 3 6.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.4.6 3.5.1.3 0 .7-.2 1z"/>
-          </svg>
-          <span id="phone-text">התקשר</span>
-        </a>
-      </div>
-
-      <a class="btn-secondary btn-email-full" id="email-link" href="#" aria-label="שלח אימייל">
-        <svg width="17" height="17" viewBox="0 0 24 24"><defs><linearGradient id="mail-grad-btn" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#mail-grad-btn)" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        <span id="email-text">שלח אימייל</span>
-      </a>
-
-      <div class="socials">
-        <a class="social-link" id="instagram-link" href="#" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f9ce34"/><stop offset="50%" stop-color="#ee2a7b"/><stop offset="100%" stop-color="#6228d7"/></linearGradient></defs><path fill="url(#ig-grad)" d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.2-3.2 1.7-4.8 4.9-4.9C8.4 2.2 8.8 2.2 12 2.2zm0 5.8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 6.6c-1.4 0-2.6-1.2-2.6-2.6S10.6 9.4 12 9.4s2.6 1.2 2.6 2.6-1.2 2.6-2.6 2.6zm5.1-6.7c-.5 0-.9.4-.9.9s.4.9.9.9.9-.4.9-.9-.4-.9-.9-.9z"/></svg>
-        </a>
-        <a class="social-link" id="facebook-link" href="#" target="_blank" rel="noopener" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
-        </a>
-        <a class="social-link" id="linkedin-link" href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8.3 18.3H5.7V9.7h2.6v8.6zM7 8.5C6.2 8.5 5.5 7.8 5.5 7s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm11.3 9.8h-2.6v-4.2c0-1 0-2.3-1.4-2.3s-1.6 1.1-1.6 2.2v4.3h-2.6V9.7h2.5v1.2c.4-.7 1.2-1.4 2.5-1.4 2.7 0 3.2 1.8 3.2 4.1v4.7z"/></svg>
-        </a>
-      </div>
-
-      <!-- Office Address Section (shown only if employee has office_location_id) -->
-      <div class="office-section hidden" id="office-section">
-        <div class="office-section-header">
-          <div class="office-section-line"></div>
-          <div class="office-section-label" id="office-section-label">המשרד שלנו</div>
-          <div class="office-section-line"></div>
-        </div>
-        <div class="office-row">
-          <span class="office-icon">📍</span>
-          <div class="office-text" id="office-address">—</div>
-        </div>
-        <div class="office-buttons">
-          <a href="#" target="_blank" rel="noopener" class="office-btn" id="office-waze">
-            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-              <!-- Waze logo - speech bubble shape with face -->
-              <path fill="#33CCFF" d="M32 6C18.7 6 8 16.7 8 30c0 4.3 1.1 8.3 3.1 11.8L7 50l9.4-2.6C20.1 49.6 25.9 51 32 51c1.5 0 2.9-.1 4.3-.3 1.5 2.4 4.2 4 7.2 4 4.7 0 8.5-3.8 8.5-8.5 0-.5-.1-1-.1-1.5C53.6 41.7 56 36 56 30c0-13.3-10.7-24-24-24z"/>
-              <!-- Eyes -->
-              <circle fill="#0a1628" cx="24" cy="28" r="3"/>
-              <circle fill="#0a1628" cx="40" cy="28" r="3"/>
-              <!-- Eye highlights -->
-              <circle fill="#ffffff" cx="25" cy="27" r="1"/>
-              <circle fill="#ffffff" cx="41" cy="27" r="1"/>
-              <!-- Smile -->
-              <path fill="none" stroke="#0a1628" stroke-width="2.5" stroke-linecap="round" d="M22 36 Q32 42 42 36"/>
-            </svg>
-            <span>Waze</span>
-          </a>
-          <a href="#" target="_blank" rel="noopener" class="office-btn" id="office-maps">
-            <svg viewBox="0 0 24 24" fill="#4285F4"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            <span>Maps</span>
-          </a>
-        </div>
-      </div>
-
-      <p class="footer-tag" id="footer-tag">DIGITAL BUSINESS CARD</p>
-
-    </div>
+    </form>
   </div>
-
 </div>
 
-<div class="toast" id="toast">איש הקשר נשמר</div>
+<!-- ============================================
+     ADMIN LAYOUT
+     ============================================ -->
+<div class="admin-layout hidden" id="admin-layout">
+  
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="admin-brand-logo" id="admin-brand-logo">
+        <span class="admin-brand-logo-fallback">צ</span>
+      </div>
+      <div class="admin-brand-divider"></div>
+      <div class="admin-brand-title">ניהול כרטיסי ביקור דיגיטליים</div>
+    </div>
+    <div class="admin-user">
+      <span class="role-badge hidden" id="role-badge">—</span>
+      <span class="admin-user-email" id="admin-user-email">—</span>
+      <button class="btn btn-secondary" onclick="logout()">התנתק</button>
+    </div>
+  </header>
+  
+  <nav class="admin-tabs">
+    <button class="admin-tab active" data-tab="employees" onclick="switchTab('employees')">עובדים</button>
+    <button class="admin-tab" data-tab="offices" onclick="switchTab('offices')">משרדים</button>
+    <button class="admin-tab" data-tab="settings" onclick="switchTab('settings')">הגדרות חברה</button>
+  </nav>
+  
+  <main class="admin-content">
+    
+    <!-- Employees Tab -->
+    <div id="tab-employees">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">עובדים</h2>
+          <p class="section-subtitle" id="employees-count">—</p>
+        </div>
+        <button class="btn btn-primary" style="width:auto;" onclick="openEmployeeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף עובד
+        </button>
+      </div>
+      
+      <div id="employees-list">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p style="color: var(--muted); font-size: 13px;">טוען עובדים...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Offices Tab -->
+    <div id="tab-offices" class="hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">משרדים</h2>
+          <p class="section-subtitle" id="offices-count">—</p>
+        </div>
+        <button id="btn-add-office" class="btn btn-primary" style="width:auto;" onclick="openOfficeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף משרד
+        </button>
+      </div>
+      
+      <div id="offices-list">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p style="color: var(--muted); font-size: 13px;">טוען משרדים...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Tab -->
+    <div id="tab-settings" class="hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">הגדרות חברה</h2>
+          <p class="section-subtitle">קישורים גלובליים שמופיעים בכרטיס של כל עובד</p>
+        </div>
+      </div>
+      
+      <div id="settings-content">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+        </div>
+      </div>
+    </div>
+    
+  </main>
+  
+</div>
 
-<!-- Supabase JS Library -->
+<!-- ============================================
+     EMPLOYEE MODAL
+     ============================================ -->
+<div class="modal-overlay hidden" id="employee-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="employee-modal-title">עובד חדש</h3>
+      <button class="modal-close" onclick="closeEmployeeModal()" aria-label="סגור">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    
+    <form id="employee-form">
+      <div class="modal-body">
+        <input type="hidden" id="emp-id">
+        
+        <!-- Photo Upload -->
+        <div class="form-group">
+          <label class="form-label">תמונת פרופיל</label>
+          <div class="photo-upload" id="photo-upload" onclick="handlePhotoAreaClick(event)">
+            <div class="photo-preview" id="photo-preview">
+              <span id="photo-letter">צ</span>
+            </div>
+            <div class="photo-upload-text">
+              <div class="photo-upload-title" id="photo-upload-title">גרור תמונה לכאן או לחץ לבחירה</div>
+              <div class="photo-upload-hint" id="photo-upload-hint">JPG / PNG / WebP - עד 5MB</div>
+              <div class="photo-actions hidden" id="photo-actions">
+                <button type="button" class="photo-action-btn" onclick="event.stopPropagation(); editCurrentPhoto();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  ערוך חיתוך
+                </button>
+                <button type="button" class="photo-action-btn" onclick="event.stopPropagation(); document.getElementById('photo-input').click();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  החלף תמונה
+                </button>
+                <button type="button" class="photo-action-btn danger" onclick="event.stopPropagation(); removePhoto();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+                  הסר
+                </button>
+              </div>
+            </div>
+            <input type="file" id="photo-input" class="photo-upload-input" accept="image/jpeg,image/png,image/webp">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-username">שם משתמש (URL) <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-username" dir="ltr" required pattern="[a-z0-9_-]+" minlength="2" maxlength="30" placeholder="tsahi">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">אותיות קטנות באנגלית, מספרים, מקפים. למשל: card.sufrin.io/?u=<strong id="username-preview">tsahi</strong></p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-name">שם מלא <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-name" required maxlength="100" placeholder="צחי סופרין">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-name-en">שם מלא באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="emp-name-en" dir="ltr" maxlength="100" placeholder="Tsahi Sufrin">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-title">תפקיד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="emp-title" required maxlength="100" placeholder="יו״ר דירקטוריון">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-title-en">תפקיד באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="emp-title-en" dir="ltr" maxlength="100" placeholder="Chairman of the Board">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-phone">טלפון נייד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="tel" id="emp-phone" dir="ltr" required placeholder="+972544242504">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-email">אימייל <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="email" id="emp-email" dir="ltr" required placeholder="tsahi@sufrin.io">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-order">סדר תצוגה</label>
+          <input class="form-input" type="number" id="emp-order" dir="ltr" min="1" max="9999" value="999">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">מספר נמוך = מופיע ראשון. ברירת מחדל: 999</p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="emp-office">משרד</label>
+          <select class="form-input" id="emp-office">
+            <option value="">— ללא משרד (לא יוצג כתובת) —</option>
+          </select>
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">המשרד יוצג בכרטיס הביקור עם כפתורי ניווט</p>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="emp-active" checked>
+            <label for="emp-active">העובד פעיל (כרטיסו מוצג)</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger hidden" id="btn-delete-employee" onclick="deleteEmployee()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+          מחק
+        </button>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-secondary" onclick="closeEmployeeModal()">ביטול</button>
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-employee">שמור</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================
+     TOAST
+     ============================================ -->
+<!-- ============================================
+     OFFICE MODAL
+     ============================================ -->
+<div class="modal-overlay hidden" id="office-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="office-modal-title">משרד חדש</h3>
+      <button class="modal-close" onclick="closeOfficeModal()" aria-label="סגור">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    
+    <form id="office-form">
+      <div class="modal-body">
+        <input type="hidden" id="office-id">
+        
+        <div style="background:var(--gold-soft);border:1px solid var(--gold-soft);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
+          <p style="font-size:12px;color:var(--gold);margin:0;">
+            💡 <strong>בעברית:</strong> מוצג בכרטיס בעברית.<br>
+            <strong>באנגלית:</strong> מוצג בכרטיס באנגלית. אופציונלי - אם ריק, יוצג העברי.
+          </p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-name">שם המשרד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-name" required maxlength="100" placeholder="משרד ראשי">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-name-en">שם באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-name-en" dir="ltr" maxlength="100" placeholder="Main Office">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-address">כתובת מלאה <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-address" required maxlength="200" placeholder="רחוב הרצל 1, מגדל אלקטרה, קומה 5">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">כולל מספר בית, מגדל, קומה - הכל בשדה אחד</p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-address-en">כתובת באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-address-en" dir="ltr" maxlength="200" placeholder="1 Herzl St., Electra Tower, 5th Floor">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-city">עיר <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-city" required maxlength="50" placeholder="תל אביב">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-city-en">עיר באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-city-en" dir="ltr" maxlength="50" placeholder="Tel Aviv">
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="office-is-main">
+            <label for="office-is-main">משרד ראשי (מוצג כברירת מחדל לעובדים חדשים)</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger hidden" id="btn-delete-office" onclick="deleteOffice()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+          מחק
+        </button>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-secondary" onclick="closeOfficeModal()">ביטול</button>
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-office">שמור</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Image Cropper Modal -->
+<div class="cropper-modal-overlay hidden" id="cropper-modal-overlay">
+  <div class="cropper-modal">
+    <div class="cropper-modal-header">
+      <div>
+        <div class="cropper-modal-title">עריכת תמונת פרופיל</div>
+        <div class="cropper-modal-subtitle">חתוך את התמונה כך שהפנים יהיו במרכז</div>
+      </div>
+    </div>
+    
+    <div class="cropper-modal-tip">
+      <span class="cropper-modal-tip-icon">💡</span>
+      <span>גרור את התמונה למיקום הרצוי, השתמש בכפתורים להגדלה / סיבוב</span>
+    </div>
+    
+    <div class="cropper-container-wrap">
+      <img id="cropper-image-target" class="cropper-image-target" alt="">
+    </div>
+    
+    <div class="cropper-controls">
+      <button class="cropper-btn" type="button" onclick="cropperZoom(0.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        זום פנימה
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperZoom(-0.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        זום החוצה
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperRotate(-90)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        סובב שמאל
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperRotate(90)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        סובב ימין
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperReset()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        איפוס
+      </button>
+    </div>
+    
+    <div class="cropper-modal-actions">
+      <button class="btn btn-secondary" type="button" onclick="closeCropper()">ביטול</button>
+      <button class="btn btn-primary" type="button" onclick="applyCrop()" id="crop-apply-btn">החל חיתוך</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
 
 <script>
 // ============================================
@@ -956,391 +1746,1378 @@ html[lang="en"] .office-row {
 const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
 
+// ============================================
+// LOCKED CONFIGURATION
+// ============================================
+// When true, company settings & offices are READ-ONLY in the UI.
+// To unlock for editing - change to false (re-deploy required).
+// Recommended: keep TRUE for production, prevents accidental changes.
+const READ_ONLY_MODE = true;
+const PHOTOS_BUCKET = 'employee-photos';
+
 const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
 
 // State
-let currentEmployee = null;
-let currentCompany = null;
-let currentOffice = null;
-let currentLang = 'he';
+let currentUser = null;
+let currentUserRole = null;  // 'super_admin' or 'editor' or null
+let employees = [];
+let companySettings = null;
+let editingEmployee = null;
+let pendingPhotoFile = null;
+let pendingPhotoRemove = false;
+let pendingLogoFile = null;
+let pendingLogoRemove = false;
 
 // ============================================
-// TRANSLATIONS
-// ============================================
-const i18n = {
-  he: {
-    loading: 'טוען...',
-    saveContact: 'שמור באנשי קשר',
-    whatsapp: 'WhatsApp',
-    call: 'התקשר',
-    sendEmail: 'שלח אימייל',
-    ourOffice: 'המשרד שלנו',
-    websiteTagline: 'לאתר הבית »',
-    waze: 'Waze',
-    maps: 'Maps',
-    errorNotFoundTitle: 'כרטיס לא נמצא',
-    errorNotFoundMsg: 'העובד שאתה מחפש לא קיים או אינו פעיל במערכת',
-    errorNoUserTitle: 'לא צוין עובד',
-    errorNoUserMsg: 'הקישור חסר פרמטר ?u= עם שם העובד',
-    errorInvalidTitle: 'קישור לא תקין',
-    errorInvalidMsg: 'שם המשתמש מכיל תווים לא חוקיים',
-    errorSystemTitle: 'שגיאה במערכת',
-    errorSystemMsg: 'לא ניתן לטעון את הגדרות החברה. נסה שוב מאוחר יותר',
-    errorLoadTitle: 'שגיאה בטעינה',
-    errorLoadMsg: 'לא ניתן לטעון את הכרטיס. בדוק את החיבור לאינטרנט ונסה שוב',
-    errorAction: 'לאתר קבוצת סופרין',
-    contactSaved: 'איש הקשר נשמר'
-  },
-  en: {
-    loading: 'Loading...',
-    saveContact: 'Save Contact',
-    whatsapp: 'WhatsApp',
-    call: 'Call',
-    sendEmail: 'Send Email',
-    ourOffice: 'OUR OFFICE',
-    websiteTagline: 'Visit our Homepage »',
-    waze: 'Waze',
-    maps: 'Maps',
-    errorNotFoundTitle: 'Card Not Found',
-    errorNotFoundMsg: 'The employee you are looking for does not exist or is not active',
-    errorNoUserTitle: 'No User Specified',
-    errorNoUserMsg: 'The link is missing the ?u= parameter with the employee username',
-    errorInvalidTitle: 'Invalid Link',
-    errorInvalidMsg: 'The username contains invalid characters',
-    errorSystemTitle: 'System Error',
-    errorSystemMsg: 'Unable to load company settings. Please try again later',
-    errorLoadTitle: 'Loading Error',
-    errorLoadMsg: 'Unable to load card. Check your internet connection and try again',
-    errorAction: 'Visit Sufrin Group',
-    contactSaved: 'Contact saved'
-  }
-};
-
-function t(key) {
-  return i18n[currentLang][key] || i18n.he[key] || key;
-}
-
-// ============================================
-// LANGUAGE MANAGEMENT
+// LOGO MANAGEMENT
 // ============================================
 
-function setLanguage(lang) {
-  if (lang !== 'he' && lang !== 'en') return;
-  currentLang = lang;
-  
-  // Update <html> attributes
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-  
-  // Update toggle buttons active state
-  document.getElementById('lang-he').classList.toggle('active', lang === 'he');
-  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-  
-  // Update all translatable static texts
-  document.querySelector('.loading-text').textContent = t('loading');
-  document.getElementById('btn-save-contact-text').textContent = t('saveContact');
-  document.getElementById('whatsapp-text').textContent = t('whatsapp');
-  document.getElementById('phone-text').textContent = t('call');
-  document.getElementById('email-text').textContent = t('sendEmail');
-  document.getElementById('office-section-label').textContent = t('ourOffice');
-  document.getElementById('company-logo-tagline').textContent = t('websiteTagline');
-  
-  // Update error if visible
-  const errorEl = document.getElementById('error');
-  if (!errorEl.classList.contains('hidden') && errorEl.dataset.titleKey) {
-    document.getElementById('error-title').textContent = t(errorEl.dataset.titleKey);
-    document.getElementById('error-message').textContent = t(errorEl.dataset.messageKey);
-    document.querySelector('.error-action').textContent = t('errorAction');
-  }
-  
-  // Re-render employee data if loaded
-  if (currentEmployee && currentCompany) {
-    renderEmployeeData();
-  }
-}
-
-// ============================================
-// MAIN: Load card data on page load
-// ============================================
-async function loadCard() {
+async function loadLogoForLoginScreen() {
+  // Load logo BEFORE auth (uses anon access to company_settings)
   try {
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get('u');
-
-    if (!username) {
-      // No username specified - redirect to landing page
-      window.location.replace('landing.html');
-      return;
-    }
-
-    if (!/^[a-z0-9_-]+$/i.test(username) || username.length > 30) {
-      showError('errorInvalidTitle', 'errorInvalidMsg');
-      return;
-    }
-
-    const [employeeResult, companyResult] = await Promise.all([
-      sb.from('employees').select('*').eq('username', username).eq('is_active', true).single(),
-      sb.from('company_settings').select('*').single()
-    ]);
-
-    if (employeeResult.error || !employeeResult.data) {
-      showError('errorNotFoundTitle', 'errorNotFoundMsg');
-      return;
-    }
-
-    if (companyResult.error || !companyResult.data) {
-      showError('errorSystemTitle', 'errorSystemMsg');
-      return;
-    }
-
-    currentEmployee = employeeResult.data;
-    currentCompany = companyResult.data;
+    const { data, error } = await sb
+      .from('company_settings')
+      .select('logo_url')
+      .single();
     
-    // Load office if employee has one assigned
-    if (currentEmployee.office_location_id) {
-      try {
-        const { data: officeData, error: officeError } = await sb
-          .from('office_locations')
-          .select('*')
-          .eq('id', currentEmployee.office_location_id)
-          .single();
-        if (!officeError && officeData) {
-          currentOffice = officeData;
-        }
-      } catch (e) {
-        console.warn('Could not load office:', e);
-      }
+    if (!error && data?.logo_url) {
+      applyLogoToLogin(data.logo_url);
     }
+  } catch (e) {
+    console.warn('Could not load logo:', e);
+  }
+}
 
-    renderEmployeeData();
+function applyLogoToLogin(logoUrl) {
+  if (!logoUrl) return;
+  const loginLogo = document.getElementById('login-logo');
+  if (loginLogo) {
+    loginLogo.classList.add('has-image');
+    loginLogo.innerHTML = `<img src="${escapeHtml(logoUrl)}" alt="לוגו">`;
+  }
+}
+
+function applyLogoToAdmin(logoUrl) {
+  const adminLogo = document.getElementById('admin-brand-logo');
+  if (!adminLogo) return;
+  
+  if (logoUrl) {
+    adminLogo.classList.add('has-image');
+    adminLogo.innerHTML = `<img src="${escapeHtml(logoUrl)}" alt="לוגו">`;
+  } else {
+    adminLogo.classList.remove('has-image');
+    adminLogo.innerHTML = '<span class="admin-brand-logo-fallback">צ</span>';
+  }
+}
+
+// ============================================
+// AUTH
+// ============================================
+
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    await loadUserRole();
+    showAdmin();
+  } else {
+    showLogin();
+  }
+}
+
+async function loadUserRole() {
+  if (!currentUser) {
+    currentUserRole = null;
+    return;
+  }
+  try {
+    const { data, error } = await sb
+      .from('admin_users')
+      .select('role')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
     
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('card').classList.remove('hidden');
-    document.getElementById('lang-toggle').classList.remove('hidden');
-
+    if (error) throw error;
+    currentUserRole = data ? data.role : null;
   } catch (error) {
-    console.error('Error loading card:', error);
-    showError('errorLoadTitle', 'errorLoadMsg');
+    console.error('Could not load user role:', error);
+    currentUserRole = null;
+  }
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const btnText = document.getElementById('login-btn-text');
+  const errorEl = document.getElementById('login-error');
+  
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  btnText.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    currentUser = data.user;
+    await loadUserRole();
+    
+    // Block users that are not registered as admins
+    if (!currentUserRole) {
+      await sb.auth.signOut();
+      currentUser = null;
+      throw new Error('NO_ADMIN_ACCESS');
+    }
+    
+    showAdmin();
+  } catch (error) {
+    errorEl.textContent = translateAuthError(error.message);
+    errorEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'התחבר';
+  }
+});
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  currentUserRole = null;
+  employees = [];
+  companySettings = null;
+  showLogin();
+}
+
+function translateAuthError(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('no_admin_access')) return 'אין לך הרשאת גישה לדשבורד. פנה למנהל המערכת.';
+  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'אימייל או סיסמה שגויים';
+  if (m.includes('email not confirmed')) return 'האימייל טרם אומת';
+  if (m.includes('too many')) return 'יותר מדי ניסיונות. נסה שוב בעוד כמה דקות';
+  if (m.includes('network')) return 'בעיית חיבור לאינטרנט';
+  return 'שגיאה: ' + msg;
+}
+
+// ============================================
+// SCREEN MANAGEMENT
+// ============================================
+
+function showLogin() {
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('admin-layout').classList.add('hidden');
+}
+
+function showAdmin() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('admin-layout').classList.remove('hidden');
+  document.getElementById('admin-user-email').textContent = currentUser.email;
+  
+  // Show role badge
+  const badge = document.getElementById('role-badge');
+  if (currentUserRole === 'super_admin') {
+    badge.className = 'role-badge super-admin';
+    badge.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"/></svg>
+      מנהל על
+    `;
+    badge.classList.remove('hidden');
+  } else if (currentUserRole === 'editor') {
+    badge.className = 'role-badge editor';
+    badge.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      עורך
+    `;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+  
+  loadEmployees();
+  loadCompanySettings();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('tab-employees').classList.toggle('hidden', tab !== 'employees');
+  document.getElementById('tab-offices').classList.toggle('hidden', tab !== 'offices');
+  document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
+  
+  // Load offices when switching to that tab
+  if (tab === 'offices') {
+    loadOffices();
   }
 }
 
 // ============================================
-// Render employee + company data
+// EMPLOYEES
 // ============================================
-function renderEmployeeData() {
-  const emp = currentEmployee;
-  const company = currentCompany;
-  
-  // Decide which language fields to use (fallback to Hebrew)
-  const displayName = (currentLang === 'en' && emp.full_name_en) ? emp.full_name_en : emp.full_name;
-  const displayTitle = (currentLang === 'en' && emp.title_en) ? emp.title_en : emp.title;
-  const displayCompany = (currentLang === 'en' && company.company_name_en) ? company.company_name_en : company.company_name;
 
-  // Page title and Open Graph
-  document.title = `${displayName} | ${displayCompany}`;
-  document.querySelector('meta[property="og:title"]').setAttribute('content', `${displayName} | ${displayCompany}`);
-  document.querySelector('meta[property="og:description"]').setAttribute('content', displayTitle);
-
-  // Avatar
-  const avatar = document.getElementById('avatar');
-  if (emp.photo_url) {
-    avatar.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(displayName)}">`;
-  } else {
-    avatar.innerHTML = `<span id="avatar-letter">${escapeHtml(displayName.charAt(0))}</span>`;
+async function loadEmployees() {
+  try {
+    const { data, error } = await sb
+      .from('employees')
+      .select('*')
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    employees = data || [];
+    renderEmployees();
+  } catch (error) {
+    console.error('Load employees error:', error);
+    showToast('שגיאה בטעינת עובדים', 'error');
   }
-
-  // Name & title
-  document.getElementById('employee-name').textContent = displayName;
-  document.getElementById('employee-title').textContent = displayTitle;
-
-  // Company logo
-  const logoLink = document.getElementById('company-logo-link');
-  const logoImg = document.getElementById('company-logo-img');
-  const logoText = document.getElementById('company-logo-text');
-  const logoExternal = document.querySelector('.company-logo-external');
-  const logoTagline = document.getElementById('company-logo-tagline');
-  
-  logoLink.href = company.website_url || '#';
-  
-  // Show external icon and tagline only if there's a real website to navigate to
-  const hasWebsite = !!company.website_url;
-  if (logoExternal) {
-    logoExternal.style.display = hasWebsite ? 'inline-block' : 'none';
-  }
-  if (logoTagline) {
-    logoTagline.style.display = hasWebsite ? 'inline-block' : 'none';
-  }
-  
-  if (company.logo_url) {
-    logoImg.src = company.logo_url;
-    logoImg.style.display = 'block';
-    logoText.style.display = 'none';
-  } else {
-    logoImg.style.display = 'none';
-    logoText.style.display = 'inline';
-    logoText.textContent = displayCompany;
-  }
-
-  // Phone & WhatsApp
-  const cleanPhone = emp.phone.replace(/[^0-9]/g, '');
-  document.getElementById('whatsapp-link').href = `https://wa.me/${cleanPhone}`;
-  document.getElementById('phone-link').href = `tel:${emp.phone}`;
-  
-  // Email
-  document.getElementById('email-link').href = `mailto:${emp.email}`;
-
-  // Social links
-  if (company.instagram_url) document.getElementById('instagram-link').href = company.instagram_url;
-  if (company.facebook_url) document.getElementById('facebook-link').href = company.facebook_url;
-  if (company.linkedin_url) document.getElementById('linkedin-link').href = company.linkedin_url;
-  
-  // Update translatable button texts
-  document.getElementById('btn-save-contact-text').textContent = t('saveContact');
-  document.getElementById('whatsapp-text').textContent = t('whatsapp');
-  document.getElementById('phone-text').textContent = t('call');
-  document.getElementById('email-text').textContent = t('sendEmail');
-  document.getElementById('office-section-label').textContent = t('ourOffice');
-  document.getElementById('company-logo-tagline').textContent = t('websiteTagline');
-  
-  // Render office address if available
-  renderOfficeSection();
 }
 
-// ============================================
-// Render office address section
-// ============================================
-function renderOfficeSection() {
-  const officeSection = document.getElementById('office-section');
+function renderEmployees() {
+  const list = document.getElementById('employees-list');
+  const count = document.getElementById('employees-count');
   
-  if (!currentOffice) {
-    officeSection.classList.add('hidden');
+  count.textContent = `${employees.length} עובדים במערכת`;
+  
+  if (employees.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7a6a3d" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <h3 class="empty-title">אין עובדים עדיין</h3>
+        <p class="empty-subtitle">הוסף עובד ראשון כדי להתחיל</p>
+        <button class="btn btn-primary" style="width:auto;" onclick="openEmployeeModal()">הוסף עובד ראשון</button>
+      </div>
+    `;
     return;
   }
   
-  // Decide which language fields to use (fallback to Hebrew)
-  const displayAddress = (currentLang === 'en' && currentOffice.address_line_en) 
-    ? currentOffice.address_line_en 
-    : currentOffice.address_line;
-  const displayCity = (currentLang === 'en' && currentOffice.city_en) 
-    ? currentOffice.city_en 
-    : currentOffice.city;
+  list.innerHTML = '<div class="employees-grid">' + employees.map(emp => {
+    const cardUrl = `https://card.sufrin.io/?u=${encodeURIComponent(emp.username)}`;
+    const shareText = `${emp.full_name} - ${emp.title}`;
+    
+    return `
+    <div class="employee-card ${!emp.is_active ? 'inactive' : ''}">
+      <div class="employee-card-main" onclick="openEmployeeModal('${emp.id}')">
+        <div class="employee-avatar">
+          ${emp.photo_url 
+            ? `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(emp.full_name)}">` 
+            : `<span>${escapeHtml(emp.full_name.charAt(0))}</span>`
+          }
+        </div>
+        <div class="employee-info">
+          <div class="employee-name">${escapeHtml(emp.full_name)}</div>
+          <div class="employee-title">${escapeHtml(emp.title)}</div>
+          <div class="employee-meta">
+            <span class="tag tag-username">${escapeHtml(emp.username)}</span>
+            ${emp.is_active 
+              ? '<span class="tag tag-active">פעיל</span>'
+              : '<span class="tag tag-inactive">מושבת</span>'
+            }
+          </div>
+        </div>
+      </div>
+      <div class="employee-share">
+        <div class="share-url" title="${escapeHtml(cardUrl)}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <span class="share-url-text">card.sufrin.io/?u=${escapeHtml(emp.username)}</span>
+        </div>
+        <div class="share-buttons">
+          <button class="share-btn" onclick="copyEmployeeLink(event, '${escapeHtml(cardUrl)}')" title="העתק קישור">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>העתק</span>
+          </button>
+          <button class="share-btn share-btn-whatsapp" onclick="shareViaWhatsApp(event, '${escapeHtml(cardUrl)}', '${escapeHtml(shareText)}')" title="שתף ב-WhatsApp">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366">
+              <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </button>
+          <button class="share-btn" onclick="shareViaEmail(event, '${escapeHtml(cardUrl)}', '${escapeHtml(shareText)}')" title="שלח באימייל">
+            <svg width="14" height="14" viewBox="0 0 24 24"><defs><linearGradient id="mail-share-${escapeHtml(emp.id)}" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#mail-share-${escapeHtml(emp.id)})" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span>אימייל</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  }).join('') + '</div>';
+}
+
+// ============================================
+// SHARE FUNCTIONS
+// ============================================
+
+async function copyEmployeeLink(event, url) {
+  event.stopPropagation();
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('הקישור הועתק!', 'success');
+  } catch (err) {
+    // Fallback for older browsers
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      showToast('הקישור הועתק!', 'success');
+    } catch (e) {
+      showToast('שגיאה בהעתקה', 'error');
+    }
+    document.body.removeChild(textarea);
+  }
+}
+
+function shareViaWhatsApp(event, url, text) {
+  event.stopPropagation();
+  const message = `${text}\n${url}`;
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+}
+
+function shareViaEmail(event, url, text) {
+  event.stopPropagation();
+  const subject = `כרטיס ביקור דיגיטלי - ${text}`;
+  const body = `שלום,\n\nמצורף קישור לכרטיס הביקור הדיגיטלי שלי:\n${url}\n\nתודה!`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// ============================================
+// EMPLOYEE MODAL
+// ============================================
+
+function openEmployeeModal(empId = null) {
+  editingEmployee = empId ? employees.find(e => e.id === empId) : null;
+  pendingPhotoFile = null;
+  pendingPhotoRemove = false;
   
-  // Build the address text with line breaks
-  const addressEl = document.getElementById('office-address');
-  addressEl.innerHTML = `
-    ${escapeHtml(displayAddress)}<br>
-    <span class="office-city">${escapeHtml(displayCity)}</span>
+  const modal = document.getElementById('employee-modal');
+  const title = document.getElementById('employee-modal-title');
+  const deleteBtn = document.getElementById('btn-delete-employee');
+  
+  // Load offices into dropdown if not loaded yet
+  loadOfficesForDropdown();
+  
+  if (editingEmployee) {
+    title.textContent = 'עריכת עובד';
+    // Only show delete button to super_admin
+    if (currentUserRole === 'super_admin') {
+      deleteBtn.classList.remove('hidden');
+    } else {
+      deleteBtn.classList.add('hidden');
+    }
+    fillEmployeeForm(editingEmployee);
+  } else {
+    title.textContent = 'עובד חדש';
+    deleteBtn.classList.add('hidden');
+    clearEmployeeForm();
+    // Auto-fill defaults for new employees
+    setTimeout(() => {
+      // Auto-select main office
+      const mainOffice = offices.find(o => o.is_main);
+      if (mainOffice) {
+        document.getElementById('emp-office').value = mainOffice.id;
+      }
+      // Auto-calculate next display_order (max + 1)
+      const maxOrder = employees.length > 0 
+        ? Math.max(...employees.map(e => e.display_order || 0))
+        : 0;
+      document.getElementById('emp-order').value = maxOrder + 1;
+    }, 100);
+  }
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+async function loadOfficesForDropdown() {
+  // If offices already loaded (from offices tab), use them
+  if (offices.length === 0) {
+    try {
+      const { data, error } = await sb
+        .from('office_locations')
+        .select('*')
+        .order('display_order', { ascending: true });
+      if (!error) offices = data || [];
+    } catch (e) {
+      console.warn('Could not load offices:', e);
+    }
+  }
+  
+  const select = document.getElementById('emp-office');
+  // Clear existing options except the first one
+  select.innerHTML = '<option value="">— ללא משרד (לא יוצג כתובת) —</option>';
+  offices.forEach(office => {
+    const opt = document.createElement('option');
+    opt.value = office.id;
+    opt.textContent = `${office.name} - ${office.city}`;
+    select.appendChild(opt);
+  });
+}
+
+function closeEmployeeModal() {
+  document.getElementById('employee-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  editingEmployee = null;
+  pendingPhotoFile = null;
+}
+
+function fillEmployeeForm(emp) {
+  document.getElementById('emp-id').value = emp.id;
+  document.getElementById('emp-username').value = emp.username;
+  document.getElementById('emp-name').value = emp.full_name;
+  document.getElementById('emp-name-en').value = emp.full_name_en || '';
+  document.getElementById('emp-title').value = emp.title;
+  document.getElementById('emp-title-en').value = emp.title_en || '';
+  document.getElementById('emp-phone').value = emp.phone;
+  document.getElementById('emp-email').value = emp.email;
+  document.getElementById('emp-order').value = emp.display_order;
+  document.getElementById('emp-active').checked = emp.is_active;
+  document.getElementById('emp-office').value = emp.office_location_id || '';
+  document.getElementById('username-preview').textContent = emp.username;
+  
+  const preview = document.getElementById('photo-preview');
+  const actions = document.getElementById('photo-actions');
+  const title = document.getElementById('photo-upload-title');
+  const hint = document.getElementById('photo-upload-hint');
+  
+  if (emp.photo_url) {
+    preview.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="">`;
+    actions.classList.remove('hidden');
+    title.textContent = 'תמונה קיימת';
+    hint.textContent = 'גרור תמונה חדשה או השתמש בכפתורים למטה';
+  } else {
+    preview.innerHTML = `<span>${escapeHtml(emp.full_name.charAt(0) || '?')}</span>`;
+    actions.classList.add('hidden');
+    title.textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+    hint.textContent = 'JPG / PNG / WebP - עד 5MB';
+  }
+}
+
+function clearEmployeeForm() {
+  document.getElementById('emp-id').value = '';
+  document.getElementById('emp-username').value = '';
+  document.getElementById('emp-name').value = '';
+  document.getElementById('emp-name-en').value = '';
+  document.getElementById('emp-title').value = '';
+  document.getElementById('emp-title-en').value = '';
+  document.getElementById('emp-phone').value = '';
+  document.getElementById('emp-email').value = '';
+  document.getElementById('emp-order').value = '999';
+  document.getElementById('emp-active').checked = true;
+  document.getElementById('emp-office').value = '';
+  document.getElementById('username-preview').textContent = 'username';
+  document.getElementById('photo-preview').innerHTML = '<span>?</span>';
+  document.getElementById('photo-actions').classList.add('hidden');
+  document.getElementById('photo-upload-title').textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+  document.getElementById('photo-upload-hint').textContent = 'JPG / PNG / WebP - עד 5MB';
+}
+
+// Live preview of username
+document.getElementById('emp-username').addEventListener('input', (e) => {
+  const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  e.target.value = val;
+  document.getElementById('username-preview').textContent = val || 'username';
+});
+
+// Save employee
+document.getElementById('employee-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const btn = document.getElementById('btn-save-employee');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    let photoUrl = editingEmployee?.photo_url || null;
+    
+    // Handle photo upload first
+    if (pendingPhotoFile) {
+      const username = document.getElementById('emp-username').value.trim();
+      const fileName = `${username}-${Date.now()}.${pendingPhotoFile.name.split('.').pop().toLowerCase()}`;
+      
+      const { data: uploadData, error: uploadError } = await sb.storage
+        .from(PHOTOS_BUCKET)
+        .upload(fileName, pendingPhotoFile, { cacheControl: '3600', upsert: false });
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: urlData } = sb.storage.from(PHOTOS_BUCKET).getPublicUrl(uploadData.path);
+      photoUrl = urlData.publicUrl;
+      
+      // Delete old photo if exists
+      if (editingEmployee?.photo_url) {
+        await deleteOldPhoto(editingEmployee.photo_url);
+      }
+    } else if (pendingPhotoRemove && editingEmployee?.photo_url) {
+      await deleteOldPhoto(editingEmployee.photo_url);
+      photoUrl = null;
+    }
+    
+    const data = {
+      username: document.getElementById('emp-username').value.trim(),
+      full_name: document.getElementById('emp-name').value.trim(),
+      full_name_en: document.getElementById('emp-name-en').value.trim() || null,
+      title: document.getElementById('emp-title').value.trim(),
+      title_en: document.getElementById('emp-title-en').value.trim() || null,
+      phone: document.getElementById('emp-phone').value.trim(),
+      email: document.getElementById('emp-email').value.trim(),
+      display_order: parseInt(document.getElementById('emp-order').value) || 999,
+      is_active: document.getElementById('emp-active').checked,
+      office_location_id: document.getElementById('emp-office').value || null,
+      photo_url: photoUrl
+    };
+    
+    let result;
+    if (editingEmployee) {
+      result = await sb.from('employees').update(data).eq('id', editingEmployee.id);
+    } else {
+      result = await sb.from('employees').insert(data);
+    }
+    
+    if (result.error) throw result.error;
+    
+    showToast(editingEmployee ? 'העובד עודכן' : 'העובד נוסף', 'success');
+    closeEmployeeModal();
+    loadEmployees();
+    
+  } catch (error) {
+    console.error('Save error:', error);
+    let msg = 'שגיאה בשמירה';
+    if (error.message?.includes('username_format')) msg = 'שם משתמש לא תקין (אותיות קטנות, מספרים, מקפים, 2-30 תווים)';
+    else if (error.message?.includes('email_format')) msg = 'כתובת אימייל לא תקינה';
+    else if (error.message?.includes('phone_format')) msg = 'מספר טלפון קצר מדי';
+    else if (error.message?.includes('duplicate') || error.code === '23505') msg = 'שם המשתמש כבר תפוס';
+    else if (error.message) msg += ': ' + error.message;
+    showToast(msg, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'שמור';
+  }
+});
+
+async function deleteOldPhoto(url) {
+  try {
+    const path = url.split(`/${PHOTOS_BUCKET}/`).pop();
+    if (path) await sb.storage.from(PHOTOS_BUCKET).remove([path]);
+  } catch (e) {
+    console.warn('Could not delete old photo:', e);
+  }
+}
+
+async function deleteEmployee() {
+  if (!editingEmployee) return;
+  if (!confirm(`למחוק את ${editingEmployee.full_name}? לא ניתן לשחזר.`)) return;
+  
+  try {
+    if (editingEmployee.photo_url) await deleteOldPhoto(editingEmployee.photo_url);
+    
+    const { error } = await sb.from('employees').delete().eq('id', editingEmployee.id);
+    if (error) throw error;
+    
+    showToast('העובד נמחק', 'success');
+    closeEmployeeModal();
+    loadEmployees();
+  } catch (error) {
+    console.error('Delete error:', error);
+    showToast('שגיאה במחיקה: ' + error.message, 'error');
+  }
+}
+
+// ============================================
+// PHOTO UPLOAD (drag & drop + click)
+// ============================================
+
+const photoUpload = document.getElementById('photo-upload');
+const photoInput = document.getElementById('photo-input');
+
+photoInput.addEventListener('change', (e) => {
+  if (e.target.files[0]) handlePhotoSelected(e.target.files[0]);
+});
+
+photoUpload.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  photoUpload.classList.add('dragging');
+});
+
+photoUpload.addEventListener('dragleave', () => {
+  photoUpload.classList.remove('dragging');
+});
+
+photoUpload.addEventListener('drop', (e) => {
+  e.preventDefault();
+  photoUpload.classList.remove('dragging');
+  if (e.dataTransfer.files[0]) handlePhotoSelected(e.dataTransfer.files[0]);
+});
+
+function handlePhotoSelected(file) {
+  // Validate type
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    showToast('סוג קובץ לא נתמך. השתמש ב-JPG/PNG/WebP', 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('הקובץ גדול מדי. עד 5MB', 'error');
+    return;
+  }
+  
+  // Open cropper instead of saving directly
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    openCropper(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+// ============================================
+// IMAGE CROPPER
+// ============================================
+let cropperInstance = null;
+
+function openCropper(imageDataUrl) {
+  const overlay = document.getElementById('cropper-modal-overlay');
+  const img = document.getElementById('cropper-image-target');
+  
+  img.src = imageDataUrl;
+  overlay.classList.remove('hidden');
+  
+  // Destroy previous instance if exists
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+  
+  // Initialize Cropper after image loads
+  img.onload = () => {
+    cropperInstance = new Cropper(img, {
+      aspectRatio: 1,           // Square (will appear circular due to CSS)
+      viewMode: 1,              // Restrict crop box to canvas
+      dragMode: 'move',         // Drag to move image
+      autoCropArea: 0.85,       // Initial crop area size
+      restore: false,
+      guides: false,
+      center: true,
+      highlight: false,
+      cropBoxMovable: false,    // User moves the IMAGE, not the box
+      cropBoxResizable: false,  // Fixed size box
+      toggleDragModeOnDblclick: false,
+      background: false,
+      modal: true,
+      minContainerWidth: 300,
+      minContainerHeight: 300,
+      responsive: true,
+      zoomable: true,
+      zoomOnTouch: true,
+      zoomOnWheel: true
+    });
+  };
+}
+
+function closeCropper() {
+  const overlay = document.getElementById('cropper-modal-overlay');
+  overlay.classList.add('hidden');
+  
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+}
+
+function cropperZoom(delta) {
+  if (cropperInstance) cropperInstance.zoom(delta);
+}
+
+function cropperRotate(degrees) {
+  if (cropperInstance) cropperInstance.rotate(degrees);
+}
+
+function cropperReset() {
+  if (cropperInstance) cropperInstance.reset();
+}
+
+function applyCrop() {
+  if (!cropperInstance) return;
+  
+  const btn = document.getElementById('crop-apply-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  // Get cropped image as canvas with reasonable size
+  const canvas = cropperInstance.getCroppedCanvas({
+    width: 800,
+    height: 800,
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'high',
+  });
+  
+  // Convert to JPEG blob (smaller than PNG, sufficient for photos)
+  canvas.toBlob((blob) => {
+    if (!blob) {
+      showToast('שגיאה בחיתוך התמונה', 'error');
+      btn.disabled = false;
+      btn.textContent = 'החל חיתוך';
+      return;
+    }
+    
+    // Create File from blob
+    const croppedFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+    
+    // Save as pending photo
+    pendingPhotoFile = croppedFile;
+    pendingPhotoRemove = false;
+    
+    // Update preview
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    document.getElementById('photo-preview').innerHTML = `<img src="${dataUrl}" alt="">`;
+    
+    // Show actions buttons
+    document.getElementById('photo-actions').classList.remove('hidden');
+    document.getElementById('photo-upload-title').textContent = 'תמונה מוכנה';
+    document.getElementById('photo-upload-hint').textContent = 'גרור תמונה חדשה או השתמש בכפתורים למטה';
+    
+    // Close cropper
+    closeCropper();
+    
+    btn.disabled = false;
+    btn.textContent = 'החל חיתוך';
+    
+    showToast('התמונה נחתכה בהצלחה', 'success');
+  }, 'image/jpeg', 0.92);
+}
+
+// ============================================
+// PHOTO ACTION BUTTONS
+// ============================================
+
+// Click handler for photo upload area (only opens file picker if no photo exists)
+function handlePhotoAreaClick(event) {
+  // If clicking on action buttons, do nothing (their handlers will fire)
+  if (event.target.closest('.photo-action-btn')) return;
+  
+  // If photo exists, do nothing on area click (use buttons instead)
+  const actions = document.getElementById('photo-actions');
+  if (!actions.classList.contains('hidden')) return;
+  
+  // No photo yet - open file picker
+  document.getElementById('photo-input').click();
+}
+
+// Re-edit current photo (the one already saved or just uploaded)
+async function editCurrentPhoto() {
+  // Try to get current photo source
+  const previewImg = document.querySelector('#photo-preview img');
+  if (!previewImg) {
+    showToast('אין תמונה לעריכה', 'error');
+    return;
+  }
+  
+  const imgSrc = previewImg.src;
+  
+  // If it's already a data URL (just uploaded), use it directly
+  if (imgSrc.startsWith('data:')) {
+    openCropper(imgSrc);
+    return;
+  }
+  
+  // Otherwise, fetch the image and convert to data URL
+  showToast('טוען תמונה...', 'info');
+  try {
+    const response = await fetch(imgSrc, { mode: 'cors' });
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.onload = (e) => openCropper(e.target.result);
+    reader.readAsDataURL(blob);
+  } catch (error) {
+    console.error('Could not load image for editing:', error);
+    showToast('שגיאה בטעינת התמונה. נסה להעלות מחדש.', 'error');
+  }
+}
+
+// Remove photo
+function removePhoto() {
+  if (!confirm('להסיר את התמונה?')) return;
+  
+  pendingPhotoFile = null;
+  pendingPhotoRemove = true;
+  
+  const empName = document.getElementById('emp-name').value || '?';
+  const firstChar = empName.charAt(0) || '?';
+  
+  document.getElementById('photo-preview').innerHTML = `<span>${escapeHtml(firstChar)}</span>`;
+  document.getElementById('photo-actions').classList.add('hidden');
+  document.getElementById('photo-upload-title').textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+  document.getElementById('photo-upload-hint').textContent = 'JPG / PNG / WebP - עד 5MB';
+  
+  showToast('התמונה הוסרה', 'success');
+}
+
+// ============================================
+// OFFICES MANAGEMENT
+// ============================================
+
+let offices = [];
+let editingOffice = null;
+
+async function loadOffices() {
+  try {
+    const { data, error } = await sb
+      .from('office_locations')
+      .select('*')
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    offices = data || [];
+    
+    // Hide "Add Office" button in read-only mode
+    const addBtn = document.getElementById('btn-add-office');
+    if (addBtn && READ_ONLY_MODE) {
+      addBtn.style.display = 'none';
+    }
+    
+    renderOffices();
+  } catch (error) {
+    console.error('Load offices error:', error);
+    showToast('שגיאה בטעינת משרדים', 'error');
+  }
+}
+
+function renderOffices() {
+  const list = document.getElementById('offices-list');
+  const count = document.getElementById('offices-count');
+  
+  count.textContent = `${offices.length} משרדים במערכת`;
+  
+  if (offices.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 class="empty-title">אין משרדים</h3>
+        <p class="empty-subtitle">${READ_ONLY_MODE ? 'לעדכון פרטי המשרד - פנה למפתח' : 'הוסף משרד כדי שיוצג בכרטיסי העובדים'}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // READ-ONLY MODE - Display locked office cards
+  if (READ_ONLY_MODE) {
+    let html = `
+      <div class="lock-banner">
+        <svg class="lock-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <div class="lock-banner-text">
+          <strong>פרטי משרדים נעולים לשינוי.</strong> לעדכון - פנה למפתח המערכת.
+        </div>
+      </div>
+    `;
+    
+    html += offices.map(office => `
+      <div class="locked-card">
+        <div style="margin-bottom:10px;">
+          <strong style="font-size:15px;color:var(--ink);">${escapeHtml(office.name)}</strong>
+          ${office.is_main ? '<span class="locked-tag">משרד ראשי</span>' : ''}
+        </div>
+        ${office.name_en ? `<div style="font-size:12px;color:var(--muted);margin-bottom:12px;direction:ltr;text-align:left;">${escapeHtml(office.name_en)}</div>` : ''}
+        
+        <div class="locked-row">
+          <span class="locked-icon">📍</span>
+          <div class="locked-content">
+            <div class="locked-label">כתובת</div>
+            <div class="locked-value">${escapeHtml(office.address_line)}, ${escapeHtml(office.city)}</div>
+            ${office.address_line_en ? `<div class="locked-value-en">${escapeHtml(office.address_line_en)}, ${escapeHtml(office.city_en || office.city)}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    list.innerHTML = html;
+    return;
+  }
+  
+  // EDITABLE MODE (legacy)
+  list.innerHTML = '<div class="employees-grid">' + offices.map(office => `
+    <div class="employee-card" onclick="openOfficeModal('${office.id}')">
+      <div class="employee-avatar" style="background: linear-gradient(135deg, var(--gold), #a8985f); color: white;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="employee-info">
+        <div class="employee-name">${escapeHtml(office.name)}</div>
+        <div class="employee-title">${escapeHtml(office.address_line)}, ${escapeHtml(office.city)}</div>
+        <div class="employee-meta">
+          ${office.is_main 
+            ? '<span class="tag tag-active">ראשי</span>'
+            : ''
+          }
+          ${office.name_en 
+            ? '<span class="tag" style="background:var(--gold-soft);color:var(--gold);">EN ✓</span>'
+            : '<span class="tag" style="background:var(--error-soft);color:var(--error);">EN חסר</span>'
+          }
+        </div>
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+
+function openOfficeModal(officeId = null) {
+  editingOffice = officeId ? offices.find(o => o.id === officeId) : null;
+  
+  const modal = document.getElementById('office-modal');
+  const title = document.getElementById('office-modal-title');
+  const deleteBtn = document.getElementById('btn-delete-office');
+  
+  if (editingOffice) {
+    title.textContent = 'עריכת משרד';
+    deleteBtn.classList.remove('hidden');
+    fillOfficeForm(editingOffice);
+  } else {
+    title.textContent = 'משרד חדש';
+    deleteBtn.classList.add('hidden');
+    clearOfficeForm();
+  }
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOfficeModal() {
+  document.getElementById('office-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  editingOffice = null;
+}
+
+function fillOfficeForm(office) {
+  document.getElementById('office-id').value = office.id;
+  document.getElementById('office-name').value = office.name;
+  document.getElementById('office-name-en').value = office.name_en || '';
+  document.getElementById('office-address').value = office.address_line;
+  document.getElementById('office-address-en').value = office.address_line_en || '';
+  document.getElementById('office-city').value = office.city;
+  document.getElementById('office-city-en').value = office.city_en || '';
+  document.getElementById('office-is-main').checked = office.is_main;
+}
+
+function clearOfficeForm() {
+  document.getElementById('office-id').value = '';
+  document.getElementById('office-name').value = '';
+  document.getElementById('office-name-en').value = '';
+  document.getElementById('office-address').value = '';
+  document.getElementById('office-address-en').value = '';
+  document.getElementById('office-city').value = '';
+  document.getElementById('office-city-en').value = '';
+  document.getElementById('office-is-main').checked = false;
+}
+
+// Save office
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('office-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btn-save-office');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div>';
+      
+      try {
+        const data = {
+          name: document.getElementById('office-name').value.trim(),
+          name_en: document.getElementById('office-name-en').value.trim() || null,
+          address_line: document.getElementById('office-address').value.trim(),
+          address_line_en: document.getElementById('office-address-en').value.trim() || null,
+          city: document.getElementById('office-city').value.trim(),
+          city_en: document.getElementById('office-city-en').value.trim() || null,
+          country: 'Israel',
+          is_main: document.getElementById('office-is-main').checked
+        };
+        
+        let result;
+        if (editingOffice) {
+          result = await sb.from('office_locations').update(data).eq('id', editingOffice.id);
+        } else {
+          result = await sb.from('office_locations').insert(data);
+        }
+        
+        if (result.error) throw result.error;
+        
+        showToast(editingOffice ? 'המשרד עודכן' : 'המשרד נוסף', 'success');
+        closeOfficeModal();
+        loadOffices();
+        
+      } catch (error) {
+        console.error('Save office error:', error);
+        showToast('שגיאה בשמירה: ' + error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'שמור';
+      }
+    });
+  }
+});
+
+async function deleteOffice() {
+  if (!editingOffice) return;
+  if (!confirm(`למחוק את המשרד "${editingOffice.name}"? לא ניתן לשחזר. עובדים שמשויכים למשרד זה יישארו בלי משרד.`)) return;
+  
+  try {
+    const { error } = await sb.from('office_locations').delete().eq('id', editingOffice.id);
+    if (error) throw error;
+    
+    showToast('המשרד נמחק', 'success');
+    closeOfficeModal();
+    loadOffices();
+  } catch (error) {
+    console.error('Delete office error:', error);
+    showToast('שגיאה במחיקה: ' + error.message, 'error');
+  }
+}
+
+// ============================================
+// COMPANY SETTINGS
+// ============================================
+
+async function loadCompanySettings() {
+  try {
+    const { data, error } = await sb.from('company_settings').select('*').single();
+    if (error) throw error;
+    companySettings = data;
+    applyLogoToAdmin(data.logo_url);
+    renderSettings();
+  } catch (error) {
+    console.error('Load settings error:', error);
+    showToast('שגיאה בטעינת הגדרות', 'error');
+  }
+}
+
+function renderSettings() {
+  const c = companySettings;
+  pendingLogoFile = null;
+  pendingLogoRemove = false;
+  
+  // READ-ONLY MODE - Display locked company settings
+  if (READ_ONLY_MODE) {
+    document.getElementById('settings-content').innerHTML = `
+      <div class="lock-banner">
+        <svg class="lock-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <div class="lock-banner-text">
+          <strong>הגדרות החברה נעולות לשינוי.</strong> לעדכון לוגו, שם או רשתות חברתיות - פנה למפתח המערכת.
+        </div>
+      </div>
+      
+      <div class="locked-card">
+        <div style="font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0.5px;margin-bottom:14px;">פרטי חברה</div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">🏢</span>
+          <div class="locked-content">
+            <div class="locked-label">שם החברה</div>
+            <div class="locked-value">${escapeHtml(c.company_name || '—')}</div>
+            ${c.company_name_en ? `<div class="locked-value-en">${escapeHtml(c.company_name_en)}</div>` : ''}
+          </div>
+        </div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">🌐</span>
+          <div class="locked-content">
+            <div class="locked-label">אתר החברה</div>
+            <div class="locked-value">
+              ${c.website_url 
+                ? `<a href="${escapeHtml(c.website_url)}" target="_blank" rel="noopener" class="locked-link">${escapeHtml(c.website_url)}</a>` 
+                : '—'
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">🎨</span>
+          <div class="locked-content">
+            <div class="locked-label">לוגו החברה</div>
+            <div class="locked-value">
+              ${c.logo_url 
+                ? `<img src="${escapeHtml(c.logo_url)}" alt="לוגו" class="locked-logo">` 
+                : '—'
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="locked-card">
+        <div style="font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0.5px;margin-bottom:14px;">רשתות חברתיות</div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">📷</span>
+          <div class="locked-content">
+            <div class="locked-label">Instagram</div>
+            <div class="locked-value">
+              ${c.instagram_url 
+                ? `<a href="${escapeHtml(c.instagram_url)}" target="_blank" rel="noopener" class="locked-link">${escapeHtml(c.instagram_url)}</a>` 
+                : '—'
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">📘</span>
+          <div class="locked-content">
+            <div class="locked-label">Facebook</div>
+            <div class="locked-value">
+              ${c.facebook_url 
+                ? `<a href="${escapeHtml(c.facebook_url)}" target="_blank" rel="noopener" class="locked-link">${escapeHtml(c.facebook_url)}</a>` 
+                : '—'
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div class="locked-row">
+          <span class="locked-icon">💼</span>
+          <div class="locked-content">
+            <div class="locked-label">LinkedIn</div>
+            <div class="locked-value">
+              ${c.linkedin_url 
+                ? `<a href="${escapeHtml(c.linkedin_url)}" target="_blank" rel="noopener" class="locked-link">${escapeHtml(c.linkedin_url)}</a>` 
+                : '—'
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  // EDITABLE MODE (legacy)
+  document.getElementById('settings-content').innerHTML = `
+    <form id="settings-form">
+      
+      <div class="settings-section">
+        <h3 class="settings-section-title">פרטי חברה</h3>
+        
+        <div class="form-group">
+          <label class="form-label">שם החברה (עברית)</label>
+          <input class="form-input" type="text" id="set-name" value="${escapeHtml(c.company_name || '')}" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">שם החברה (אנגלית)</label>
+          <input class="form-input" type="text" id="set-name-en" value="${escapeHtml(c.company_name_en || '')}" dir="ltr">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">אתר החברה</label>
+          <input class="form-input" type="url" id="set-website" value="${escapeHtml(c.website_url || '')}" dir="ltr" placeholder="https://www.sufrin.io">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">לוגו החברה</label>
+          <div class="logo-upload" id="logo-upload" onclick="document.getElementById('logo-input').click()">
+            <div class="logo-preview" id="logo-preview">
+              ${c.logo_url 
+                ? `<img src="${escapeHtml(c.logo_url)}" alt="לוגו">` 
+                : `<span class="logo-preview-empty">אין לוגו</span>`
+              }
+            </div>
+            <div class="photo-upload-text">
+              <div class="photo-upload-title">גרור לוגו לכאן או לחץ לבחירה</div>
+              <div class="photo-upload-hint">PNG / SVG / JPG / WebP - עד 5MB. רקע שקוף מומלץ.</div>
+              ${c.logo_url ? `
+                <div class="logo-actions">
+                  <button type="button" class="logo-action-btn danger" onclick="event.stopPropagation(); removeLogo();">הסר לוגו</button>
+                </div>
+              ` : ''}
+            </div>
+            <input type="file" id="logo-input" class="photo-upload-input" accept="image/jpeg,image/png,image/webp,image/svg+xml">
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3 class="settings-section-title">רשתות חברתיות (אחיד לכולם)</h3>
+        
+        <div class="form-group">
+          <label class="form-label">Instagram</label>
+          <input class="form-input" type="url" id="set-instagram" value="${escapeHtml(c.instagram_url || '')}" dir="ltr" placeholder="https://www.instagram.com/...">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Facebook</label>
+          <input class="form-input" type="url" id="set-facebook" value="${escapeHtml(c.facebook_url || '')}" dir="ltr" placeholder="https://www.facebook.com/...">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">LinkedIn</label>
+          <input class="form-input" type="url" id="set-linkedin" value="${escapeHtml(c.linkedin_url || '')}" dir="ltr" placeholder="https://www.linkedin.com/...">
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-settings">שמור הגדרות</button>
+      </div>
+      
+    </form>
   `;
   
-  // Build navigation URLs
-  // ALWAYS use the Hebrew address for navigation (more accurate in Israel)
-  // even if displaying in English
-  const navAddress = `${currentOffice.address_line}, ${currentOffice.city}`;
-  const encodedAddress = encodeURIComponent(navAddress);
+  document.getElementById('settings-form').addEventListener('submit', saveSettings);
+  setupLogoUpload();
+}
+
+function setupLogoUpload() {
+  const logoUpload = document.getElementById('logo-upload');
+  const logoInput = document.getElementById('logo-input');
+  if (!logoUpload || !logoInput) return;
   
-  // Waze: opens in app on mobile, web on desktop
-  const wazeUrl = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`;
+  logoInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) handleLogoSelected(e.target.files[0]);
+  });
   
-  // Google Maps: works on all devices
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+  logoUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    logoUpload.classList.add('dragging');
+  });
   
-  document.getElementById('office-waze').href = wazeUrl;
-  document.getElementById('office-maps').href = mapsUrl;
+  logoUpload.addEventListener('dragleave', () => {
+    logoUpload.classList.remove('dragging');
+  });
   
-  // Show the section
-  officeSection.classList.remove('hidden');
+  logoUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    logoUpload.classList.remove('dragging');
+    if (e.dataTransfer.files[0]) handleLogoSelected(e.dataTransfer.files[0]);
+  });
+}
+
+function handleLogoSelected(file) {
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+  if (!validTypes.includes(file.type)) {
+    showToast('סוג קובץ לא נתמך. השתמש ב-PNG/SVG/JPG/WebP', 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('הקובץ גדול מדי. עד 5MB', 'error');
+    return;
+  }
+  
+  pendingLogoFile = file;
+  pendingLogoRemove = false;
+  
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('logo-preview').innerHTML = `<img src="${e.target.result}" alt="לוגו">`;
+  };
+  reader.readAsDataURL(file);
+  
+  showToast('הלוגו ייעלה כשתלחץ "שמור הגדרות"', 'success');
+}
+
+function removeLogo() {
+  if (!confirm('להסיר את הלוגו? במקומו יוצג שם החברה כטקסט.')) return;
+  pendingLogoRemove = true;
+  pendingLogoFile = null;
+  document.getElementById('logo-preview').innerHTML = '<span class="logo-preview-empty">אין לוגו</span>';
+  showToast('הלוגו יוסר כשתלחץ "שמור הגדרות"', 'success');
+}
+
+async function saveSettings(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-save-settings');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    let logoUrl = companySettings.logo_url || null;
+    
+    // Handle logo upload
+    if (pendingLogoFile) {
+      const ext = pendingLogoFile.name.split('.').pop().toLowerCase();
+      const fileName = `company/logo-${Date.now()}.${ext}`;
+      
+      const { data: uploadData, error: uploadError } = await sb.storage
+        .from(PHOTOS_BUCKET)
+        .upload(fileName, pendingLogoFile, { cacheControl: '3600', upsert: false });
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: urlData } = sb.storage.from(PHOTOS_BUCKET).getPublicUrl(uploadData.path);
+      logoUrl = urlData.publicUrl;
+      
+      // Delete old logo if exists
+      if (companySettings.logo_url) {
+        await deleteOldPhoto(companySettings.logo_url);
+      }
+    } else if (pendingLogoRemove && companySettings.logo_url) {
+      await deleteOldPhoto(companySettings.logo_url);
+      logoUrl = null;
+    }
+    
+    const data = {
+      company_name: document.getElementById('set-name').value.trim(),
+      company_name_en: document.getElementById('set-name-en').value.trim() || null,
+      website_url: document.getElementById('set-website').value.trim() || null,
+      logo_url: logoUrl,
+      instagram_url: document.getElementById('set-instagram').value.trim() || null,
+      facebook_url: document.getElementById('set-facebook').value.trim() || null,
+      linkedin_url: document.getElementById('set-linkedin').value.trim() || null
+    };
+    
+    const { error } = await sb.from('company_settings').update(data).eq('id', companySettings.id);
+    if (error) throw error;
+    
+    showToast('ההגדרות נשמרו', 'success');
+    await loadCompanySettings();
+  } catch (error) {
+    console.error('Save settings error:', error);
+    showToast('שגיאה בשמירה: ' + error.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'שמור הגדרות';
+  }
 }
 
 // ============================================
-// Show error state
+// HELPERS
 // ============================================
-function showError(titleKey, messageKey) {
-  const errorEl = document.getElementById('error');
-  errorEl.dataset.titleKey = titleKey;
-  errorEl.dataset.messageKey = messageKey;
-  
-  document.getElementById('error-title').textContent = t(titleKey);
-  document.getElementById('error-message').textContent = t(messageKey);
-  document.querySelector('.error-action').textContent = t('errorAction');
-  
-  document.getElementById('loading').classList.add('hidden');
-  errorEl.classList.remove('hidden');
-  document.getElementById('lang-toggle').classList.remove('hidden');
-}
 
-// ============================================
-// Save contact as vCard
-// ============================================
-function saveContact() {
-  if (!currentEmployee || !currentCompany) return;
-
-  const emp = currentEmployee;
-  const company = currentCompany;
-  
-  const displayName = (currentLang === 'en' && emp.full_name_en) ? emp.full_name_en : emp.full_name;
-  const displayTitle = (currentLang === 'en' && emp.title_en) ? emp.title_en : emp.title;
-  const displayCompany = (currentLang === 'en' && company.company_name_en) ? company.company_name_en : company.company_name;
-
-  const nameParts = displayName.split(' ');
-  const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
-  const firstName = nameParts.slice(0, -1).join(' ') || nameParts[0];
-
-  const vcard = [
-    'BEGIN:VCARD',
-    'VERSION:3.0',
-    `N;CHARSET=UTF-8:${lastName};${firstName};;;`,
-    `FN;CHARSET=UTF-8:${displayName}`,
-    `ORG;CHARSET=UTF-8:${displayCompany}`,
-    `TITLE;CHARSET=UTF-8:${displayTitle}`,
-    `TEL;TYPE=CELL,VOICE:${emp.phone}`,
-    `EMAIL;TYPE=WORK:${emp.email}`,
-    company.instagram_url ? `URL;TYPE=Instagram:${company.instagram_url}` : null,
-    company.linkedin_url ? `URL;TYPE=LinkedIn:${company.linkedin_url}` : null,
-    company.facebook_url ? `URL;TYPE=Facebook:${company.facebook_url}` : null,
-    company.website_url ? `URL;TYPE=Company:${company.website_url}` : null,
-    'END:VCARD'
-  ].filter(Boolean).join('\r\n');
-
-  const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  
-  const fileName = (currentLang === 'en' && emp.full_name_en)
-    ? emp.full_name_en.replace(/\s+/g, '-')
-    : displayName.replace(/\s+/g, '-');
-  link.download = `${fileName}.vcf`;
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-  showToast(t('contactSaved'));
-}
-
-// ============================================
-// Helpers
-// ============================================
-function showToast(message) {
+function showToast(message, type = '') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  toast.className = 'toast ' + type;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = String(str);
   return div.innerHTML;
 }
 
 // ============================================
-// Start
+// START
 // ============================================
-setLanguage('he');
-loadCard();
+loadLogoForLoginScreen();
+checkAuth();
 </script>
 
 </body>
