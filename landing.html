@@ -732,7 +732,7 @@ function renderTeam() {
       : `<span>${escapeHtml(displayName.charAt(0))}</span>`;
     
     return `
-      <a href="?u=${encodeURIComponent(emp.username)}" class="team-card" aria-label="${escapeHtml(displayName)} - ${escapeHtml(displayTitle)}">
+      <a href="index.html?u=${encodeURIComponent(emp.username)}" class="team-card" aria-label="${escapeHtml(displayName)} - ${escapeHtml(displayTitle)}">
         <div class="team-avatar-wrap">
           <div class="team-avatar">${avatarContent}</div>
         </div>
