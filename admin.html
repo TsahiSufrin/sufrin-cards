@@ -772,6 +772,45 @@ body {
   color: var(--error);
 }
 
+.photo-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.photo-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 5px 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.photo-action-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
+.photo-action-btn.danger:hover {
+  border-color: var(--error);
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.photo-action-btn svg {
+  flex-shrink: 0;
+}
+
 .checkbox-row {
   display: flex;
   align-items: center;
@@ -1372,13 +1411,27 @@ html[dir="ltr"] .locked-card::after {
         <!-- Photo Upload -->
         <div class="form-group">
           <label class="form-label">תמונת פרופיל</label>
-          <div class="photo-upload" id="photo-upload" onclick="document.getElementById('photo-input').click()">
+          <div class="photo-upload" id="photo-upload" onclick="handlePhotoAreaClick(event)">
             <div class="photo-preview" id="photo-preview">
               <span id="photo-letter">צ</span>
             </div>
             <div class="photo-upload-text">
-              <div class="photo-upload-title">גרור תמונה לכאן או לחץ לבחירה</div>
-              <div class="photo-upload-hint">JPG / PNG / WebP - עד 5MB</div>
+              <div class="photo-upload-title" id="photo-upload-title">גרור תמונה לכאן או לחץ לבחירה</div>
+              <div class="photo-upload-hint" id="photo-upload-hint">JPG / PNG / WebP - עד 5MB</div>
+              <div class="photo-actions hidden" id="photo-actions">
+                <button type="button" class="photo-action-btn" onclick="event.stopPropagation(); editCurrentPhoto();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  ערוך חיתוך
+                </button>
+                <button type="button" class="photo-action-btn" onclick="event.stopPropagation(); document.getElementById('photo-input').click();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  החלף תמונה
+                </button>
+                <button type="button" class="photo-action-btn danger" onclick="event.stopPropagation(); removePhoto();">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+                  הסר
+                </button>
+              </div>
             </div>
             <input type="file" id="photo-input" class="photo-upload-input" accept="image/jpeg,image/png,image/webp">
           </div>
@@ -1962,10 +2015,20 @@ function fillEmployeeForm(emp) {
   document.getElementById('username-preview').textContent = emp.username;
   
   const preview = document.getElementById('photo-preview');
+  const actions = document.getElementById('photo-actions');
+  const title = document.getElementById('photo-upload-title');
+  const hint = document.getElementById('photo-upload-hint');
+  
   if (emp.photo_url) {
     preview.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="">`;
+    actions.classList.remove('hidden');
+    title.textContent = 'תמונה קיימת';
+    hint.textContent = 'גרור תמונה חדשה או השתמש בכפתורים למטה';
   } else {
     preview.innerHTML = `<span>${escapeHtml(emp.full_name.charAt(0) || '?')}</span>`;
+    actions.classList.add('hidden');
+    title.textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+    hint.textContent = 'JPG / PNG / WebP - עד 5MB';
   }
 }
 
@@ -1983,6 +2046,9 @@ function clearEmployeeForm() {
   document.getElementById('emp-office').value = '';
   document.getElementById('username-preview').textContent = 'username';
   document.getElementById('photo-preview').innerHTML = '<span>?</span>';
+  document.getElementById('photo-actions').classList.add('hidden');
+  document.getElementById('photo-upload-title').textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+  document.getElementById('photo-upload-hint').textContent = 'JPG / PNG / WebP - עד 5MB';
 }
 
 // Live preview of username
@@ -2242,6 +2308,11 @@ function applyCrop() {
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
     document.getElementById('photo-preview').innerHTML = `<img src="${dataUrl}" alt="">`;
     
+    // Show actions buttons
+    document.getElementById('photo-actions').classList.remove('hidden');
+    document.getElementById('photo-upload-title').textContent = 'תמונה מוכנה';
+    document.getElementById('photo-upload-hint').textContent = 'גרור תמונה חדשה או השתמש בכפתורים למטה';
+    
     // Close cropper
     closeCropper();
     
@@ -2250,6 +2321,72 @@ function applyCrop() {
     
     showToast('התמונה נחתכה בהצלחה', 'success');
   }, 'image/jpeg', 0.92);
+}
+
+// ============================================
+// PHOTO ACTION BUTTONS
+// ============================================
+
+// Click handler for photo upload area (only opens file picker if no photo exists)
+function handlePhotoAreaClick(event) {
+  // If clicking on action buttons, do nothing (their handlers will fire)
+  if (event.target.closest('.photo-action-btn')) return;
+  
+  // If photo exists, do nothing on area click (use buttons instead)
+  const actions = document.getElementById('photo-actions');
+  if (!actions.classList.contains('hidden')) return;
+  
+  // No photo yet - open file picker
+  document.getElementById('photo-input').click();
+}
+
+// Re-edit current photo (the one already saved or just uploaded)
+async function editCurrentPhoto() {
+  // Try to get current photo source
+  const previewImg = document.querySelector('#photo-preview img');
+  if (!previewImg) {
+    showToast('אין תמונה לעריכה', 'error');
+    return;
+  }
+  
+  const imgSrc = previewImg.src;
+  
+  // If it's already a data URL (just uploaded), use it directly
+  if (imgSrc.startsWith('data:')) {
+    openCropper(imgSrc);
+    return;
+  }
+  
+  // Otherwise, fetch the image and convert to data URL
+  showToast('טוען תמונה...', 'info');
+  try {
+    const response = await fetch(imgSrc, { mode: 'cors' });
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.onload = (e) => openCropper(e.target.result);
+    reader.readAsDataURL(blob);
+  } catch (error) {
+    console.error('Could not load image for editing:', error);
+    showToast('שגיאה בטעינת התמונה. נסה להעלות מחדש.', 'error');
+  }
+}
+
+// Remove photo
+function removePhoto() {
+  if (!confirm('להסיר את התמונה?')) return;
+  
+  pendingPhotoFile = null;
+  pendingPhotoRemove = true;
+  
+  const empName = document.getElementById('emp-name').value || '?';
+  const firstChar = empName.charAt(0) || '?';
+  
+  document.getElementById('photo-preview').innerHTML = `<span>${escapeHtml(firstChar)}</span>`;
+  document.getElementById('photo-actions').classList.add('hidden');
+  document.getElementById('photo-upload-title').textContent = 'גרור תמונה לכאן או לחץ לבחירה';
+  document.getElementById('photo-upload-hint').textContent = 'JPG / PNG / WebP - עד 5MB';
+  
+  showToast('התמונה הוסרה', 'success');
 }
 
 // ============================================
