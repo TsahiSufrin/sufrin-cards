@@ -854,6 +854,37 @@ body {
 }
 
 /* ================================================
+   ROLE BADGE
+   ================================================ */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.role-badge.super-admin {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.role-badge.editor {
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+.role-badge svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ================================================
    LOCKED / READ-ONLY MODE
    ================================================ */
 .lock-banner {
@@ -1070,6 +1101,7 @@ html[dir="ltr"] .locked-card::after {
       <div class="admin-brand-title">ניהול כרטיסי ביקור</div>
     </div>
     <div class="admin-user">
+      <span class="role-badge hidden" id="role-badge">—</span>
       <span class="admin-user-email" id="admin-user-email">—</span>
       <button class="btn btn-secondary" onclick="logout()">התנתק</button>
     </div>
@@ -1353,6 +1385,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 // State
 let currentUser = null;
+let currentUserRole = null;  // 'super_admin' or 'editor' or null
 let employees = [];
 let companySettings = null;
 let editingEmployee = null;
@@ -1411,9 +1444,30 @@ async function checkAuth() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     currentUser = session.user;
+    await loadUserRole();
     showAdmin();
   } else {
     showLogin();
+  }
+}
+
+async function loadUserRole() {
+  if (!currentUser) {
+    currentUserRole = null;
+    return;
+  }
+  try {
+    const { data, error } = await sb
+      .from('admin_users')
+      .select('role')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
+    
+    if (error) throw error;
+    currentUserRole = data ? data.role : null;
+  } catch (error) {
+    console.error('Could not load user role:', error);
+    currentUserRole = null;
   }
 }
 
@@ -1433,6 +1487,15 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
     if (error) throw error;
     currentUser = data.user;
+    await loadUserRole();
+    
+    // Block users that are not registered as admins
+    if (!currentUserRole) {
+      await sb.auth.signOut();
+      currentUser = null;
+      throw new Error('NO_ADMIN_ACCESS');
+    }
+    
     showAdmin();
   } catch (error) {
     errorEl.textContent = translateAuthError(error.message);
@@ -1446,6 +1509,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 async function logout() {
   await sb.auth.signOut();
   currentUser = null;
+  currentUserRole = null;
   employees = [];
   companySettings = null;
   showLogin();
@@ -1453,6 +1517,7 @@ async function logout() {
 
 function translateAuthError(msg) {
   const m = msg.toLowerCase();
+  if (m.includes('no_admin_access')) return 'אין לך הרשאת גישה לדשבורד. פנה למנהל המערכת.';
   if (m.includes('invalid login') || m.includes('invalid credentials')) return 'אימייל או סיסמה שגויים';
   if (m.includes('email not confirmed')) return 'האימייל טרם אומת';
   if (m.includes('too many')) return 'יותר מדי ניסיונות. נסה שוב בעוד כמה דקות';
@@ -1473,6 +1538,27 @@ function showAdmin() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('admin-layout').classList.remove('hidden');
   document.getElementById('admin-user-email').textContent = currentUser.email;
+  
+  // Show role badge
+  const badge = document.getElementById('role-badge');
+  if (currentUserRole === 'super_admin') {
+    badge.className = 'role-badge super-admin';
+    badge.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"/></svg>
+      מנהל על
+    `;
+    badge.classList.remove('hidden');
+  } else if (currentUserRole === 'editor') {
+    badge.className = 'role-badge editor';
+    badge.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      עורך
+    `;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+  
   loadEmployees();
   loadCompanySettings();
 }
@@ -1572,7 +1658,12 @@ function openEmployeeModal(empId = null) {
   
   if (editingEmployee) {
     title.textContent = 'עריכת עובד';
-    deleteBtn.classList.remove('hidden');
+    // Only show delete button to super_admin
+    if (currentUserRole === 'super_admin') {
+      deleteBtn.classList.remove('hidden');
+    } else {
+      deleteBtn.classList.add('hidden');
+    }
     fillEmployeeForm(editingEmployee);
   } else {
     title.textContent = 'עובד חדש';
