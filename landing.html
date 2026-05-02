@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#efece4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d121b" media="(prefers-color-scheme: dark)">
+<title>קבוצת סופרין | הצוות שלנו</title>
+<meta name="description" content="קבוצת סופרין - הצוות שלנו. בחר איש צוות לקבלת פרטי קשר.">
+
+<meta property="og:title" content="קבוצת סופרין | הצוות שלנו">
+<meta property="og:description" content="הצוות שלנו - קבלו פרטי קשר של אנשי הצוות">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a1628'/%3E%3Ctext x='50' y='68' font-size='52' font-family='serif' font-weight='500' fill='%23c9b885' text-anchor='middle'%3Eצ%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg-page: #efece4;
+  --bg-card: #fafaf7;
+  --bg-soft: #f0ede4;
+  --bg-white: #ffffff;
+  --ink: #0a1628;
+  --ink-soft: #1e3a5f;
+  --muted: #6b6555;
+  --gold: #c9b885;
+  --gold-soft: rgba(201, 184, 133, 0.12);
+  --gold-border: rgba(201, 184, 133, 0.3);
+  --line: rgba(10, 22, 40, 0.08);
+  --line-soft: rgba(10, 22, 40, 0.05);
+  --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 22, 40, 0.08);
+  --shadow-lg: 0 20px 60px -20px rgba(10, 22, 40, 0.15), 0 0 0 1px rgba(10, 22, 40, 0.04);
+  
+  --avatar-bg-start: #1e3a5f;
+  --avatar-bg-end: #0a1628;
+  --address-color: #1e3a5f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0d121b;
+    --bg-card: #131a26;
+    --bg-soft: #1a2230;
+    --bg-white: rgba(255, 255, 255, 0.05);
+    --ink: #f0ede4;
+    --ink-soft: #d6d4cc;
+    --muted: #a1a098;
+    --gold: #d4c490;
+    --gold-soft: rgba(212, 196, 144, 0.1);
+    --gold-border: rgba(212, 196, 144, 0.3);
+    --line: rgba(255, 255, 255, 0.08);
+    --line-soft: rgba(255, 255, 255, 0.05);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    
+    --avatar-bg-start: #2a3a55;
+    --avatar-bg-end: #131a26;
+    --address-color: #d6d4cc;
+  }
+}
+
+html, body {
+  font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(201, 184, 133, 0.15), transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(30, 58, 95, 0.08), transparent 50%),
+    var(--bg-page);
+}
+
+.hidden { display: none !important; }
+
+/* ============== Language Toggle ============== */
+.lang-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: var(--shadow-sm);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  direction: rtl;
+}
+
+.lang-toggle button {
+  background: transparent;
+  border: none;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.lang-toggle button.active {
+  background: var(--ink);
+  color: var(--bg-card);
+}
+
+.lang-toggle button:not(.active):hover {
+  color: var(--ink);
+}
+
+/* ============== Container ============== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 40px;
+}
+
+/* ============== Header ============== */
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.company-logo {
+  display: inline-block;
+  margin-bottom: 24px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.company-logo:hover { opacity: 0.85; }
+
+.company-logo img {
+  height: 50px;
+  width: auto;
+  display: block;
+}
+
+.company-logo-text {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.header-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0 0;
+}
+
+.divider-line {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 184, 133, 0.4));
+}
+
+.divider-line.left {
+  background: linear-gradient(-90deg, transparent, rgba(201, 184, 133, 0.4));
+}
+
+.divider-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  transform: rotate(45deg);
+}
+
+/* ============== Team Grid ============== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 56px;
+  animation: fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.team-card {
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 22px 18px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold-border);
+}
+
+.team-card:hover::before {
+  opacity: 0.6;
+}
+
+.team-avatar-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 16px;
+}
+
+.team-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--bg-card);
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 0 0 2px var(--gold-border);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease;
+}
+
+.team-card:hover .team-avatar {
+  box-shadow: 0 0 0 3px var(--gold);
+}
+
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: 0.2px;
+}
+
+.team-title {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  min-height: 36px;
+}
+
+/* ============== Footer Info ============== */
+.footer-info {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 28px 26px;
+  border: 1px solid var(--line);
+  animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  margin-bottom: 24px;
+}
+
+.footer-section {
+  text-align: center;
+}
+
+.footer-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.footer-address {
+  font-size: 14px;
+  color: var(--address-color);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.footer-address-city {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.footer-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--bg-white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer-btn:hover {
+  border-color: var(--gold-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.footer-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.footer-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 22px 0;
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.social-link {
+  width: 42px;
+  height: 42px;
+  background: var(--bg-white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.social-link svg {
+  width: 19px;
+  height: 19px;
+}
+
+.brand-credit {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ================ Loading State ================ */
+.loading-state {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold-border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+}
+
+/* ================ Empty State ================ */
+.empty-state {
+  text-align: center;
+  padding: 60px 30px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px dashed var(--line);
+}
+
+.empty-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.empty-msg {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ============== LTR Adjustments for English ============== */
+html[lang="en"] {
+  direction: ltr;
+}
+
+html[lang="en"] .footer-address {
+  direction: ltr;
+}
+
+/* ============== Animations ============== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 50px 16px 30px; }
+  .page-title { font-size: 26px; }
+  .page-subtitle { font-size: 13px; }
+  .team-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .team-card { padding: 18px 14px; }
+  .team-avatar-wrap, .team-avatar { width: 80px; height: 80px; }
+  .team-avatar { font-size: 28px; }
+  .footer-info { padding: 22px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Language Toggle -->
+<div class="lang-toggle hidden" id="lang-toggle">
+  <button id="lang-he" onclick="setLanguage('he')">עב</button>
+  <button id="lang-en" onclick="setLanguage('en')">EN</button>
+</div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <a href="#" target="_blank" rel="noopener" class="company-logo" id="company-logo-link">
+      <img id="company-logo-img" src="" alt="Sufrin Group" style="display:none;">
+      <span class="company-logo-text" id="company-logo-text">קבוצת סופרין</span>
+    </a>
+    
+    <h1 class="page-title" id="page-title">הצוות שלנו</h1>
+    <p class="page-subtitle" id="page-subtitle">לחץ על איש צוות לקבלת פרטי הקשר שלו</p>
+    
+    <div class="header-divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot"></div>
+      <div class="divider-line left"></div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div class="loading-state" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">טוען...</div>
+  </div>
+
+  <!-- Team Grid -->
+  <div class="team-grid hidden" id="team-grid"></div>
+
+  <!-- Empty State -->
+  <div class="empty-state hidden" id="empty-state">
+    <div class="empty-icon">👥</div>
+    <h2 class="empty-title" id="empty-title">אין עובדים פעילים כרגע</h2>
+    <p class="empty-msg" id="empty-msg">צוות הסופרין יופיע כאן בקרוב</p>
+  </div>
+
+  <!-- Footer with company info -->
+  <div class="footer-info hidden" id="footer-info">
+    
+    <div class="footer-section" id="office-section">
+      <div class="footer-label" id="office-label">המשרד שלנו</div>
+      <div class="footer-address" id="office-address">—</div>
+      <div class="footer-buttons">
+        <a href="#" target="_blank" rel="noopener" class="footer-btn" id="office-waze">
+          <svg viewBox="0 0 24 24" fill="#33CCFF"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L2 22l5.71-.97A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm-2 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm4 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+          <span>Waze</span>
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="footer-btn" id="office-maps">
+          <svg viewBox="0 0 24 24" fill="#4285F4"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span>Maps</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="footer-divider"></div>
+    
+    <div class="footer-section">
+      <div class="footer-label" id="connect-label">תוכלו למצוא אותנו גם ב</div>
+      <div class="socials">
+        <a class="social-link" id="instagram-link" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f9ce34"/><stop offset="50%" stop-color="#ee2a7b"/><stop offset="100%" stop-color="#6228d7"/></linearGradient></defs><path fill="url(#ig-grad)" d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.2-3.2 1.7-4.8 4.9-4.9C8.4 2.2 8.8 2.2 12 2.2zm0 5.8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 6.6c-1.4 0-2.6-1.2-2.6-2.6S10.6 9.4 12 9.4s2.6 1.2 2.6 2.6-1.2 2.6-2.6 2.6zm5.1-6.7c-.5 0-.9.4-.9.9s.4.9.9.9.9-.4.9-.9-.4-.9-.9-.9z"/></svg>
+        </a>
+        <a class="social-link" id="facebook-link" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+        </a>
+        <a class="social-link" id="linkedin-link" href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8.3 18.3H5.7V9.7h2.6v8.6zM7 8.5C6.2 8.5 5.5 7.8 5.5 7s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm11.3 9.8h-2.6v-4.2c0-1 0-2.3-1.4-2.3s-1.6 1.1-1.6 2.2v4.3h-2.6V9.7h2.5v1.2c.4-.7 1.2-1.4 2.5-1.4 2.7 0 3.2 1.8 3.2 4.1v4.7z"/></svg>
+        </a>
+      </div>
+    </div>
+    
+  </div>
+
+  <p class="brand-credit">DIGITAL BUSINESS CARDS</p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+let employeesData = [];
+let companyData = null;
+let officeData = null;
+let currentLang = 'he';
+
+const i18n = {
+  he: {
+    pageTitle: 'הצוות שלנו',
+    pageSubtitle: 'לחץ על איש צוות לקבלת פרטי הקשר שלו',
+    loading: 'טוען...',
+    emptyTitle: 'אין עובדים פעילים כרגע',
+    emptyMsg: 'צוות הסופרין יופיע כאן בקרוב',
+    officeLabel: 'המשרד שלנו',
+    connectLabel: 'תוכלו למצוא אותנו גם ב'
+  },
+  en: {
+    pageTitle: 'Our Team',
+    pageSubtitle: 'Click on a team member to get their contact details',
+    loading: 'Loading...',
+    emptyTitle: 'No active team members',
+    emptyMsg: 'The Sufrin team will appear here soon',
+    officeLabel: 'Our Office',
+    connectLabel: 'Find us on'
+  }
+};
+
+function t(key) {
+  return i18n[currentLang][key] || i18n.he[key] || key;
+}
+
+function setLanguage(lang) {
+  if (lang !== 'he' && lang !== 'en') return;
+  currentLang = lang;
+  
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  
+  document.getElementById('lang-he').classList.toggle('active', lang === 'he');
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  
+  document.getElementById('page-title').textContent = t('pageTitle');
+  document.getElementById('page-subtitle').textContent = t('pageSubtitle');
+  document.getElementById('loading-text').textContent = t('loading');
+  document.getElementById('empty-title').textContent = t('emptyTitle');
+  document.getElementById('empty-msg').textContent = t('emptyMsg');
+  document.getElementById('office-label').textContent = t('officeLabel');
+  document.getElementById('connect-label').textContent = t('connectLabel');
+  
+  if (employeesData.length > 0 && companyData) {
+    renderHeader();
+    renderTeam();
+    renderFooter();
+  }
+}
+
+async function loadLandingPage() {
+  try {
+    const [employeesResult, companyResult, officeResult] = await Promise.all([
+      sb.from('employees')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true }),
+      sb.from('company_settings').select('*').single(),
+      sb.from('office_locations').select('*').eq('is_main', true).maybeSingle()
+    ]);
+
+    if (employeesResult.error) throw employeesResult.error;
+    if (companyResult.error) throw companyResult.error;
+
+    employeesData = employeesResult.data || [];
+    companyData = companyResult.data;
+    officeData = officeResult.data || null;
+
+    renderHeader();
+    renderTeam();
+    renderFooter();
+    
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('lang-toggle').classList.remove('hidden');
+    document.getElementById('footer-info').classList.remove('hidden');
+    
+    if (employeesData.length === 0) {
+      document.getElementById('empty-state').classList.remove('hidden');
+    } else {
+      document.getElementById('team-grid').classList.remove('hidden');
+    }
+
+  } catch (error) {
+    console.error('Error loading landing page:', error);
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('empty-state').classList.remove('hidden');
+    document.getElementById('lang-toggle').classList.remove('hidden');
+  }
+}
+
+function renderHeader() {
+  if (!companyData) return;
+  
+  const displayName = (currentLang === 'en' && companyData.company_name_en) 
+    ? companyData.company_name_en 
+    : companyData.company_name;
+  
+  document.title = `${displayName} | ${t('pageTitle')}`;
+  document.querySelector('meta[property="og:title"]').setAttribute('content', `${displayName} | ${t('pageTitle')}`);
+  
+  const logoLink = document.getElementById('company-logo-link');
+  const logoImg = document.getElementById('company-logo-img');
+  const logoText = document.getElementById('company-logo-text');
+  
+  logoLink.href = companyData.website_url || '#';
+  
+  if (companyData.logo_url) {
+    logoImg.src = companyData.logo_url;
+    logoImg.style.display = 'block';
+    logoText.style.display = 'none';
+  } else {
+    logoImg.style.display = 'none';
+    logoText.style.display = 'inline';
+    logoText.textContent = displayName;
+  }
+}
+
+function renderTeam() {
+  const grid = document.getElementById('team-grid');
+  
+  if (employeesData.length === 0) {
+    grid.innerHTML = '';
+    return;
+  }
+  
+  grid.innerHTML = employeesData.map(emp => {
+    const displayName = (currentLang === 'en' && emp.full_name_en) ? emp.full_name_en : emp.full_name;
+    const displayTitle = (currentLang === 'en' && emp.title_en) ? emp.title_en : emp.title;
+    
+    const avatarContent = emp.photo_url 
+      ? `<img src="${escapeHtml(emp.photo_url)}" alt="${escapeHtml(displayName)}">`
+      : `<span>${escapeHtml(displayName.charAt(0))}</span>`;
+    
+    return `
+      <a href="?u=${encodeURIComponent(emp.username)}" class="team-card" aria-label="${escapeHtml(displayName)} - ${escapeHtml(displayTitle)}">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar">${avatarContent}</div>
+        </div>
+        <div class="team-name">${escapeHtml(displayName)}</div>
+        <div class="team-title">${escapeHtml(displayTitle)}</div>
+      </a>
+    `;
+  }).join('');
+}
+
+function renderFooter() {
+  const officeSection = document.getElementById('office-section');
+  
+  if (officeData) {
+    officeSection.classList.remove('hidden');
+    
+    const displayAddress = (currentLang === 'en' && officeData.address_line_en) 
+      ? officeData.address_line_en 
+      : officeData.address_line;
+    const displayCity = (currentLang === 'en' && officeData.city_en) 
+      ? officeData.city_en 
+      : officeData.city;
+    
+    document.getElementById('office-address').innerHTML = `
+      ${escapeHtml(displayAddress)}<br>
+      <span class="footer-address-city">${escapeHtml(displayCity)}</span>
+    `;
+    
+    const navAddress = `${officeData.address_line}, ${officeData.city}`;
+    const encodedAddress = encodeURIComponent(navAddress);
+    
+    document.getElementById('office-waze').href = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`;
+    document.getElementById('office-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+  } else {
+    officeSection.classList.add('hidden');
+  }
+  
+  if (companyData.instagram_url) document.getElementById('instagram-link').href = companyData.instagram_url;
+  if (companyData.facebook_url) document.getElementById('facebook-link').href = companyData.facebook_url;
+  if (companyData.linkedin_url) document.getElementById('linkedin-link').href = companyData.linkedin_url;
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+setLanguage('he');
+loadLandingPage();
+</script>
+
+</body>
+</html>
