@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a1628">
+<meta name="theme-color" content="#f5f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d121b" media="(prefers-color-scheme: dark)">
 <title>ניהול | קבוצת סופרין</title>
 <meta name="robots" content="noindex, nofollow">
 
@@ -34,6 +35,47 @@
   --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
   --shadow-md: 0 4px 12px rgba(10, 22, 40, 0.06);
   --shadow-lg: 0 20px 60px -20px rgba(10, 22, 40, 0.15), 0 0 0 1px rgba(10, 22, 40, 0.04);
+  
+  /* Variables that change in dark mode */
+  --avatar-bg-start: #1e3a5f;
+  --avatar-bg-end: #0a1628;
+  --btn-primary-bg: #0a1628;
+  --btn-primary-color: #ffffff;
+  --btn-primary-hover: #1e3a5f;
+  --input-bg: #fafaf7;
+  --input-bg-focus: #ffffff;
+}
+
+/* ============== DARK MODE ============== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0d121b;
+    --bg-card: #131a26;
+    --bg-soft: #1a2230;
+    --ink: #f0ede4;
+    --ink-soft: #d6d4cc;
+    --muted: #a1a098;
+    --gold: #d4c490;
+    --gold-soft: rgba(212, 196, 144, 0.1);
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.15);
+    --error: #f87171;
+    --error-soft: rgba(220, 38, 38, 0.15);
+    --success: #4ade80;
+    --success-soft: rgba(22, 163, 74, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    
+    /* Dark mode specific */
+    --avatar-bg-start: #2a3a55;
+    --avatar-bg-end: #131a26;
+    --btn-primary-bg: #d4c490;
+    --btn-primary-color: #131a26;
+    --btn-primary-hover: #c9b885;
+    --input-bg: #1a2230;
+    --input-bg-focus: #20283a;
+  }
 }
 
 html, body {
@@ -82,7 +124,7 @@ body {
   justify-content: center;
   /* Fallback gradient box - shown when no logo */
   width: 64px;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   border-radius: 16px;
   font-size: 30px;
   font-weight: 500;
@@ -148,7 +190,7 @@ body {
   border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
-  background: var(--bg-soft);
+  background: var(--input-bg);
   color: var(--ink);
   transition: all 0.2s ease;
   direction: rtl;
@@ -156,9 +198,9 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--ink-soft);
-  background: var(--bg-card);
-  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+  border-color: var(--gold);
+  background: var(--input-bg-focus);
+  box-shadow: 0 0 0 3px var(--gold-soft);
 }
 
 .form-input[dir="ltr"] {
@@ -196,13 +238,13 @@ body {
 }
 
 .btn-primary {
-  background: var(--ink);
-  color: var(--bg-card);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   width: 100%;
   padding: 14px;
 }
 
-.btn-primary:hover { background: var(--ink-soft); }
+.btn-primary:hover { background: var(--btn-primary-hover); }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-secondary {
@@ -221,7 +263,7 @@ body {
   color: var(--error);
 }
 
-.btn-danger:hover { background: #fee2e2; }
+.btn-danger:hover { background: var(--error-soft); filter: brightness(1.15); }
 
 .btn-icon {
   padding: 8px;
@@ -264,7 +306,7 @@ body {
   justify-content: center;
   /* Fallback gradient box - shown when no logo */
   width: 36px;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   border-radius: 10px;
   font-size: 18px;
   color: var(--gold);
@@ -414,7 +456,7 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   color: var(--bg-card);
   display: flex;
   align-items: center;
@@ -481,7 +523,7 @@ body {
 
 .tag-username {
   background: var(--gold-soft);
-  color: #7a6a3d;
+  color: var(--gold);
   font-family: 'Consolas', monospace;
 }
 
@@ -621,7 +663,7 @@ body {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   color: var(--bg-card);
   display: flex;
   align-items: center;
@@ -1096,8 +1138,8 @@ body {
       <div class="modal-body">
         <input type="hidden" id="office-id">
         
-        <div style="background:var(--gold-soft, rgba(201, 184, 133, 0.12));border:1px solid rgba(201,184,133,0.25);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
-          <p style="font-size:12px;color:#7a6a3d;margin:0;">
+        <div style="background:var(--gold-soft);border:1px solid var(--gold-soft);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
+          <p style="font-size:12px;color:var(--gold);margin:0;">
             💡 <strong>בעברית:</strong> מוצג בכרטיס בעברית.<br>
             <strong>באנגלית:</strong> מוצג בכרטיס באנגלית. אופציונלי - אם ריק, יוצג העברי.
           </p>
@@ -1706,8 +1748,8 @@ function renderOffices() {
             : ''
           }
           ${office.name_en 
-            ? '<span class="tag" style="background:var(--gold-soft);color:#7a6a3d;">EN ✓</span>'
-            : '<span class="tag" style="background:#fef3c7;color:#92400e;">EN חסר</span>'
+            ? '<span class="tag" style="background:var(--gold-soft);color:var(--gold);">EN ✓</span>'
+            : '<span class="tag" style="background:var(--error-soft);color:var(--error);">EN חסר</span>'
           }
         </div>
       </div>
