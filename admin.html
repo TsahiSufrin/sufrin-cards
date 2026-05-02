@@ -907,6 +907,7 @@ body {
   
   <nav class="admin-tabs">
     <button class="admin-tab active" data-tab="employees" onclick="switchTab('employees')">עובדים</button>
+    <button class="admin-tab" data-tab="offices" onclick="switchTab('offices')">משרדים</button>
     <button class="admin-tab" data-tab="settings" onclick="switchTab('settings')">הגדרות חברה</button>
   </nav>
   
@@ -929,6 +930,27 @@ body {
         <div class="loading-state">
           <div class="loading-spinner-large"></div>
           <p style="color: var(--muted); font-size: 13px;">טוען עובדים...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Offices Tab -->
+    <div id="tab-offices" class="hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">משרדים</h2>
+          <p class="section-subtitle" id="offices-count">—</p>
+        </div>
+        <button class="btn btn-primary" style="width:auto;" onclick="openOfficeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף משרד
+        </button>
+      </div>
+      
+      <div id="offices-list">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p style="color: var(--muted); font-size: 13px;">טוען משרדים...</p>
         </div>
       </div>
     </div>
@@ -1027,6 +1049,14 @@ body {
         </div>
         
         <div class="form-group">
+          <label class="form-label" for="emp-office">משרד</label>
+          <select class="form-input" id="emp-office">
+            <option value="">— ללא משרד (לא יוצג כתובת) —</option>
+          </select>
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">המשרד יוצג בכרטיס הביקור עם כפתורי ניווט</p>
+        </div>
+        
+        <div class="form-group">
           <div class="checkbox-row">
             <input type="checkbox" id="emp-active" checked>
             <label for="emp-active">העובד פעיל (כרטיסו מוצג)</label>
@@ -1050,6 +1080,81 @@ body {
 <!-- ============================================
      TOAST
      ============================================ -->
+<!-- ============================================
+     OFFICE MODAL
+     ============================================ -->
+<div class="modal-overlay hidden" id="office-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="office-modal-title">משרד חדש</h3>
+      <button class="modal-close" onclick="closeOfficeModal()" aria-label="סגור">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    
+    <form id="office-form">
+      <div class="modal-body">
+        <input type="hidden" id="office-id">
+        
+        <div style="background:var(--gold-soft, rgba(201, 184, 133, 0.12));border:1px solid rgba(201,184,133,0.25);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
+          <p style="font-size:12px;color:#7a6a3d;margin:0;">
+            💡 <strong>בעברית:</strong> מוצג בכרטיס בעברית.<br>
+            <strong>באנגלית:</strong> מוצג בכרטיס באנגלית. אופציונלי - אם ריק, יוצג העברי.
+          </p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-name">שם המשרד <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-name" required maxlength="100" placeholder="משרד ראשי">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-name-en">שם באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-name-en" dir="ltr" maxlength="100" placeholder="Main Office">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-address">כתובת מלאה <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-address" required maxlength="200" placeholder="רחוב הרצל 1, מגדל אלקטרה, קומה 5">
+          <p style="font-size:11px;color:var(--muted);margin-top:4px;">כולל מספר בית, מגדל, קומה - הכל בשדה אחד</p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-address-en">כתובת באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-address-en" dir="ltr" maxlength="200" placeholder="1 Herzl St., Electra Tower, 5th Floor">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-city">עיר <span style="color:var(--error)">*</span></label>
+          <input class="form-input" type="text" id="office-city" required maxlength="50" placeholder="תל אביב">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="office-city-en">עיר באנגלית <span style="color:var(--muted);font-weight:400;font-size:11px;">(אופציונלי)</span></label>
+          <input class="form-input" type="text" id="office-city-en" dir="ltr" maxlength="50" placeholder="Tel Aviv">
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="office-is-main">
+            <label for="office-is-main">משרד ראשי (מוצג כברירת מחדל לעובדים חדשים)</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger hidden" id="btn-delete-office" onclick="deleteOffice()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+          מחק
+        </button>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-secondary" onclick="closeOfficeModal()">ביטול</button>
+        <button type="submit" class="btn btn-primary" style="width:auto;" id="btn-save-office">שמור</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Supabase JS -->
@@ -1198,7 +1303,13 @@ function switchTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
   document.getElementById('tab-employees').classList.toggle('hidden', tab !== 'employees');
+  document.getElementById('tab-offices').classList.toggle('hidden', tab !== 'offices');
   document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
+  
+  // Load offices when switching to that tab
+  if (tab === 'offices') {
+    loadOffices();
+  }
 }
 
 // ============================================
@@ -1278,6 +1389,9 @@ function openEmployeeModal(empId = null) {
   const title = document.getElementById('employee-modal-title');
   const deleteBtn = document.getElementById('btn-delete-employee');
   
+  // Load offices into dropdown if not loaded yet
+  loadOfficesForDropdown();
+  
   if (editingEmployee) {
     title.textContent = 'עריכת עובד';
     deleteBtn.classList.remove('hidden');
@@ -1286,10 +1400,42 @@ function openEmployeeModal(empId = null) {
     title.textContent = 'עובד חדש';
     deleteBtn.classList.add('hidden');
     clearEmployeeForm();
+    // Auto-select main office for new employees
+    setTimeout(() => {
+      const mainOffice = offices.find(o => o.is_main);
+      if (mainOffice) {
+        document.getElementById('emp-office').value = mainOffice.id;
+      }
+    }, 100);
   }
   
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+}
+
+async function loadOfficesForDropdown() {
+  // If offices already loaded (from offices tab), use them
+  if (offices.length === 0) {
+    try {
+      const { data, error } = await sb
+        .from('office_locations')
+        .select('*')
+        .order('display_order', { ascending: true });
+      if (!error) offices = data || [];
+    } catch (e) {
+      console.warn('Could not load offices:', e);
+    }
+  }
+  
+  const select = document.getElementById('emp-office');
+  // Clear existing options except the first one
+  select.innerHTML = '<option value="">— ללא משרד (לא יוצג כתובת) —</option>';
+  offices.forEach(office => {
+    const opt = document.createElement('option');
+    opt.value = office.id;
+    opt.textContent = `${office.name} - ${office.city}`;
+    select.appendChild(opt);
+  });
 }
 
 function closeEmployeeModal() {
@@ -1310,6 +1456,7 @@ function fillEmployeeForm(emp) {
   document.getElementById('emp-email').value = emp.email;
   document.getElementById('emp-order').value = emp.display_order;
   document.getElementById('emp-active').checked = emp.is_active;
+  document.getElementById('emp-office').value = emp.office_location_id || '';
   document.getElementById('username-preview').textContent = emp.username;
   
   const preview = document.getElementById('photo-preview');
@@ -1331,6 +1478,7 @@ function clearEmployeeForm() {
   document.getElementById('emp-email').value = '';
   document.getElementById('emp-order').value = '999';
   document.getElementById('emp-active').checked = true;
+  document.getElementById('emp-office').value = '';
   document.getElementById('username-preview').textContent = 'username';
   document.getElementById('photo-preview').innerHTML = '<span>?</span>';
 }
@@ -1386,6 +1534,7 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
       email: document.getElementById('emp-email').value.trim(),
       display_order: parseInt(document.getElementById('emp-order').value) || 999,
       is_active: document.getElementById('emp-active').checked,
+      office_location_id: document.getElementById('emp-office').value || null,
       photo_url: photoUrl
     };
     
@@ -1491,6 +1640,186 @@ function handlePhotoSelected(file) {
     document.getElementById('photo-preview').innerHTML = `<img src="${e.target.result}" alt="">`;
   };
   reader.readAsDataURL(file);
+}
+
+// ============================================
+// OFFICES MANAGEMENT
+// ============================================
+
+let offices = [];
+let editingOffice = null;
+
+async function loadOffices() {
+  try {
+    const { data, error } = await sb
+      .from('office_locations')
+      .select('*')
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    offices = data || [];
+    renderOffices();
+  } catch (error) {
+    console.error('Load offices error:', error);
+    showToast('שגיאה בטעינת משרדים', 'error');
+  }
+}
+
+function renderOffices() {
+  const list = document.getElementById('offices-list');
+  const count = document.getElementById('offices-count');
+  
+  count.textContent = `${offices.length} משרדים במערכת`;
+  
+  if (offices.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7a6a3d" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 class="empty-title">אין משרדים עדיין</h3>
+        <p class="empty-subtitle">הוסף משרד כדי שיוצג בכרטיסי העובדים</p>
+        <button class="btn btn-primary" style="width:auto;" onclick="openOfficeModal()">הוסף משרד ראשון</button>
+      </div>
+    `;
+    return;
+  }
+  
+  list.innerHTML = '<div class="employees-grid">' + offices.map(office => `
+    <div class="employee-card" onclick="openOfficeModal('${office.id}')">
+      <div class="employee-avatar" style="background: linear-gradient(135deg, var(--gold), #a8985f); color: white;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="employee-info">
+        <div class="employee-name">${escapeHtml(office.name)}</div>
+        <div class="employee-title">${escapeHtml(office.address_line)}, ${escapeHtml(office.city)}</div>
+        <div class="employee-meta">
+          ${office.is_main 
+            ? '<span class="tag tag-active">ראשי</span>'
+            : ''
+          }
+          ${office.name_en 
+            ? '<span class="tag" style="background:var(--gold-soft);color:#7a6a3d;">EN ✓</span>'
+            : '<span class="tag" style="background:#fef3c7;color:#92400e;">EN חסר</span>'
+          }
+        </div>
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+
+function openOfficeModal(officeId = null) {
+  editingOffice = officeId ? offices.find(o => o.id === officeId) : null;
+  
+  const modal = document.getElementById('office-modal');
+  const title = document.getElementById('office-modal-title');
+  const deleteBtn = document.getElementById('btn-delete-office');
+  
+  if (editingOffice) {
+    title.textContent = 'עריכת משרד';
+    deleteBtn.classList.remove('hidden');
+    fillOfficeForm(editingOffice);
+  } else {
+    title.textContent = 'משרד חדש';
+    deleteBtn.classList.add('hidden');
+    clearOfficeForm();
+  }
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOfficeModal() {
+  document.getElementById('office-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  editingOffice = null;
+}
+
+function fillOfficeForm(office) {
+  document.getElementById('office-id').value = office.id;
+  document.getElementById('office-name').value = office.name;
+  document.getElementById('office-name-en').value = office.name_en || '';
+  document.getElementById('office-address').value = office.address_line;
+  document.getElementById('office-address-en').value = office.address_line_en || '';
+  document.getElementById('office-city').value = office.city;
+  document.getElementById('office-city-en').value = office.city_en || '';
+  document.getElementById('office-is-main').checked = office.is_main;
+}
+
+function clearOfficeForm() {
+  document.getElementById('office-id').value = '';
+  document.getElementById('office-name').value = '';
+  document.getElementById('office-name-en').value = '';
+  document.getElementById('office-address').value = '';
+  document.getElementById('office-address-en').value = '';
+  document.getElementById('office-city').value = '';
+  document.getElementById('office-city-en').value = '';
+  document.getElementById('office-is-main').checked = false;
+}
+
+// Save office
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('office-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btn-save-office');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div>';
+      
+      try {
+        const data = {
+          name: document.getElementById('office-name').value.trim(),
+          name_en: document.getElementById('office-name-en').value.trim() || null,
+          address_line: document.getElementById('office-address').value.trim(),
+          address_line_en: document.getElementById('office-address-en').value.trim() || null,
+          city: document.getElementById('office-city').value.trim(),
+          city_en: document.getElementById('office-city-en').value.trim() || null,
+          country: 'Israel',
+          is_main: document.getElementById('office-is-main').checked
+        };
+        
+        let result;
+        if (editingOffice) {
+          result = await sb.from('office_locations').update(data).eq('id', editingOffice.id);
+        } else {
+          result = await sb.from('office_locations').insert(data);
+        }
+        
+        if (result.error) throw result.error;
+        
+        showToast(editingOffice ? 'המשרד עודכן' : 'המשרד נוסף', 'success');
+        closeOfficeModal();
+        loadOffices();
+        
+      } catch (error) {
+        console.error('Save office error:', error);
+        showToast('שגיאה בשמירה: ' + error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'שמור';
+      }
+    });
+  }
+});
+
+async function deleteOffice() {
+  if (!editingOffice) return;
+  if (!confirm(`למחוק את המשרד "${editingOffice.name}"? לא ניתן לשחזר. עובדים שמשויכים למשרד זה יישארו בלי משרד.`)) return;
+  
+  try {
+    const { error } = await sb.from('office_locations').delete().eq('id', editingOffice.id);
+    if (error) throw error;
+    
+    showToast('המשרד נמחק', 'success');
+    closeOfficeModal();
+    loadOffices();
+  } catch (error) {
+    console.error('Delete office error:', error);
+    showToast('שגיאה במחיקה: ' + error.message, 'error');
+  }
 }
 
 // ============================================
