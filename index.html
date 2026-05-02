@@ -387,18 +387,61 @@ html[lang="en"] .name {
   display: inline-block;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
-  opacity: 0.85;
+  opacity: 0.95;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.company-logo-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
 }
 
 .company-logo:hover {
   opacity: 1;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.company-logo:active {
+  transform: translateY(0);
 }
 
 .company-logo img {
-  height: 28px;
+  height: 40px;
   width: auto;
   display: block;
+  transition: filter 0.2s ease;
+}
+
+.company-logo:hover img {
+  filter: drop-shadow(0 2px 8px rgba(10, 22, 40, 0.12));
+}
+
+/* External link icon - subtle but visible */
+.company-logo-external {
+  width: 13px;
+  height: 13px;
+  color: var(--muted);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.company-logo:hover .company-logo-external {
+  opacity: 1;
+  color: var(--gold);
+  transform: translate(2px, -2px);
+}
+
+/* Logo when displayed as text (no image set) */
+.company-logo #company-logo-text {
+  transition: color 0.2s ease;
+}
+
+.company-logo:hover #company-logo-text {
+  color: var(--ink) !important;
 }
 
 /* ============== Office Address ============== */
@@ -782,8 +825,14 @@ html[lang="en"] .office-row {
       </div>
 
       <a href="#" target="_blank" rel="noopener" class="company-logo" id="company-logo-link" aria-label="קבוצת סופרין - לאתר החברה">
-        <img id="company-logo-img" src="" alt="Sufrin Group" style="display:none;">
-        <span id="company-logo-text" style="font-size: 13px; color: var(--muted);">קבוצת סופרין</span>
+        <span class="company-logo-inner">
+          <img id="company-logo-img" src="" alt="Sufrin Group" style="display:none;">
+          <span id="company-logo-text" style="font-size: 13px; color: var(--muted);">קבוצת סופרין</span>
+          <svg class="company-logo-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
       </a>
 
       <div class="divider">
@@ -1075,8 +1124,14 @@ function renderEmployeeData() {
   const logoLink = document.getElementById('company-logo-link');
   const logoImg = document.getElementById('company-logo-img');
   const logoText = document.getElementById('company-logo-text');
+  const logoExternal = document.querySelector('.company-logo-external');
   
   logoLink.href = company.website_url || '#';
+  
+  // Show external icon only if there's a real website to navigate to
+  if (logoExternal) {
+    logoExternal.style.display = company.website_url ? 'inline-block' : 'none';
+  }
   
   if (company.logo_url) {
     logoImg.src = company.logo_url;
