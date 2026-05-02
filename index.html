@@ -1010,17 +1010,26 @@ function renderOfficeSection() {
     return;
   }
   
-  // Build the address text
+  // Decide which language fields to use (fallback to Hebrew)
+  const displayAddress = (currentLang === 'en' && currentOffice.address_line_en) 
+    ? currentOffice.address_line_en 
+    : currentOffice.address_line;
+  const displayCity = (currentLang === 'en' && currentOffice.city_en) 
+    ? currentOffice.city_en 
+    : currentOffice.city;
+  
+  // Build the address text with line breaks
   const addressEl = document.getElementById('office-address');
   addressEl.innerHTML = `
-    ${escapeHtml(currentOffice.address_line)}<br>
-    <span class="office-city">${escapeHtml(currentOffice.city)}</span>
+    ${escapeHtml(displayAddress)}<br>
+    <span class="office-city">${escapeHtml(displayCity)}</span>
   `;
   
   // Build navigation URLs
-  // Use the FULL address (including city) for accurate navigation
-  const fullAddress = `${currentOffice.address_line}, ${currentOffice.city}`;
-  const encodedAddress = encodeURIComponent(fullAddress);
+  // ALWAYS use the Hebrew address for navigation (more accurate in Israel)
+  // even if displaying in English
+  const navAddress = `${currentOffice.address_line}, ${currentOffice.city}`;
+  const encodedAddress = encodeURIComponent(navAddress);
   
   // Waze: opens in app on mobile, web on desktop
   const wazeUrl = `https://waze.com/ul?q=${encodedAddress}&navigate=yes`;
