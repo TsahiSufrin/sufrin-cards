@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a1628">
+<meta name="theme-color" content="#efece4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d121b" media="(prefers-color-scheme: dark)">
 <title>קבוצת סופרין | כרטיס ביקור</title>
 <meta name="description" content="כרטיס ביקור דיגיטלי - קבוצת סופרין">
 
@@ -35,6 +36,46 @@
   --line-soft: rgba(10, 22, 40, 0.05);
   --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
   --shadow-lg: 0 20px 60px -20px rgba(10, 22, 40, 0.15), 0 0 0 1px rgba(10, 22, 40, 0.04);
+  
+  /* Card-specific colors that change in dark mode */
+  --card-top-start: #f0ede4;
+  --card-top-end: #fafaf7;
+  --btn-primary-bg: #0a1628;
+  --btn-primary-color: #fafaf7;
+  --avatar-bg-start: #1e3a5f;
+  --avatar-bg-end: #0a1628;
+  --status-online: #16a34a;
+  --address-color: #1e3a5f;
+}
+
+/* ============== DARK MODE ============== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0d121b;
+    --bg-card: #131a26;
+    --bg-soft: #1a2230;
+    --bg-white: rgba(255, 255, 255, 0.05);
+    --ink: #f0ede4;
+    --ink-soft: #d6d4cc;
+    --muted: #a1a098;
+    --gold: #d4c490;
+    --gold-soft: rgba(212, 196, 144, 0.1);
+    --gold-border: rgba(212, 196, 144, 0.3);
+    --line: rgba(255, 255, 255, 0.08);
+    --line-soft: rgba(255, 255, 255, 0.05);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    
+    /* Card-specific in dark mode */
+    --card-top-start: #1e2738;
+    --card-top-end: #131a26;
+    --btn-primary-bg: #d4c490;
+    --btn-primary-color: #131a26;
+    --avatar-bg-start: #2a3a55;
+    --avatar-bg-end: #131a26;
+    --status-online: #4ade80;
+    --address-color: #d6d4cc;
+  }
 }
 
 html, body {
@@ -246,7 +287,7 @@ html[lang="en"] .name {
 .status-dot {
   width: 7px;
   height: 7px;
-  background: #16a34a;
+  background: var(--status-online);
   border-radius: 50%;
   position: relative;
 }
@@ -256,7 +297,7 @@ html[lang="en"] .name {
   position: absolute;
   inset: -3px;
   border-radius: 50%;
-  background: #16a34a;
+  background: var(--status-online);
   opacity: 0.3;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -296,7 +337,7 @@ html[lang="en"] .name {
   width: 132px;
   height: 132px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+  background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,7 +439,7 @@ html[lang="en"] .office-row {
 
 .office-text {
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--address-color);
   line-height: 1.6;
   flex: 1;
 }
@@ -474,8 +515,8 @@ html[lang="en"] .office-row {
 
 .btn-primary {
   width: 100%;
-  background: var(--ink);
-  color: var(--bg-card);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   border: none;
   padding: 16px;
   border-radius: 14px;
