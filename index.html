@@ -928,7 +928,8 @@ async function loadCard() {
     const username = params.get('u');
 
     if (!username) {
-      showError('errorNoUserTitle', 'errorNoUserMsg');
+      // No username specified - redirect to landing page
+      window.location.replace('landing.html');
       return;
     }
 
