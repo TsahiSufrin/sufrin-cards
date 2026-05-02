@@ -588,10 +588,6 @@ html[lang="en"] .office-row {
   padding: 14px;
 }
 
-.btn-email-full svg {
-  color: var(--ink);
-}
-
 .btn-secondary {
   background: var(--bg-white);
   color: var(--ink);
@@ -811,10 +807,7 @@ html[lang="en"] .office-row {
       </div>
 
       <a class="btn-secondary btn-email-full" id="email-link" href="#" aria-label="שלח אימייל">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg>
+        <svg width="17" height="17" viewBox="0 0 24 24"><defs><linearGradient id="mail-grad-btn" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#mail-grad-btn)" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <span id="email-text">שלח אימייל</span>
       </a>
 
