@@ -1400,12 +1400,18 @@ function openEmployeeModal(empId = null) {
     title.textContent = 'עובד חדש';
     deleteBtn.classList.add('hidden');
     clearEmployeeForm();
-    // Auto-select main office for new employees
+    // Auto-fill defaults for new employees
     setTimeout(() => {
+      // Auto-select main office
       const mainOffice = offices.find(o => o.is_main);
       if (mainOffice) {
         document.getElementById('emp-office').value = mainOffice.id;
       }
+      // Auto-calculate next display_order (max + 1)
+      const maxOrder = employees.length > 0 
+        ? Math.max(...employees.map(e => e.display_order || 0))
+        : 0;
+      document.getElementById('emp-order').value = maxOrder + 1;
     }, 100);
   }
   
