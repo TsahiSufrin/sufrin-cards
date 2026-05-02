@@ -885,6 +885,182 @@ body {
 }
 
 /* ================================================
+   IMAGE CROPPER MODAL
+   ================================================ */
+.cropper-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.cropper-modal {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 540px;
+  width: 100%;
+  max-height: 92vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--line);
+}
+
+.cropper-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cropper-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cropper-modal-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.cropper-container-wrap {
+  background: var(--bg-soft);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cropper-image-target {
+  display: block;
+  max-width: 100%;
+  max-height: 380px;
+  margin: 0 auto;
+}
+
+/* Cropper.js overrides for circular preview */
+.cropper-view-box,
+.cropper-face {
+  border-radius: 50%;
+}
+
+.cropper-view-box {
+  outline: 0;
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.cropper-line, .cropper-point {
+  background-color: var(--gold) !important;
+}
+
+.cropper-point {
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 1 !important;
+}
+
+.cropper-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cropper-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cropper-btn:hover {
+  border-color: var(--gold-border);
+  background: var(--gold-soft);
+  transform: translateY(-1px);
+}
+
+.cropper-btn:active {
+  transform: translateY(0);
+}
+
+.cropper-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cropper-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.cropper-modal-tip {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cropper-modal-tip-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .cropper-modal {
+    padding: 20px 16px;
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+  .cropper-image-target {
+    max-height: 280px;
+  }
+  .cropper-controls {
+    gap: 6px;
+  }
+  .cropper-btn {
+    padding: 7px 11px;
+    font-size: 11px;
+  }
+}
+
+/* ================================================
    LOCKED / READ-ONLY MODE
    ================================================ */
 .lock-banner {
@@ -1359,8 +1535,59 @@ html[dir="ltr"] .locked-card::after {
 
 <div class="toast" id="toast"></div>
 
+<!-- Image Cropper Modal -->
+<div class="cropper-modal-overlay hidden" id="cropper-modal-overlay">
+  <div class="cropper-modal">
+    <div class="cropper-modal-header">
+      <div>
+        <div class="cropper-modal-title">עריכת תמונת פרופיל</div>
+        <div class="cropper-modal-subtitle">חתוך את התמונה כך שהפנים יהיו במרכז</div>
+      </div>
+    </div>
+    
+    <div class="cropper-modal-tip">
+      <span class="cropper-modal-tip-icon">💡</span>
+      <span>גרור את התמונה למיקום הרצוי, השתמש בכפתורים להגדלה / סיבוב</span>
+    </div>
+    
+    <div class="cropper-container-wrap">
+      <img id="cropper-image-target" class="cropper-image-target" alt="">
+    </div>
+    
+    <div class="cropper-controls">
+      <button class="cropper-btn" type="button" onclick="cropperZoom(0.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        זום פנימה
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperZoom(-0.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        זום החוצה
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperRotate(-90)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        סובב שמאל
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperRotate(90)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        סובב ימין
+      </button>
+      <button class="cropper-btn" type="button" onclick="cropperReset()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        איפוס
+      </button>
+    </div>
+    
+    <div class="cropper-modal-actions">
+      <button class="btn btn-secondary" type="button" onclick="closeCropper()">ביטול</button>
+      <button class="btn btn-primary" type="button" onclick="applyCrop()" id="crop-apply-btn">החל חיתוך</button>
+    </div>
+  </div>
+</div>
+
 <!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
 
 <script>
 // ============================================
@@ -1896,7 +2123,7 @@ photoUpload.addEventListener('drop', (e) => {
 });
 
 function handlePhotoSelected(file) {
-  // Validate
+  // Validate type
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
     showToast('סוג קובץ לא נתמך. השתמש ב-JPG/PNG/WebP', 'error');
     return;
@@ -1906,15 +2133,123 @@ function handlePhotoSelected(file) {
     return;
   }
   
-  pendingPhotoFile = file;
-  pendingPhotoRemove = false;
-  
-  // Show preview
+  // Open cropper instead of saving directly
   const reader = new FileReader();
   reader.onload = (e) => {
-    document.getElementById('photo-preview').innerHTML = `<img src="${e.target.result}" alt="">`;
+    openCropper(e.target.result);
   };
   reader.readAsDataURL(file);
+}
+
+// ============================================
+// IMAGE CROPPER
+// ============================================
+let cropperInstance = null;
+
+function openCropper(imageDataUrl) {
+  const overlay = document.getElementById('cropper-modal-overlay');
+  const img = document.getElementById('cropper-image-target');
+  
+  img.src = imageDataUrl;
+  overlay.classList.remove('hidden');
+  
+  // Destroy previous instance if exists
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+  
+  // Initialize Cropper after image loads
+  img.onload = () => {
+    cropperInstance = new Cropper(img, {
+      aspectRatio: 1,           // Square (will appear circular due to CSS)
+      viewMode: 1,              // Restrict crop box to canvas
+      dragMode: 'move',         // Drag to move image
+      autoCropArea: 0.85,       // Initial crop area size
+      restore: false,
+      guides: false,
+      center: true,
+      highlight: false,
+      cropBoxMovable: false,    // User moves the IMAGE, not the box
+      cropBoxResizable: false,  // Fixed size box
+      toggleDragModeOnDblclick: false,
+      background: false,
+      modal: true,
+      minContainerWidth: 300,
+      minContainerHeight: 300,
+      responsive: true,
+      zoomable: true,
+      zoomOnTouch: true,
+      zoomOnWheel: true
+    });
+  };
+}
+
+function closeCropper() {
+  const overlay = document.getElementById('cropper-modal-overlay');
+  overlay.classList.add('hidden');
+  
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+}
+
+function cropperZoom(delta) {
+  if (cropperInstance) cropperInstance.zoom(delta);
+}
+
+function cropperRotate(degrees) {
+  if (cropperInstance) cropperInstance.rotate(degrees);
+}
+
+function cropperReset() {
+  if (cropperInstance) cropperInstance.reset();
+}
+
+function applyCrop() {
+  if (!cropperInstance) return;
+  
+  const btn = document.getElementById('crop-apply-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+  
+  // Get cropped image as canvas with reasonable size
+  const canvas = cropperInstance.getCroppedCanvas({
+    width: 800,
+    height: 800,
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'high',
+  });
+  
+  // Convert to JPEG blob (smaller than PNG, sufficient for photos)
+  canvas.toBlob((blob) => {
+    if (!blob) {
+      showToast('שגיאה בחיתוך התמונה', 'error');
+      btn.disabled = false;
+      btn.textContent = 'החל חיתוך';
+      return;
+    }
+    
+    // Create File from blob
+    const croppedFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+    
+    // Save as pending photo
+    pendingPhotoFile = croppedFile;
+    pendingPhotoRemove = false;
+    
+    // Update preview
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    document.getElementById('photo-preview').innerHTML = `<img src="${dataUrl}" alt="">`;
+    
+    // Close cropper
+    closeCropper();
+    
+    btn.disabled = false;
+    btn.textContent = 'החל חיתוך';
+    
+    showToast('התמונה נחתכה בהצלחה', 'success');
+  }, 'image/jpeg', 0.92);
 }
 
 // ============================================
