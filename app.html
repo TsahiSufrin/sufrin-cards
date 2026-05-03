@@ -565,6 +565,173 @@ body {
   flex-shrink: 0;
 }
 
+/* Instructions Modal */
+.instructions-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn 0.2s ease;
+}
+
+@media (min-width: 480px) {
+  .instructions-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+}
+
+.instructions-modal {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+@media (min-width: 480px) {
+  .instructions-modal {
+    border-radius: 24px;
+    max-height: 80vh;
+  }
+}
+
+.instructions-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.instructions-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.instructions-close {
+  background: var(--bg-soft);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instructions-content {
+  padding: 20px 24px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.instr-platform-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.instr-platform-tab {
+  flex: 1;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.instr-platform-tab.active {
+  background: var(--bg-card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.instr-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.instr-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1.5px solid var(--gold-border);
+}
+
+.instr-step-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  padding-top: 5px;
+}
+
+.instr-step-text strong {
+  font-weight: 600;
+}
+
+.instr-icon-inline {
+  display: inline-flex;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin: 0 2px;
+}
+
+.instr-tip {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--ink);
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.instr-tip-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
 /* Footer Tag */
 .app-footer-tag {
   text-align: center;
@@ -618,14 +785,27 @@ body {
   <!-- Main App Screen -->
   <div class="main-screen hidden" id="main-screen">
     
-    <!-- Install Banner -->
+    <!-- Install Banner - Always visible if not installed -->
     <div class="install-banner hidden" id="install-banner">
       <div class="install-banner-icon">📱</div>
       <div class="install-banner-text">
         <strong>הוסף למסך הבית</strong>
         גישה מהירה בלחיצה אחת
       </div>
-      <button class="install-banner-close" id="install-close" onclick="hideInstallBanner()">×</button>
+      <button class="install-banner-close" id="install-close" onclick="hideInstallBanner()" type="button">×</button>
+    </div>
+    
+    <!-- Install Instructions Modal -->
+    <div class="instructions-overlay hidden" id="instructions-overlay" onclick="closeInstructions(event)">
+      <div class="instructions-modal" onclick="event.stopPropagation()">
+        <div class="instructions-header">
+          <div class="instructions-title" id="instructions-title">איך להוסיף למסך הבית</div>
+          <button class="instructions-close" onclick="closeInstructions()" type="button">×</button>
+        </div>
+        <div class="instructions-content" id="instructions-content">
+          <!-- Filled by JS based on platform -->
+        </div>
+      </div>
     </div>
     
     <!-- Header -->
@@ -829,27 +1009,183 @@ async function init() {
       }
     }
     
-    // Listen for install prompt
+    // Listen for install prompt (Android Chrome)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (!localStorage.getItem('install-dismissed')) {
-        setTimeout(() => {
-          const banner = document.getElementById('install-banner');
-          if (banner && !document.getElementById('main-screen').classList.contains('hidden')) {
-            banner.classList.remove('hidden');
-            banner.onclick = (ev) => {
-              if (ev.target.classList.contains('install-banner-close')) return;
-              promptInstall();
-            };
-          }
-        }, 1000);
-      }
     });
+    
+    // Show install banner after a delay (unless already dismissed/installed)
+    setTimeout(() => {
+      showInstallBannerIfNeeded();
+    }, 1500);
   } catch (err) {
     console.error('Init error:', err);
     showErrorOnLoadingScreen('שגיאה באתחול: ' + err.message);
   }
+}
+
+// ============================================
+// INSTALL BANNER & INSTRUCTIONS
+// ============================================
+function isStandalone() {
+  // Check if app is running as installed PWA
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true ||
+         document.referrer.includes('android-app://');
+}
+
+function getPlatform() {
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return 'ios';
+  if (/Android/i.test(ua)) return 'android';
+  return 'other';
+}
+
+function showInstallBannerIfNeeded() {
+  // Don't show if already installed, dismissed, or not on main screen
+  if (isStandalone()) return;
+  if (localStorage.getItem('install-dismissed')) return;
+  
+  const banner = document.getElementById('install-banner');
+  if (!banner) return;
+  
+  // Show banner and make it open instructions on tap
+  banner.classList.remove('hidden');
+  banner.style.cursor = 'pointer';
+  banner.onclick = (ev) => {
+    if (ev.target.classList.contains('install-banner-close')) return;
+    showInstructions();
+  };
+}
+
+function showInstructions() {
+  const platform = getPlatform();
+  const overlay = document.getElementById('instructions-overlay');
+  const content = document.getElementById('instructions-content');
+  
+  let html = `
+    <div class="instr-platform-tabs">
+      <button class="instr-platform-tab ${platform === 'ios' ? 'active' : ''}" onclick="switchPlatform('ios')" type="button">🍎 אייפון</button>
+      <button class="instr-platform-tab ${platform === 'android' ? 'active' : ''}" onclick="switchPlatform('android')" type="button">🤖 אנדרואיד</button>
+    </div>
+    <div id="instr-platform-content"></div>
+  `;
+  
+  content.innerHTML = html;
+  switchPlatform(platform === 'other' ? 'ios' : platform);
+  overlay.classList.remove('hidden');
+}
+
+function switchPlatform(platform) {
+  // Update tab buttons
+  document.querySelectorAll('.instr-platform-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelectorAll('.instr-platform-tab').forEach(tab => {
+    if (tab.textContent.includes(platform === 'ios' ? 'אייפון' : 'אנדרואיד')) {
+      tab.classList.add('active');
+    }
+  });
+  
+  const target = document.getElementById('instr-platform-content');
+  if (!target) return;
+  
+  if (platform === 'ios') {
+    target.innerHTML = `
+      <div class="instr-step">
+        <div class="instr-step-num">1</div>
+        <div class="instr-step-text">
+          ודא שאתה ב<strong>Safari</strong> (לא Chrome).
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">2</div>
+        <div class="instr-step-text">
+          לחץ על כפתור <strong>שתף</strong>
+          <svg class="instr-icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          בסרגל התחתון של Safari (ריבוע עם חץ למעלה).
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">3</div>
+        <div class="instr-step-text">
+          גלול ובחר <strong>"הוסף למסך הבית"</strong> (Add to Home Screen).
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">4</div>
+        <div class="instr-step-text">
+          לחץ <strong>"הוסף"</strong> בפינה הימנית העליונה.
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">✓</div>
+        <div class="instr-step-text">
+          <strong>סיימת!</strong> האייקון יופיע במסך הבית 🎉
+        </div>
+      </div>
+      <div class="instr-tip">
+        <span class="instr-tip-icon">💡</span>
+        <div>בפעם הבאה - פתח את האייקון מהמסך הראשי. האפליקציה תיפתח במסך מלא, בלי דפדפן.</div>
+      </div>
+    `;
+  } else if (platform === 'android') {
+    target.innerHTML = `
+      <div class="instr-step">
+        <div class="instr-step-num">1</div>
+        <div class="instr-step-text">
+          ב-<strong>Chrome</strong>: לחץ על <strong>3 הנקודות</strong> בפינה הימנית העליונה ⋮
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">2</div>
+        <div class="instr-step-text">
+          בחר <strong>"הוסף למסך הבית"</strong> (Add to Home screen) או <strong>"התקן אפליקציה"</strong> (Install app).
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">3</div>
+        <div class="instr-step-text">
+          לחץ <strong>"הוסף"</strong> או <strong>"התקן"</strong>.
+        </div>
+      </div>
+      <div class="instr-step">
+        <div class="instr-step-num">✓</div>
+        <div class="instr-step-text">
+          <strong>סיימת!</strong> האייקון יופיע במסך הבית 🎉
+        </div>
+      </div>
+      ${deferredPrompt ? `
+      <button onclick="promptInstall()" type="button" style="
+        width: 100%;
+        padding: 14px;
+        background: var(--ink);
+        color: var(--bg-card);
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 16px;
+        cursor: pointer;
+        font-family: inherit;
+      ">
+        📱 התקן עכשיו (לחיצה אחת)
+      </button>
+      ` : ''}
+      <div class="instr-tip">
+        <span class="instr-tip-icon">💡</span>
+        <div>בפעם הבאה - פתח את האייקון מהמסך הראשי. האפליקציה תיפתח במסך מלא, בלי דפדפן.</div>
+      </div>
+    `;
+  }
+}
+
+function closeInstructions(event) {
+  if (event && event.target.id !== 'instructions-overlay' && !event.target.classList.contains('instructions-close')) {
+    return;
+  }
+  document.getElementById('instructions-overlay').classList.add('hidden');
 }
 
 function showLoginScreen() {
@@ -1144,17 +1480,21 @@ async function copyLink() {
 // PWA INSTALL
 // ============================================
 async function promptInstall() {
-  if (!deferredPrompt) return;
+  if (!deferredPrompt) {
+    showToast('פתח את ההוראות לקבלת הסבר', 'info');
+    return;
+  }
   
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
   
   if (outcome === 'accepted') {
     showToast('האפליקציה הותקנה!', 'success');
+    closeInstructions({target: {id: 'instructions-overlay'}});
+    hideInstallBanner();
   }
   
   deferredPrompt = null;
-  hideInstallBanner();
 }
 
 function hideInstallBanner() {
