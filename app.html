@@ -338,9 +338,19 @@ body {
 }
 
 #qrcode {
-  display: block;
+  display: inline-block;
   width: 200px;
   height: 200px;
+}
+
+#qrcode img {
+  display: block;
+  margin: 0 auto;
+}
+
+#qrcode canvas {
+  display: block;
+  margin: 0 auto;
 }
 
 .qr-url {
@@ -636,7 +646,7 @@ body {
     <div class="qr-section">
       <div class="qr-section-title">סרוק לקבלת הכרטיס</div>
       <div class="qr-wrap">
-        <canvas id="qrcode"></canvas>
+        <div id="qrcode"></div>
       </div>
       <div class="qr-url" id="qr-url">card.sufrin.io/?u=...</div>
     </div>
@@ -716,7 +726,7 @@ body {
 
 <!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 
 <script>
 // ============================================
@@ -962,20 +972,33 @@ function renderUserData() {
 }
 
 function generateQR(url) {
-  const canvas = document.getElementById('qrcode');
-  if (!canvas || !window.QRCode) return;
+  const container = document.getElementById('qrcode');
+  if (!container || !window.QRCode) return;
   
-  QRCode.toCanvas(canvas, url, {
-    width: 200,
-    margin: 1,
-    color: {
-      dark: '#0A1628',
-      light: '#FFFFFF'
-    },
-    errorCorrectionLevel: 'M'
-  }, (error) => {
-    if (error) console.error('QR error:', error);
-  });
+  // Clear previous
+  container.innerHTML = '';
+  
+  // qrcodejs needs a div, not canvas
+  // Replace canvas with div if needed
+  if (container.tagName === 'CANVAS') {
+    const div = document.createElement('div');
+    div.id = 'qrcode';
+    container.parentNode.replaceChild(div, container);
+  }
+  
+  // Create QR Code
+  try {
+    new QRCode(document.getElementById('qrcode'), {
+      text: url,
+      width: 200,
+      height: 200,
+      colorDark: '#0A1628',
+      colorLight: '#FFFFFF',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch (err) {
+    console.error('QR error:', err);
+  }
 }
 
 // ============================================
