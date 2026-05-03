@@ -1,0 +1,42 @@
+{
+  "name": "סופרין - כרטיסי ביקור",
+  "short_name": "Sufrin Cards",
+  "description": "כלי לעובדי קבוצת סופרין לשיתוף מהיר של כרטיס הביקור הדיגיטלי",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAFAF7",
+  "theme_color": "#0A1628",
+  "lang": "he",
+  "dir": "rtl",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "שיתוף מהיר",
+      "short_name": "שתף",
+      "description": "שתף את הכרטיס שלך עם לקוח",
+      "url": "/app"
+    }
+  ]
+}

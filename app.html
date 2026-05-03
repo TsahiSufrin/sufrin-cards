@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0A1628">
+<title>סופרין - שיתוף כרטיס</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Sufrin">
+<meta name="mobile-web-app-capable" content="yes">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg-page: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-soft: #F5F2EA;
+  --bg-dark: #0A1628;
+  --ink: #0A1628;
+  --ink-light: #1E3A5F;
+  --muted: #6B6555;
+  --muted-light: #A8A193;
+  --gold: #C9B885;
+  --gold-soft: rgba(201, 184, 133, 0.1);
+  --gold-border: rgba(201, 184, 133, 0.35);
+  --line: rgba(10, 22, 40, 0.08);
+  --line-strong: rgba(10, 22, 40, 0.15);
+  --blue: #1F66B5;
+  --blue-light: #5DADEC;
+  --error: #DC2626;
+  --error-soft: rgba(220, 38, 38, 0.1);
+  --success: #16A34A;
+  --shadow-sm: 0 2px 8px rgba(10, 22, 40, 0.06);
+  --shadow-md: 0 6px 20px rgba(10, 22, 40, 0.08);
+  --shadow-lg: 0 12px 40px rgba(10, 22, 40, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0A1628;
+    --bg-card: #1A2942;
+    --bg-soft: #243450;
+    --ink: #F5F2EA;
+    --ink-light: #C9B885;
+    --muted: #A8A193;
+    --muted-light: #7A7466;
+    --line: rgba(245, 242, 234, 0.1);
+    --line-strong: rgba(245, 242, 234, 0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg-page);
+  color: var(--ink);
+  overscroll-behavior-y: contain;
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============== LOADING ============== */
+.loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold-border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.hidden { display: none !important; }
+
+/* ============== LOGIN SCREEN ============== */
+.login-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 24px;
+  justify-content: center;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-logo-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 22px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.login-subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.login-tagline {
+  text-align: center;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.login-form {
+  background: var(--bg-card);
+  padding: 28px 24px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  margin-top: 32px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--ink);
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--bg-card);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: var(--ink);
+  color: var(--bg-card);
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.error-msg {
+  background: var(--error-soft);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* ============== MAIN APP SCREEN ============== */
+.main-screen {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--ink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--bg-card);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-greeting {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.logout-btn:hover {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* QR Code Section */
+.qr-section {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  text-align: center;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.qr-section-title {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.qr-wrap {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  display: inline-block;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+}
+
+#qrcode {
+  display: block;
+  width: 200px;
+  height: 200px;
+}
+
+.qr-url {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2px;
+  direction: ltr;
+  word-break: break-all;
+  margin-top: 4px;
+}
+
+/* Share Buttons */
+.share-section {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 18px 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  min-height: 56px;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-btn:active {
+  transform: translateY(0);
+}
+
+.share-btn-whatsapp:hover {
+  background: rgba(37, 211, 102, 0.08);
+  border-color: rgba(37, 211, 102, 0.3);
+}
+
+.share-btn-email:hover {
+  background: rgba(31, 102, 181, 0.08);
+  border-color: rgba(31, 102, 181, 0.3);
+}
+
+.share-btn-nfc:hover {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.share-btn-system:hover {
+  background: var(--gold-soft);
+  border-color: var(--gold-border);
+}
+
+.share-btn svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* Native share button - full width */
+.share-btn-native {
+  grid-column: 1 / -1;
+  background: var(--ink);
+  color: var(--bg-card);
+  border-color: var(--ink);
+  font-weight: 600;
+}
+
+.share-btn-native:hover {
+  background: var(--ink-light);
+  border-color: var(--ink-light);
+}
+
+.share-btn-native svg {
+  color: var(--bg-card);
+}
+
+/* Footer Actions */
+.footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+  margin-top: 4px;
+}
+
+.footer-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.footer-action:hover {
+  background: var(--bg-card);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.footer-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--ink);
+  color: var(--bg-card);
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  max-width: calc(100% - 40px);
+  text-align: center;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success { background: var(--success); }
+.toast.error { background: var(--error); }
+
+/* Install prompt banner */
+.install-banner {
+  background: linear-gradient(135deg, var(--gold-soft), rgba(201, 184, 133, 0.05));
+  border: 1px solid var(--gold-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.install-banner-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.install-banner-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.install-banner-text strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.install-banner-close {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+/* Footer Tag */
+.app-footer-tag {
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted-light);
+  padding: 16px 0 8px;
+  font-weight: 500;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- Loading State -->
+  <div class="loading" id="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">טוען...</div>
+  </div>
+
+  <!-- Login Screen -->
+  <div class="login-screen hidden" id="login-screen">
+    <div class="login-logo">
+      <img src="/icon-192.png" class="login-logo-img" alt="Sufrin">
+      <div class="login-title">סופרין</div>
+      <div class="login-subtitle">כלי השיתוף לעובדים</div>
+      <div class="login-tagline">SHARE YOUR CARD</div>
+    </div>
+    
+    <div class="login-form">
+      <div class="error-msg hidden" id="login-error"></div>
+      
+      <form onsubmit="event.preventDefault(); doLogin();">
+        <div class="form-group">
+          <label class="form-label" for="login-email">אימייל</label>
+          <input type="email" id="login-email" class="form-input" autocomplete="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="login-password">סיסמה</label>
+          <input type="password" id="login-password" class="form-input" autocomplete="current-password" required>
+        </div>
+        
+        <button type="submit" class="btn-primary" id="login-btn">
+          <span id="login-btn-text">התחבר</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App Screen -->
+  <div class="main-screen hidden" id="main-screen">
+    
+    <!-- Install Banner -->
+    <div class="install-banner hidden" id="install-banner">
+      <div class="install-banner-icon">📱</div>
+      <div class="install-banner-text">
+        <strong>הוסף למסך הבית</strong>
+        גישה מהירה בלחיצה אחת
+      </div>
+      <button class="install-banner-close" id="install-close" onclick="hideInstallBanner()">×</button>
+    </div>
+    
+    <!-- Header -->
+    <div class="app-header">
+      <div class="user-avatar" id="user-avatar">
+        <span id="user-initial">?</span>
+      </div>
+      <div class="user-info">
+        <div class="user-greeting">שלום</div>
+        <div class="user-name" id="user-name">טוען...</div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">התנתק</button>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section">
+      <div class="qr-section-title">סרוק לקבלת הכרטיס</div>
+      <div class="qr-wrap">
+        <canvas id="qrcode"></canvas>
+      </div>
+      <div class="qr-url" id="qr-url">card.sufrin.io/?u=...</div>
+    </div>
+
+    <!-- Share Section -->
+    <div class="share-section">
+      <div class="share-section-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        שיתוף מהיר
+      </div>
+      <div class="share-grid">
+        
+        <!-- Native Share (most prominent) -->
+        <button class="share-btn share-btn-native" onclick="shareNative()" id="share-native-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span>שתף עם מישהו</span>
+        </button>
+
+        <!-- WhatsApp -->
+        <button class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">
+          <svg viewBox="0 0 24 24" fill="#25D366">
+            <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/>
+          </svg>
+          <span>WhatsApp</span>
+        </button>
+
+        <!-- Email -->
+        <button class="share-btn share-btn-email" onclick="shareEmail()">
+          <svg viewBox="0 0 24 24"><defs><linearGradient id="mail-share" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#mail-share)" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>אימייל</span>
+        </button>
+
+        <!-- Copy Link -->
+        <button class="share-btn share-btn-system" onclick="copyLink()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>העתק קישור</span>
+        </button>
+
+        <!-- SMS -->
+        <button class="share-btn share-btn-system" onclick="shareSMS()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>SMS</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="footer-actions">
+      <a href="#" class="footer-action" id="view-card-link" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>צפה בכרטיס שלך</span>
+      </a>
+    </div>
+
+    <div class="app-footer-tag">SUFRIN GROUP • PWA</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+// ============================================
+// CONFIGURATION
+// ============================================
+const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
+const CARD_BASE_URL = 'https://card.sufrin.io';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+let currentUser = null;
+let currentEmployee = null;
+let deferredPrompt = null;
+
+// ============================================
+// INITIALIZATION
+// ============================================
+async function init() {
+  // Check existing session
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (session) {
+    await loadUserData(session.user);
+  } else {
+    showLoginScreen();
+  }
+  
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').catch(err => {
+      console.log('SW registration failed:', err);
+    });
+  }
+  
+  // Listen for install prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show install banner if hasn't been dismissed
+    if (!localStorage.getItem('install-dismissed')) {
+      setTimeout(() => {
+        const banner = document.getElementById('install-banner');
+        if (banner && !document.getElementById('main-screen').classList.contains('hidden')) {
+          banner.classList.remove('hidden');
+          banner.onclick = (ev) => {
+            if (ev.target.classList.contains('install-banner-close')) return;
+            promptInstall();
+          };
+        }
+      }, 1000);
+    }
+  });
+}
+
+function showLoginScreen() {
+  document.getElementById('loading-screen').classList.add('hidden');
+  document.getElementById('main-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+function showMainScreen() {
+  document.getElementById('loading-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('main-screen').classList.remove('hidden');
+}
+
+function showLoading() {
+  document.getElementById('loading-screen').classList.remove('hidden');
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('main-screen').classList.add('hidden');
+}
+
+// ============================================
+// AUTH
+// ============================================
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  const btnText = document.getElementById('login-btn-text');
+  
+  errorEl.classList.add('hidden');
+  
+  if (!email || !password) {
+    errorEl.textContent = 'נא להזין אימייל וסיסמה';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  
+  btn.disabled = true;
+  btnText.textContent = 'מתחבר...';
+  
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) throw error;
+    
+    await loadUserData(data.user);
+  } catch (err) {
+    console.error('Login error:', err);
+    errorEl.textContent = err.message?.includes('Invalid login') 
+      ? 'אימייל או סיסמה שגויים' 
+      : 'שגיאה בהתחברות. נסה שוב.';
+    errorEl.classList.remove('hidden');
+    btn.disabled = false;
+    btnText.textContent = 'התחבר';
+  }
+}
+
+async function doLogout() {
+  if (!confirm('להתנתק מהאפליקציה?')) return;
+  
+  showLoading();
+  await supabase.auth.signOut();
+  currentUser = null;
+  currentEmployee = null;
+  
+  // Clear inputs
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  
+  showLoginScreen();
+}
+
+async function loadUserData(user) {
+  showLoading();
+  currentUser = user;
+  
+  try {
+    // Find employee by email
+    const { data: employee, error } = await supabase
+      .from('employees')
+      .select('*')
+      .eq('email', user.email)
+      .eq('is_active', true)
+      .single();
+    
+    if (error || !employee) {
+      // No employee record found - check if admin user
+      const { data: adminData } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (adminData) {
+        // Admin without employee record - show error
+        showLoginScreen();
+        const errorEl = document.getElementById('login-error');
+        errorEl.textContent = 'אין כרטיס ביקור משויך לאימייל שלך. פנה למנהל המערכת.';
+        errorEl.classList.remove('hidden');
+        await supabase.auth.signOut();
+        return;
+      }
+      
+      // Not authorized at all
+      showLoginScreen();
+      const errorEl = document.getElementById('login-error');
+      errorEl.textContent = 'אין לך הרשאת גישה לאפליקציה. פנה למנהל המערכת.';
+      errorEl.classList.remove('hidden');
+      await supabase.auth.signOut();
+      return;
+    }
+    
+    currentEmployee = employee;
+    renderUserData();
+    showMainScreen();
+  } catch (err) {
+    console.error('Error loading user:', err);
+    showLoginScreen();
+    const errorEl = document.getElementById('login-error');
+    errorEl.textContent = 'שגיאה בטעינת הנתונים. נסה שוב.';
+    errorEl.classList.remove('hidden');
+  }
+}
+
+function renderUserData() {
+  const emp = currentEmployee;
+  const cardUrl = `${CARD_BASE_URL}/?u=${encodeURIComponent(emp.username)}`;
+  
+  // User name
+  document.getElementById('user-name').textContent = emp.full_name;
+  
+  // Avatar
+  const avatar = document.getElementById('user-avatar');
+  if (emp.photo_url) {
+    avatar.innerHTML = `<img src="${escapeHtml(emp.photo_url)}" alt="">`;
+  } else {
+    avatar.innerHTML = `<span>${escapeHtml(emp.full_name.charAt(0))}</span>`;
+  }
+  
+  // QR Code
+  generateQR(cardUrl);
+  
+  // URL display
+  document.getElementById('qr-url').textContent = cardUrl.replace('https://', '');
+  
+  // View card link
+  document.getElementById('view-card-link').href = cardUrl;
+  
+  // Hide native share button if not supported
+  if (!navigator.share) {
+    document.getElementById('share-native-btn').style.display = 'none';
+  }
+}
+
+function generateQR(url) {
+  const canvas = document.getElementById('qrcode');
+  if (!canvas || !window.QRCode) return;
+  
+  QRCode.toCanvas(canvas, url, {
+    width: 200,
+    margin: 1,
+    color: {
+      dark: '#0A1628',
+      light: '#FFFFFF'
+    },
+    errorCorrectionLevel: 'M'
+  }, (error) => {
+    if (error) console.error('QR error:', error);
+  });
+}
+
+// ============================================
+// SHARE FUNCTIONS
+// ============================================
+function getCardUrl() {
+  return `${CARD_BASE_URL}/?u=${encodeURIComponent(currentEmployee.username)}`;
+}
+
+function getShareText() {
+  return `${currentEmployee.full_name} - ${currentEmployee.title}`;
+}
+
+function getShareMessage() {
+  return `${getShareText()}\n${getCardUrl()}`;
+}
+
+async function shareNative() {
+  if (!navigator.share) {
+    showToast('שיתוף זה לא נתמך במכשיר שלך', 'error');
+    return;
+  }
+  
+  try {
+    await navigator.share({
+      title: `כרטיס ביקור - ${currentEmployee.full_name}`,
+      text: getShareText(),
+      url: getCardUrl()
+    });
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      console.error('Share error:', err);
+    }
+  }
+}
+
+function shareWhatsApp() {
+  const url = `https://wa.me/?text=${encodeURIComponent(getShareMessage())}`;
+  window.open(url, '_blank');
+}
+
+function shareEmail() {
+  const subject = `כרטיס ביקור דיגיטלי - ${currentEmployee.full_name}`;
+  const body = `שלום,\n\nמצורף קישור לכרטיס הביקור הדיגיטלי שלי:\n${getCardUrl()}\n\nתודה!`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function shareSMS() {
+  // SMS link (works on mobile)
+  const text = encodeURIComponent(getShareMessage());
+  // iOS uses ?body=, Android uses ?body= too (newer Android)
+  window.location.href = `sms:?&body=${text}`;
+}
+
+async function copyLink() {
+  const url = getCardUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('הקישור הועתק!', 'success');
+  } catch (err) {
+    // Fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      showToast('הקישור הועתק!', 'success');
+    } catch (e) {
+      showToast('שגיאה בהעתקה', 'error');
+    }
+    document.body.removeChild(textarea);
+  }
+}
+
+// ============================================
+// PWA INSTALL
+// ============================================
+async function promptInstall() {
+  if (!deferredPrompt) return;
+  
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  
+  if (outcome === 'accepted') {
+    showToast('האפליקציה הותקנה!', 'success');
+  }
+  
+  deferredPrompt = null;
+  hideInstallBanner();
+}
+
+function hideInstallBanner() {
+  document.getElementById('install-banner').classList.add('hidden');
+  localStorage.setItem('install-dismissed', '1');
+}
+
+// ============================================
+// UTILITIES
+// ============================================
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function showToast(message, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+// Start
+init();
+</script>
+
+</body>
+</html>
