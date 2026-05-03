@@ -786,11 +786,47 @@ async function init() {
       showLoginScreen();
     }
     
-    // Register service worker (optional - don't fail if it doesn't work)
+    // Register service worker with auto-update support
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').catch(err => {
-        console.log('SW registration failed (non-critical):', err);
-      });
+      try {
+        const registration = await navigator.serviceWorker.register('/service-worker.js');
+        console.log('[App] SW registered');
+        
+        // Check for updates every 60 seconds when app is open
+        setInterval(() => {
+          registration.update().catch(() => {});
+        }, 60000);
+        
+        // Listen for new SW waiting
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New version available - show update banner
+                showUpdateAvailable();
+              }
+            });
+          }
+        });
+        
+        // Listen for messages from SW
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data?.type === 'SW_UPDATED') {
+            console.log('[App] SW updated to version', event.data.version);
+          }
+        });
+        
+        // Reload page when new SW takes control
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+      } catch (err) {
+        console.log('[App] SW registration failed (non-critical):', err);
+      }
     }
     
     // Listen for install prompt
@@ -1124,6 +1160,66 @@ async function promptInstall() {
 function hideInstallBanner() {
   document.getElementById('install-banner').classList.add('hidden');
   localStorage.setItem('install-dismissed', '1');
+}
+
+// ============================================
+// UPDATE NOTIFICATION
+// ============================================
+function showUpdateAvailable() {
+  // Check if banner already shown
+  if (document.getElementById('update-banner')) return;
+  
+  const banner = document.createElement('div');
+  banner.id = 'update-banner';
+  banner.style.cssText = `
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--bg-card);
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+    max-width: calc(100% - 40px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideUp 0.3s ease;
+  `;
+  banner.innerHTML = `
+    <span style="font-size:18px;">🔄</span>
+    <span style="flex:1;">גרסה חדשה זמינה</span>
+    <button onclick="applyUpdate()" style="
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    ">עדכן</button>
+  `;
+  document.body.appendChild(banner);
+}
+
+async function applyUpdate() {
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (registration?.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    } else {
+      // No waiting SW - just reload
+      window.location.reload();
+    }
+  } else {
+    window.location.reload();
+  }
 }
 
 // ============================================
