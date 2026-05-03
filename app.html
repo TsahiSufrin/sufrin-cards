@@ -599,21 +599,19 @@ body {
     <div class="login-form">
       <div class="error-msg hidden" id="login-error"></div>
       
-      <form onsubmit="event.preventDefault(); doLogin();">
-        <div class="form-group">
-          <label class="form-label" for="login-email">אימייל</label>
-          <input type="email" id="login-email" class="form-input" autocomplete="email" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="login-password">סיסמה</label>
-          <input type="password" id="login-password" class="form-input" autocomplete="current-password" required>
-        </div>
-        
-        <button type="submit" class="btn-primary" id="login-btn">
-          <span id="login-btn-text">התחבר</span>
-        </button>
-      </form>
+      <div class="form-group">
+        <label class="form-label" for="login-email">אימייל</label>
+        <input type="email" id="login-email" class="form-input" autocomplete="email" autocapitalize="none" autocorrect="off" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="login-password">סיסמה</label>
+        <input type="password" id="login-password" class="form-input" autocomplete="current-password" required>
+      </div>
+      
+      <button type="button" class="btn-primary" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-text">התחבר</span>
+      </button>
     </div>
   </div>
 
@@ -840,6 +838,8 @@ function showLoading() {
 // AUTH
 // ============================================
 async function doLogin() {
+  console.log('[Login] Started');
+  
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   const errorEl = document.getElementById('login-error');
@@ -854,25 +854,53 @@ async function doLogin() {
     return;
   }
   
+  console.log('[Login] Attempting with email:', email);
+  
   btn.disabled = true;
   btnText.textContent = 'מתחבר...';
   
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     
-    if (error) throw error;
+    console.log('[Login] Response:', { hasData: !!data, hasError: !!error });
     
+    if (error) {
+      console.error('[Login] Auth error:', error);
+      throw error;
+    }
+    
+    console.log('[Login] Success, loading user data');
     await loadUserData(data.user);
   } catch (err) {
-    console.error('Login error:', err);
+    console.error('[Login] Caught error:', err);
     errorEl.textContent = err.message?.includes('Invalid login') 
       ? 'אימייל או סיסמה שגויים' 
-      : 'שגיאה בהתחברות. נסה שוב.';
+      : `שגיאה: ${err.message || 'לא ידוע'}`;
     errorEl.classList.remove('hidden');
     btn.disabled = false;
     btnText.textContent = 'התחבר';
   }
 }
+
+// Enter key submits login form
+document.addEventListener('DOMContentLoaded', () => {
+  const passwordInput = document.getElementById('login-password');
+  const emailInput = document.getElementById('login-email');
+  
+  if (passwordInput) {
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+  }
+  if (emailInput) {
+    emailInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        passwordInput?.focus();
+      }
+    });
+  }
+});
 
 async function doLogout() {
   if (!confirm('להתנתק מהאפליקציה?')) return;
