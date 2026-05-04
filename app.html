@@ -979,7 +979,15 @@ const SUPABASE_URL = 'https://kyjdveqvfyusvpsafmcm.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5g82iLsXJvJfT-0GLTI9sQ_SiOsLy4T';
 const CARD_BASE_URL = 'https://card.sufrin.io';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    persistSession: true,           // Save session in localStorage
+    autoRefreshToken: true,         // Auto-refresh token before expiry
+    detectSessionInUrl: false,      // Don't process URL params (we don't use OAuth)
+    storage: window.localStorage,   // Explicitly use localStorage
+    storageKey: 'sufrin-app-auth'   // Custom storage key (avoids conflicts)
+  }
+});
 
 let currentUser = null;
 let currentEmployee = null;
@@ -993,14 +1001,49 @@ async function init() {
     // Load company logo for login screen (in parallel with session check)
     loadCompanyLogo().catch(() => {});
     
-    // Check existing session
-    const { data: { session } } = await supabase.auth.getSession();
+    console.log('[App] Checking session...');
+    
+    // Try to get existing session
+    let { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError) {
+      console.error('[App] Session error:', sessionError);
+    }
+    
+    // If no session but we have a refresh token, try to refresh
+    if (!session) {
+      console.log('[App] No session, trying refresh...');
+      try {
+        const { data: refreshData } = await supabase.auth.refreshSession();
+        if (refreshData?.session) {
+          session = refreshData.session;
+          console.log('[App] Session refreshed successfully');
+        }
+      } catch (refreshErr) {
+        console.log('[App] Refresh failed (this is normal if not logged in):', refreshErr);
+      }
+    }
     
     if (session) {
+      console.log('[App] Session found, loading user data');
       await loadUserData(session.user);
     } else {
+      console.log('[App] No session, showing login');
       showLoginScreen();
     }
+    
+    // Listen for auth state changes (login/logout/token refresh)
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log('[App] Auth event:', event);
+      
+      if (event === 'SIGNED_OUT') {
+        currentUser = null;
+        currentEmployee = null;
+        showLoginScreen();
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('[App] Token refreshed automatically');
+      }
+    });
     
     // Register service worker with auto-update support
     if ('serviceWorker' in navigator) {
