@@ -2273,7 +2273,7 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
       title: document.getElementById('emp-title').value.trim(),
       title_en: document.getElementById('emp-title-en').value.trim() || null,
       phone: document.getElementById('emp-phone').value.trim(),
-      email: document.getElementById('emp-email').value.trim(),
+      email: document.getElementById('emp-email').value.trim().toLowerCase(),
       display_order: parseInt(document.getElementById('emp-order').value) || 999,
       is_active: document.getElementById('emp-active').checked,
       office_location_id: document.getElementById('emp-office').value || null,
