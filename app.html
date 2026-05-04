@@ -129,19 +129,34 @@ body {
 }
 
 .login-logo-img {
+  max-width: 240px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-logo-img-fallback {
   width: 80px;
   height: 80px;
   border-radius: 22px;
   box-shadow: var(--shadow-md);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-align: center;
+  line-height: 1.4;
 }
 
 .login-subtitle {
@@ -149,6 +164,7 @@ body {
   font-size: 14px;
   text-align: center;
   margin-bottom: 4px;
+  font-weight: 500;
 }
 
 .login-tagline {
@@ -757,10 +773,10 @@ body {
   <!-- Login Screen -->
   <div class="login-screen hidden" id="login-screen">
     <div class="login-logo">
-      <img src="/icon-192.png" class="login-logo-img" alt="Sufrin">
-      <div class="login-title">סופרין</div>
-      <div class="login-subtitle">כלי השיתוף לעובדים</div>
-      <div class="login-tagline">SHARE YOUR CARD</div>
+      <img src="" class="login-logo-img" alt="Sufrin Group" id="login-logo-img" style="display:none;">
+      <img src="/icon-192.png" class="login-logo-img-fallback" alt="Sufrin" id="login-logo-fallback">
+      <div class="login-title">אפליקציית שיתוף<br>כרטיסי ביקור דיגיטליים</div>
+      <div class="login-subtitle">קבוצת סופרין</div>
     </div>
     
     <div class="login-form">
@@ -957,6 +973,9 @@ let deferredPrompt = null;
 // ============================================
 async function init() {
   try {
+    // Load company logo for login screen (in parallel with session check)
+    loadCompanyLogo().catch(() => {});
+    
     // Check existing session
     const { data: { session } } = await supabase.auth.getSession();
     
@@ -1192,6 +1211,36 @@ function showLoginScreen() {
   document.getElementById('loading-screen').classList.add('hidden');
   document.getElementById('main-screen').classList.add('hidden');
   document.getElementById('login-screen').classList.remove('hidden');
+}
+
+// Load company logo for login screen (no auth needed - public read)
+async function loadCompanyLogo() {
+  try {
+    const { data, error } = await supabase
+      .from('company_settings')
+      .select('logo_url')
+      .single();
+    
+    if (data?.logo_url) {
+      const logoImg = document.getElementById('login-logo-img');
+      const fallback = document.getElementById('login-logo-fallback');
+      
+      // Test if image loads successfully
+      const testImg = new Image();
+      testImg.onload = () => {
+        logoImg.src = data.logo_url;
+        logoImg.style.display = 'block';
+        if (fallback) fallback.style.display = 'none';
+      };
+      testImg.onerror = () => {
+        // Fallback to icon stays visible
+        console.log('[App] Company logo failed to load, using fallback');
+      };
+      testImg.src = data.logo_url;
+    }
+  } catch (err) {
+    console.log('[App] Could not load company logo:', err);
+  }
 }
 
 function showMainScreen() {
