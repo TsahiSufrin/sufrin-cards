@@ -1360,13 +1360,16 @@ async function loadUserData(user) {
   currentUser = user;
   
   try {
-    // Find employee by email
+    // Find employee by email (case-insensitive match)
+    // Use ilike for case-insensitive comparison
+    const userEmail = (user.email || '').toLowerCase().trim();
+    
     const { data: employee, error } = await supabase
       .from('employees')
       .select('*')
-      .eq('email', user.email)
+      .ilike('email', userEmail)
       .eq('is_active', true)
-      .single();
+      .maybeSingle();
     
     if (error || !employee) {
       // No employee record found - check if admin user
