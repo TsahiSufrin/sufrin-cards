@@ -1003,25 +1003,11 @@ async function init() {
     
     console.log('[App] Checking session...');
     
-    // Try to get existing session
-    let { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    // Try to get existing session - this is safe and won't throw
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     
     if (sessionError) {
       console.error('[App] Session error:', sessionError);
-    }
-    
-    // If no session but we have a refresh token, try to refresh
-    if (!session) {
-      console.log('[App] No session, trying refresh...');
-      try {
-        const { data: refreshData } = await supabase.auth.refreshSession();
-        if (refreshData?.session) {
-          session = refreshData.session;
-          console.log('[App] Session refreshed successfully');
-        }
-      } catch (refreshErr) {
-        console.log('[App] Refresh failed (this is normal if not logged in):', refreshErr);
-      }
     }
     
     if (session) {
@@ -1033,7 +1019,7 @@ async function init() {
     }
     
     // Listen for auth state changes (login/logout/token refresh)
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((event, newSession) => {
       console.log('[App] Auth event:', event);
       
       if (event === 'SIGNED_OUT') {
@@ -1042,6 +1028,11 @@ async function init() {
         showLoginScreen();
       } else if (event === 'TOKEN_REFRESHED') {
         console.log('[App] Token refreshed automatically');
+      } else if (event === 'SIGNED_IN' && newSession && !currentEmployee) {
+        // Auto-load user data on sign in (if not already loaded)
+        loadUserData(newSession.user).catch(err => {
+          console.error('[App] Failed to load on sign in:', err);
+        });
       }
     });
     
