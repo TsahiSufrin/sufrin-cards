@@ -796,7 +796,7 @@ body {
       <div class="login-subtitle">קבוצת סופרין</div>
     </div>
     
-    <div class="login-form">
+    <form class="login-form" id="login-form" onsubmit="event.preventDefault(); doLogin(); return false;">
       <div class="error-msg hidden" id="login-error"></div>
       
       <div class="form-group">
@@ -809,10 +809,10 @@ body {
         <input type="password" id="login-password" class="form-input" autocomplete="current-password" required>
       </div>
       
-      <button type="button" class="btn-primary" id="login-btn" onclick="doLogin()">
+      <button type="submit" class="btn-primary" id="login-btn">
         <span id="login-btn-text">התחבר</span>
       </button>
-    </div>
+    </form>
   </div>
 
   <!-- Main App Screen -->
@@ -1309,8 +1309,16 @@ function showLoading() {
 // ============================================
 // AUTH
 // ============================================
+let isLoggingIn = false;
 async function doLogin() {
   console.log('[Login] Started');
+  
+  // Prevent double-click
+  if (isLoggingIn) {
+    console.log('[Login] Already in progress');
+    return;
+  }
+  isLoggingIn = true;
   
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
@@ -1323,6 +1331,7 @@ async function doLogin() {
   if (!email || !password) {
     errorEl.textContent = 'נא להזין אימייל וסיסמה';
     errorEl.classList.remove('hidden');
+    isLoggingIn = false;
     return;
   }
   
@@ -1351,13 +1360,16 @@ async function doLogin() {
     errorEl.classList.remove('hidden');
     btn.disabled = false;
     btnText.textContent = 'התחבר';
+    isLoggingIn = false;
   }
 }
 
-// Enter key submits login form
+// Enter key submits login form + multiple click handlers as backup
 document.addEventListener('DOMContentLoaded', () => {
   const passwordInput = document.getElementById('login-password');
   const emailInput = document.getElementById('login-email');
+  const loginBtn = document.getElementById('login-btn');
+  const loginForm = document.getElementById('login-form');
   
   if (passwordInput) {
     passwordInput.addEventListener('keypress', (e) => {
@@ -1370,6 +1382,33 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         passwordInput?.focus();
       }
+    });
+  }
+  
+  // Multiple event handlers on login button (defense in depth)
+  if (loginBtn) {
+    // Standard click
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('[App] Login button clicked');
+      doLogin();
+    });
+    
+    // Touch events for iOS Safari (sometimes click doesn't fire)
+    loginBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      console.log('[App] Login button touched');
+      doLogin();
+    });
+  }
+  
+  // Form submit (yet another fallback)
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log('[App] Form submitted');
+      doLogin();
+      return false;
     });
   }
 });
