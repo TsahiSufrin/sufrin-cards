@@ -2152,6 +2152,24 @@ function shareViaWhatsApp(event, url, text) {
   window.open(waUrl, '_blank');
 }
 
+// Format phone number for WhatsApp/wa.me URL
+// Handles Israeli formats: 0XX, 05X, +972, 972, with/without dashes/spaces
+function formatPhoneForWhatsApp(phone) {
+  if (!phone) return '';
+  
+  // Remove all non-digits
+  let digits = phone.replace(/[^0-9]/g, '');
+  
+  // Israeli mobile/landline starting with 0 (e.g., 0523090441) -> 972523090441
+  if (digits.startsWith('0') && digits.length === 10) {
+    digits = '972' + digits.substring(1);
+  }
+  // Already has 972 prefix - keep as is
+  // International numbers without 0 - keep as is
+  
+  return digits;
+}
+
 function shareViaEmail(event, url, text) {
   event.stopPropagation();
   const subject = `כרטיס ביקור דיגיטלי - ${text}`;
@@ -2176,8 +2194,8 @@ function shareAppLink(event, channel, employeeName, employeeContact, username) {
     const message = `היי ${firstName}! 👋\n\nמצורף קישור אישי לאפליקציית שיתוף כרטיס הביקור הדיגיטלי שלך:\n\n${appUrl}\n\n💡 פתח את הקישור, אשר ש"זה אני", והוסף למסך הבית של הטלפון - ככה תוכל לשתף את הכרטיס שלך עם לקוחות בלחיצה אחת.`;
     
     // If employee has phone - go directly to their chat
-    if (employeeContact && employeeContact.replace(/[^0-9]/g, '').length > 5) {
-      const cleanPhone = employeeContact.replace(/[^0-9]/g, '');
+    const cleanPhone = formatPhoneForWhatsApp(employeeContact);
+    if (cleanPhone && cleanPhone.length > 5) {
       const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
     } else {
