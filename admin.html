@@ -2102,11 +2102,11 @@ function renderEmployees() {
             <span>שלח לעובד את האפליקציה</span>
           </div>
           <div class="share-app-buttons">
-            <button class="share-btn share-btn-app" onclick="shareAppLink(event, 'whatsapp', '${escapeHtml(emp.full_name)}', '${escapeHtml(emp.phone || '')}')" title="שלח באפליקציה בWhatsApp">
+            <button class="share-btn share-btn-app" onclick="shareAppLink(event, 'whatsapp', '${escapeHtml(emp.full_name)}', '${escapeHtml(emp.phone || '')}', '${escapeHtml(emp.username)}')" title="שלח באפליקציה בWhatsApp">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.5-.3zM12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.7 1.4h.1c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4C18.2 1.2 15.2 0 12 0z"/></svg>
               <span>WhatsApp</span>
             </button>
-            <button class="share-btn share-btn-app" onclick="shareAppLink(event, 'email', '${escapeHtml(emp.full_name)}', '${escapeHtml(emp.email || '')}')" title="שלח באימייל">
+            <button class="share-btn share-btn-app" onclick="shareAppLink(event, 'email', '${escapeHtml(emp.full_name)}', '${escapeHtml(emp.email || '')}', '${escapeHtml(emp.username)}')" title="שלח באימייל">
               <svg width="13" height="13" viewBox="0 0 24 24"><defs><linearGradient id="app-mail-${escapeHtml(emp.id)}" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5DADEC"/><stop offset="100%" stop-color="#1E88E5"/></linearGradient></defs><path fill="url(#app-mail-${escapeHtml(emp.id)})" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
               <span>אימייל</span>
             </button>
@@ -2162,14 +2162,18 @@ function shareViaEmail(event, url, text) {
 // ============================================
 // SHARE APP LINK TO EMPLOYEE
 // ============================================
-function shareAppLink(event, channel, employeeName, employeeContact) {
+function shareAppLink(event, channel, employeeName, employeeContact, username) {
   event.stopPropagation();
   
-  const appUrl = 'https://card.sufrin.io/app';
+  // Build personal app URL
+  const appUrl = username 
+    ? `https://card.sufrin.io/app?u=${encodeURIComponent(username)}`
+    : 'https://card.sufrin.io/app';
+  
   const firstName = employeeName.split(' ')[0] || employeeName;
   
   if (channel === 'whatsapp') {
-    const message = `היי ${firstName}! 👋\n\nמצורף קישור לאפליקציית שיתוף כרטיסי הביקור הדיגיטליים של קבוצת סופרין:\n\n${appUrl}\n\n💡 כדאי להוסיף למסך הבית של הטלפון - גישה מהירה לשיתוף הכרטיס שלך עם לקוחות.\n\nלהתחברות: השתמש במייל ובסיסמה שלך.`;
+    const message = `היי ${firstName}! 👋\n\nמצורף קישור אישי לאפליקציית שיתוף כרטיס הביקור הדיגיטלי שלך:\n\n${appUrl}\n\n💡 פתח את הקישור, אשר ש"זה אני", והוסף למסך הבית של הטלפון - ככה תוכל לשתף את הכרטיס שלך עם לקוחות בלחיצה אחת.`;
     
     // If employee has phone - go directly to their chat
     if (employeeContact && employeeContact.replace(/[^0-9]/g, '').length > 5) {
@@ -2182,8 +2186,8 @@ function shareAppLink(event, channel, employeeName, employeeContact) {
       window.open(waUrl, '_blank');
     }
   } else if (channel === 'email') {
-    const subject = `אפליקציית שיתוף כרטיסי ביקור - קבוצת סופרין`;
-    const body = `היי ${firstName},\n\nמצורף קישור לאפליקציית שיתוף כרטיסי הביקור הדיגיטליים של קבוצת סופרין:\n\n${appUrl}\n\nכדאי להוסיף למסך הבית של הטלפון - גישה מהירה לשיתוף הכרטיס שלך עם לקוחות.\n\nלהתחברות: השתמש במייל ובסיסמה שלך.\n\nתודה!`;
+    const subject = `אפליקציית שיתוף כרטיס הביקור שלך - קבוצת סופרין`;
+    const body = `היי ${firstName},\n\nמצורף קישור אישי לאפליקציית שיתוף כרטיס הביקור הדיגיטלי שלך:\n\n${appUrl}\n\nפתח את הקישור, אשר ש"זה אני", והוסף למסך הבית של הטלפון - ככה תוכל לשתף את הכרטיס שלך עם לקוחות בלחיצה אחת.\n\nתודה!`;
     
     // Pre-fill recipient if available
     const to = employeeContact ? encodeURIComponent(employeeContact) : '';
