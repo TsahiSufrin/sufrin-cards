@@ -140,6 +140,97 @@ body {
   justify-content: center;
 }
 
+/* Confirmation Screen (for /app/USERNAME route) */
+.confirm-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line);
+}
+
+.confirm-greeting {
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.confirm-question {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.confirm-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--ink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--bg-card);
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 0 0 3px var(--gold-border), var(--shadow-md);
+}
+
+.confirm-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.confirm-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.confirm-title {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.confirm-yes-btn {
+  margin-bottom: 12px;
+  font-size: 16px;
+  padding: 16px;
+}
+
+.confirm-no-link {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px;
+  margin-top: 4px;
+}
+
+.confirm-no-link:hover {
+  color: var(--ink);
+}
+
 .login-logo {
   text-align: center;
   margin-bottom: 40px;
@@ -815,6 +906,27 @@ body {
     </form>
   </div>
 
+  <!-- Confirmation Screen (for /app/USERNAME route) -->
+  <div class="confirm-screen hidden" id="confirm-screen">
+    <div class="confirm-card">
+      <div class="confirm-greeting">ברוך הבא! 👋</div>
+      <div class="confirm-question">זה הכרטיס שלך?</div>
+      
+      <div class="confirm-avatar" id="confirm-avatar">
+        <span>?</span>
+      </div>
+      
+      <div class="confirm-name" id="confirm-name">טוען...</div>
+      <div class="confirm-title" id="confirm-title"></div>
+      
+      <button class="btn-primary confirm-yes-btn" id="confirm-yes-btn" type="button">
+        ✓ כן, זה אני
+      </button>
+      
+      <a href="/app" class="confirm-no-link">לא, חזרה למסך התחברות</a>
+    </div>
+  </div>
+
   <!-- Main App Screen -->
   <div class="main-screen hidden" id="main-screen">
     
@@ -1001,6 +1113,27 @@ async function init() {
     // Load company logo for login screen (in parallel with session check)
     loadCompanyLogo().catch(() => {});
     
+    // ============================================
+    // CHECK URL FOR USERNAME-BASED ROUTE (/app/USERNAME)
+    // ============================================
+    const pathParts = window.location.pathname.split('/').filter(p => p);
+    // pathParts will be like: ['app', 'tsahi'] or ['app']
+    
+    if (pathParts.length >= 2 && pathParts[0] === 'app') {
+      const username = pathParts[1].toLowerCase();
+      
+      // Validate username format
+      if (/^[a-z0-9_-]+$/.test(username) && username.length <= 30) {
+        console.log('[App] Username-based route:', username);
+        await loadByUsername(username);
+        registerServiceWorker();
+        return;
+      }
+    }
+    
+    // ============================================
+    // STANDARD AUTH FLOW (/app with password)
+    // ============================================
     console.log('[App] Checking session...');
     
     // Try to get existing session - this is safe and won't throw
@@ -1029,55 +1162,13 @@ async function init() {
       } else if (event === 'TOKEN_REFRESHED') {
         console.log('[App] Token refreshed automatically');
       } else if (event === 'SIGNED_IN' && newSession && !currentEmployee) {
-        // Auto-load user data on sign in (if not already loaded)
         loadUserData(newSession.user).catch(err => {
           console.error('[App] Failed to load on sign in:', err);
         });
       }
     });
     
-    // Register service worker with auto-update support
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register('/service-worker.js');
-        console.log('[App] SW registered');
-        
-        // Check for updates every 60 seconds when app is open
-        setInterval(() => {
-          registration.update().catch(() => {});
-        }, 60000);
-        
-        // Listen for new SW waiting
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New version available - show update banner
-                showUpdateAvailable();
-              }
-            });
-          }
-        });
-        
-        // Listen for messages from SW
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data?.type === 'SW_UPDATED') {
-            console.log('[App] SW updated to version', event.data.version);
-          }
-        });
-        
-        // Reload page when new SW takes control
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-      } catch (err) {
-        console.log('[App] SW registration failed (non-critical):', err);
-      }
-    }
+    registerServiceWorker();
     
     // Listen for install prompt (Android Chrome)
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -1093,6 +1184,130 @@ async function init() {
     console.error('Init error:', err);
     showErrorOnLoadingScreen('שגיאה באתחול: ' + err.message);
   }
+}
+
+// ============================================
+// USERNAME-BASED ROUTE - direct access without password
+// ============================================
+async function loadByUsername(username) {
+  showLoading();
+  
+  try {
+    // Fetch employee by username
+    const { data: employee, error } = await supabase
+      .from('employees')
+      .select('*')
+      .eq('username', username)
+      .eq('is_active', true)
+      .maybeSingle();
+    
+    if (error || !employee) {
+      console.error('[App] Employee not found:', username);
+      showLoadError('הקישור לא תקין או שהעובד לא נמצא');
+      return;
+    }
+    
+    currentEmployee = employee;
+    
+    // Check if user already confirmed this is their card
+    const confirmKey = `sufrin-confirmed-${username}`;
+    const alreadyConfirmed = localStorage.getItem(confirmKey) === '1';
+    
+    if (alreadyConfirmed) {
+      // Already confirmed - go straight to main screen
+      console.log('[App] Already confirmed, showing main screen');
+      renderUserData();
+      showMainScreen();
+    } else {
+      // First time - show confirmation screen
+      console.log('[App] Showing confirmation for:', employee.full_name);
+      showConfirmationScreen(employee, username);
+    }
+  } catch (err) {
+    console.error('[App] Load by username error:', err);
+    showLoadError('שגיאה בטעינת הכרטיס. נסה שוב.');
+  }
+}
+
+function showConfirmationScreen(employee, username) {
+  document.getElementById('loading-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('main-screen').classList.add('hidden');
+  
+  const confirmScreen = document.getElementById('confirm-screen');
+  const avatar = document.getElementById('confirm-avatar');
+  const name = document.getElementById('confirm-name');
+  const title = document.getElementById('confirm-title');
+  const yesBtn = document.getElementById('confirm-yes-btn');
+  
+  // Set employee info
+  if (employee.photo_url) {
+    avatar.innerHTML = `<img src="${escapeHtml(employee.photo_url)}" alt="">`;
+  } else {
+    avatar.innerHTML = `<span>${escapeHtml(employee.full_name.charAt(0))}</span>`;
+  }
+  name.textContent = employee.full_name;
+  title.textContent = employee.title;
+  
+  // Set up button handler
+  yesBtn.onclick = () => {
+    localStorage.setItem(`sufrin-confirmed-${username}`, '1');
+    renderUserData();
+    showMainScreen();
+  };
+  
+  confirmScreen.classList.remove('hidden');
+}
+
+function showLoadError(message) {
+  document.getElementById('loading-screen').innerHTML = `
+    <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+    <div style="font-weight:600;color:#DC2626;margin-bottom:8px;">בעיה בטעינה</div>
+    <div style="color:#6B6555;font-size:13px;text-align:center;max-width:300px;direction:rtl;">${message}</div>
+    <a href="/app" style="margin-top:20px;padding:10px 24px;background:#0A1628;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;">חזרה למסך התחברות</a>
+  `;
+}
+
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  
+  navigator.serviceWorker.register('/service-worker.js').then(registration => {
+    console.log('[App] SW registered');
+    
+    // Check for updates every 60 seconds
+    setInterval(() => {
+      registration.update().catch(() => {});
+    }, 60000);
+    
+    // Listen for new SW waiting
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      if (newWorker) {
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateAvailable();
+          }
+        });
+      }
+    });
+    
+    // Listen for messages from SW
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type === 'SW_UPDATED') {
+        console.log('[App] SW updated to version', event.data.version);
+      }
+    });
+    
+    // Reload page when new SW takes control
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+  }).catch(err => {
+    console.log('[App] SW registration failed (non-critical):', err);
+  });
 }
 
 // ============================================
@@ -1261,6 +1476,7 @@ function closeInstructions(event) {
 function showLoginScreen() {
   document.getElementById('loading-screen').classList.add('hidden');
   document.getElementById('main-screen').classList.add('hidden');
+  document.getElementById('confirm-screen')?.classList.add('hidden');
   document.getElementById('login-screen').classList.remove('hidden');
 }
 
@@ -1297,12 +1513,14 @@ async function loadCompanyLogo() {
 function showMainScreen() {
   document.getElementById('loading-screen').classList.add('hidden');
   document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('confirm-screen')?.classList.add('hidden');
   document.getElementById('main-screen').classList.remove('hidden');
 }
 
 function showLoading() {
   document.getElementById('loading-screen').classList.remove('hidden');
   document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('confirm-screen')?.classList.add('hidden');
   document.getElementById('main-screen').classList.add('hidden');
 }
 
