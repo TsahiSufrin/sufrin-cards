@@ -231,6 +231,115 @@ body {
   color: var(--ink);
 }
 
+/* Employee Picker Screen */
+.picker-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 20px;
+}
+
+.picker-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.picker-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 16px;
+}
+
+.picker-greeting {
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.picker-question {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  text-align: right;
+  width: 100%;
+  color: var(--ink);
+}
+
+.picker-item:hover, .picker-item:active {
+  border-color: var(--gold);
+  background: var(--bg-soft);
+  transform: translateY(-1px);
+}
+
+.picker-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--ink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--bg-card);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.picker-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.picker-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.picker-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.picker-title {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .login-logo {
   text-align: center;
   margin-bottom: 40px;
@@ -927,6 +1036,18 @@ body {
     </div>
   </div>
 
+  <!-- Employee Picker Screen (for installed PWA without identified user) -->
+  <div class="picker-screen hidden" id="picker-screen">
+    <div class="picker-header">
+      <img src="/icon-192.png" class="picker-logo" alt="Sufrin">
+      <div class="picker-greeting">ברוך הבא! 👋</div>
+      <div class="picker-question">מי אתה?</div>
+    </div>
+    <div class="picker-list" id="picker-list">
+      <!-- Filled dynamically -->
+    </div>
+  </div>
+
   <!-- Main App Screen -->
   <div class="main-screen hidden" id="main-screen">
     
@@ -1139,11 +1260,37 @@ async function init() {
     if (usernameFromUrl) {
       // Validate username format
       if (/^[a-z0-9_-]+$/.test(usernameFromUrl) && usernameFromUrl.length <= 30) {
-        console.log('[App] Username-based route:', usernameFromUrl);
+        console.log('[App] Username from URL:', usernameFromUrl);
         await loadByUsername(usernameFromUrl);
         registerServiceWorker();
         return;
       }
+    }
+    
+    // ============================================
+    // CHECK FOR LAST CONFIRMED USER (PWA installed flow)
+    // Try multiple sources: localStorage, cookie
+    // When app is opened from home screen icon, there's no username in URL
+    // but the user already confirmed who they are previously - load that user
+    // ============================================
+    const lastConfirmedUser = getLastConfirmedUser();
+    if (lastConfirmedUser && /^[a-z0-9_-]+$/.test(lastConfirmedUser)) {
+      console.log('[App] Loading last confirmed user from storage:', lastConfirmedUser);
+      await loadByUsername(lastConfirmedUser);
+      registerServiceWorker();
+      return;
+    }
+    
+    // ============================================
+    // NO USER IDENTIFIED - SHOW EMPLOYEE PICKER
+    // (last resort - if no URL param and no stored user)
+    // ============================================
+    if (isStandalone()) {
+      // Running as installed PWA - show employee picker
+      console.log('[App] Standalone mode without identified user - showing picker');
+      await showEmployeePicker();
+      registerServiceWorker();
+      return;
     }
     
     // ============================================
@@ -1231,6 +1378,9 @@ async function loadByUsername(username) {
     if (alreadyConfirmed) {
       // Already confirmed - go straight to main screen
       console.log('[App] Already confirmed, showing main screen');
+      // Save user identity (localStorage + cookie) and update manifest
+      setLastConfirmedUser(username);
+      updateManifestForUser(username);
       renderUserData();
       showMainScreen();
     } else {
@@ -1248,6 +1398,7 @@ function showConfirmationScreen(employee, username) {
   document.getElementById('loading-screen').classList.add('hidden');
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('main-screen').classList.add('hidden');
+  document.getElementById('picker-screen')?.classList.add('hidden');
   
   const confirmScreen = document.getElementById('confirm-screen');
   const avatar = document.getElementById('confirm-avatar');
@@ -1267,6 +1418,9 @@ function showConfirmationScreen(employee, username) {
   // Set up button handler
   yesBtn.onclick = () => {
     localStorage.setItem(`sufrin-confirmed-${username}`, '1');
+    // Save user identity (localStorage + cookie) and update manifest
+    setLastConfirmedUser(username);
+    updateManifestForUser(username);
     renderUserData();
     showMainScreen();
   };
@@ -1281,6 +1435,147 @@ function showLoadError(message) {
     <div style="color:#6B6555;font-size:13px;text-align:center;max-width:300px;direction:rtl;">${message}</div>
     <a href="/app" style="margin-top:20px;padding:10px 24px;background:#0A1628;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;">חזרה למסך התחברות</a>
   `;
+}
+
+// ============================================
+// USER STORAGE - works across PWA contexts
+// Tries localStorage first, falls back to cookie
+// ============================================
+function setLastConfirmedUser(username) {
+  try {
+    localStorage.setItem('sufrin-last-user', username);
+  } catch (e) {
+    console.warn('[App] localStorage failed:', e);
+  }
+  
+  // Also save in cookie (works across Safari ↔ PWA contexts)
+  try {
+    const oneYear = 365 * 24 * 60 * 60;
+    document.cookie = `sufrin-last-user=${encodeURIComponent(username)}; max-age=${oneYear}; path=/; SameSite=Lax`;
+  } catch (e) {
+    console.warn('[App] Cookie set failed:', e);
+  }
+}
+
+function getLastConfirmedUser() {
+  // Try localStorage first
+  try {
+    const fromLS = localStorage.getItem('sufrin-last-user');
+    if (fromLS) return fromLS;
+  } catch (e) {}
+  
+  // Fall back to cookie
+  try {
+    const match = document.cookie.match(/(?:^|;\s*)sufrin-last-user=([^;]+)/);
+    if (match) {
+      const value = decodeURIComponent(match[1]);
+      // Restore to localStorage for next time
+      try { localStorage.setItem('sufrin-last-user', value); } catch (e) {}
+      return value;
+    }
+  } catch (e) {}
+  
+  return null;
+}
+
+// ============================================
+// DYNAMIC MANIFEST - updates start_url with user's username
+// So when installed as PWA, the icon opens user's specific page
+// ============================================
+function updateManifestForUser(username) {
+  try {
+    const manifest = {
+      name: "סופרין - כרטיסי ביקור",
+      short_name: "Sufrin Cards",
+      description: "כלי לעובדי קבוצת סופרין לשיתוף מהיר של כרטיס הביקור הדיגיטלי",
+      start_url: `/app?u=${encodeURIComponent(username)}`,
+      scope: "/",
+      display: "standalone",
+      orientation: "portrait",
+      background_color: "#FAFAF7",
+      theme_color: "#0A1628",
+      lang: "he",
+      dir: "rtl",
+      icons: [
+        { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+        { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+        { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
+      ]
+    };
+    
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.querySelector('link[rel="manifest"]');
+    if (link) {
+      link.href = url;
+      console.log('[App] Manifest updated with user:', username);
+    }
+  } catch (err) {
+    console.warn('[App] Failed to update manifest:', err);
+  }
+}
+
+// ============================================
+// EMPLOYEE PICKER - shown when running as PWA without identified user
+// ============================================
+async function showEmployeePicker() {
+  try {
+    const { data: employees, error } = await supabase
+      .from('employees')
+      .select('id, username, full_name, title, photo_url')
+      .eq('is_active', true)
+      .order('display_order', { ascending: true });
+    
+    if (error || !employees || employees.length === 0) {
+      showLoadError('לא נמצאו עובדים פעילים');
+      return;
+    }
+    
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('main-screen').classList.add('hidden');
+    document.getElementById('confirm-screen')?.classList.add('hidden');
+    
+    // Build picker UI
+    const picker = document.getElementById('picker-screen');
+    const pickerList = document.getElementById('picker-list');
+    
+    pickerList.innerHTML = employees.map(emp => {
+      const initial = (emp.full_name || '?').charAt(0);
+      const photoHtml = emp.photo_url 
+        ? `<img src="${escapeHtml(emp.photo_url)}" alt="">`
+        : `<span>${escapeHtml(initial)}</span>`;
+      
+      return `
+        <button class="picker-item" data-username="${escapeHtml(emp.username)}" type="button">
+          <div class="picker-avatar">${photoHtml}</div>
+          <div class="picker-info">
+            <div class="picker-name">${escapeHtml(emp.full_name)}</div>
+            <div class="picker-title">${escapeHtml(emp.title || '')}</div>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4;">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      `;
+    }).join('');
+    
+    // Attach click handlers
+    pickerList.querySelectorAll('.picker-item').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const username = btn.dataset.username;
+        if (username) {
+          await loadByUsername(username);
+        }
+      });
+    });
+    
+    picker.classList.remove('hidden');
+  } catch (err) {
+    console.error('[App] Picker error:', err);
+    showLoadError('שגיאה בטעינת רשימת העובדים');
+  }
 }
 
 function registerServiceWorker() {
