@@ -1114,18 +1114,33 @@ async function init() {
     loadCompanyLogo().catch(() => {});
     
     // ============================================
-    // CHECK URL FOR USERNAME-BASED ROUTE (/app/USERNAME)
+    // CHECK URL FOR USERNAME-BASED ROUTE
+    // Supports two formats:
+    //   /app/USERNAME       (path-based, requires _redirects)
+    //   /app?u=USERNAME     (query param, works on any host)
     // ============================================
-    const pathParts = window.location.pathname.split('/').filter(p => p);
-    // pathParts will be like: ['app', 'tsahi'] or ['app']
+    let usernameFromUrl = null;
     
+    // Try path-based: /app/USERNAME
+    const pathParts = window.location.pathname.split('/').filter(p => p);
     if (pathParts.length >= 2 && pathParts[0] === 'app') {
-      const username = pathParts[1].toLowerCase();
-      
+      usernameFromUrl = pathParts[1].toLowerCase();
+    }
+    
+    // Try query param: ?u=USERNAME (also works as fallback)
+    if (!usernameFromUrl) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const u = urlParams.get('u');
+      if (u) {
+        usernameFromUrl = u.toLowerCase();
+      }
+    }
+    
+    if (usernameFromUrl) {
       // Validate username format
-      if (/^[a-z0-9_-]+$/.test(username) && username.length <= 30) {
-        console.log('[App] Username-based route:', username);
-        await loadByUsername(username);
+      if (/^[a-z0-9_-]+$/.test(usernameFromUrl) && usernameFromUrl.length <= 30) {
+        console.log('[App] Username-based route:', usernameFromUrl);
+        await loadByUsername(usernameFromUrl);
         registerServiceWorker();
         return;
       }
