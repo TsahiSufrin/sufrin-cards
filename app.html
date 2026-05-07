@@ -2086,23 +2086,44 @@ function getShareMessage() {
   return `${getShareText()}\n${getCardUrl()}`;
 }
 
-async function shareNative() {
+function shareNative() {
+  console.log('[Share] shareNative clicked');
+  
+  // Check support
   if (!navigator.share) {
+    console.warn('[Share] Web Share API not supported');
     showToast('שיתוף זה לא נתמך במכשיר שלך', 'error');
     return;
   }
   
-  try {
-    await navigator.share({
-      title: `כרטיס ביקור - ${currentEmployee.full_name}`,
-      text: getShareText(),
-      url: getCardUrl()
-    });
-  } catch (err) {
-    if (err.name !== 'AbortError') {
-      console.error('Share error:', err);
-    }
+  // Verify employee data exists
+  if (!currentEmployee) {
+    console.error('[Share] No currentEmployee');
+    showToast('שגיאה - נסה לרענן', 'error');
+    return;
   }
+  
+  const shareData = {
+    title: `כרטיס ביקור - ${currentEmployee.full_name}`,
+    text: getShareText(),
+    url: getCardUrl()
+  };
+  
+  console.log('[Share] Calling navigator.share with:', shareData);
+  
+  // Call navigator.share DIRECTLY (no await before this) - iOS requires this
+  navigator.share(shareData)
+    .then(() => {
+      console.log('[Share] Shared successfully');
+    })
+    .catch((err) => {
+      if (err.name !== 'AbortError') {
+        console.error('[Share] Error:', err.name, err.message);
+        showToast('שגיאה בשיתוף', 'error');
+      } else {
+        console.log('[Share] User canceled');
+      }
+    });
 }
 
 function shareWhatsApp() {
