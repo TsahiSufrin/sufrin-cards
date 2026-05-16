@@ -2342,6 +2342,8 @@ function clearEmployeeForm() {
   document.getElementById('photo-actions').classList.add('hidden');
   document.getElementById('photo-upload-title').textContent = 'גרור תמונה לכאן או לחץ לבחירה';
   document.getElementById('photo-upload-hint').textContent = 'JPG / PNG / WebP - עד 5MB';
+  // Reset manually-edited flag so auto-fill works for new employee
+  document.getElementById('emp-username').dataset.manuallyEdited = 'false';
 }
 
 // Live preview of username
@@ -2349,6 +2351,31 @@ document.getElementById('emp-username').addEventListener('input', (e) => {
   const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
   e.target.value = val;
   document.getElementById('username-preview').textContent = val || 'username';
+  // Mark username as manually edited (don't auto-fill anymore)
+  e.target.dataset.manuallyEdited = 'true';
+});
+
+// Auto-fill username from English first name (only for new employees, only if not manually edited)
+document.getElementById('emp-name-en').addEventListener('input', (e) => {
+  // Don't auto-fill in edit mode
+  if (editingEmployee) return;
+  
+  const usernameField = document.getElementById('emp-username');
+  
+  // Don't override if user already manually edited the username
+  if (usernameField.dataset.manuallyEdited === 'true' && usernameField.value !== '') return;
+  
+  // Extract first name (first word) and clean for username
+  const fullName = e.target.value.trim();
+  const firstName = fullName.split(/\s+/)[0] || '';
+  const username = firstName.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  
+  if (username.length >= 2) {
+    usernameField.value = username;
+    document.getElementById('username-preview').textContent = username;
+    // Reset the manual flag - this was auto-filled
+    usernameField.dataset.manuallyEdited = 'false';
+  }
 });
 
 // Save employee
