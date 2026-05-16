@@ -533,6 +533,19 @@ body {
   background: var(--bg-soft);
 }
 
+.employees-stats-table tr.inactive-row {
+  opacity: 0.55;
+}
+
+.employees-stats-table tr.inactive-row:hover {
+  opacity: 1;
+}
+
+.emp-stats-num.inactive-num {
+  color: var(--muted);
+  font-weight: 500;
+}
+
 .emp-stats-name {
   display: flex;
   align-items: center;
@@ -2379,17 +2392,7 @@ async function loadAnalytics() {
     
     analyticsData = events || [];
     
-    if (analyticsData.length === 0) {
-      content.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">📊</div>
-          <div class="empty-state-title">אין נתונים עדיין</div>
-          <div class="empty-state-desc">נתונים יופיעו כאן ברגע שלקוחות יתחילו לצפות בכרטיסים</div>
-        </div>
-      `;
-      return;
-    }
-    
+    // Always render - even if no events yet (will show employees with 0)
     renderAnalytics();
     
   } catch (error) {
@@ -2514,6 +2517,19 @@ function renderEmployeesStats(events) {
     }
   });
   
+  // Make sure ALL active employees appear (even with 0 events)
+  const activeEmployees = employees.filter(e => e.is_active);
+  activeEmployees.forEach(emp => {
+    if (!byEmp[emp.username]) {
+      byEmp[emp.username] = {
+        username: emp.username,
+        views: 0,
+        unique_visitors: new Set(),
+        clicks: 0
+      };
+    }
+  });
+  
   // Convert to array and add employee data
   const rows = Object.values(byEmp).map(stats => {
     const emp = employees.find(e => e.username === stats.username);
@@ -2523,10 +2539,16 @@ function renderEmployeesStats(events) {
       engagement: stats.views > 0 ? Math.round((stats.clicks / stats.views) * 100) : 0,
       employee: emp
     };
-  }).sort((a, b) => b.views - a.views);
+  }).sort((a, b) => {
+    // Sort by views (descending), then by name
+    if (b.views !== a.views) return b.views - a.views;
+    const aName = a.employee?.full_name || a.username;
+    const bName = b.employee?.full_name || b.username;
+    return aName.localeCompare(bName, 'he');
+  });
   
   if (rows.length === 0) {
-    return '<div class="empty-state-desc">אין נתונים</div>';
+    return '<div class="empty-state-desc">אין עובדים פעילים</div>';
   }
   
   // Find max for normalization
@@ -2552,9 +2574,10 @@ function renderEmployeesStats(events) {
           const displayName = emp?.full_name || row.username;
           const displayTitle = emp?.title || '';
           const engagementPct = (row.engagement / maxEngagement) * 100;
+          const isInactive = row.views === 0 && row.clicks === 0;
           
           return `
-            <tr class="clickable-row" onclick="showEmployeeDetail('${escapeHtml(row.username)}')">
+            <tr class="clickable-row ${isInactive ? 'inactive-row' : ''}" onclick="showEmployeeDetail('${escapeHtml(row.username)}')">
               <td>
                 <div class="emp-stats-name">
                   <div class="emp-stats-avatar">${photoHtml}</div>
@@ -2564,16 +2587,19 @@ function renderEmployeesStats(events) {
                   </div>
                 </div>
               </td>
-              <td class="emp-stats-num">${row.views}</td>
-              <td class="emp-stats-num">${row.unique_visitors}</td>
-              <td class="emp-stats-num">${row.clicks}</td>
+              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.views}</td>
+              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.unique_visitors}</td>
+              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.clicks}</td>
               <td>
-                <div class="engagement-bar">
-                  <div class="engagement-bar-track">
-                    <div class="engagement-bar-fill" style="width:${engagementPct}%"></div>
-                  </div>
-                  <div class="engagement-bar-text">${row.engagement}%</div>
-                </div>
+                ${row.views === 0 
+                  ? '<span style="color: var(--muted); font-size: 12px; font-style: italic;">אין נתונים</span>'
+                  : `<div class="engagement-bar">
+                      <div class="engagement-bar-track">
+                        <div class="engagement-bar-fill" style="width:${engagementPct}%"></div>
+                      </div>
+                      <div class="engagement-bar-text">${row.engagement}%</div>
+                    </div>`
+                }
               </td>
             </tr>
           `;
