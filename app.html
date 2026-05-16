@@ -1825,6 +1825,9 @@ function showMainScreen() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('confirm-screen')?.classList.add('hidden');
   document.getElementById('main-screen').classList.remove('hidden');
+  
+  // Track app open (employee using their own app)
+  trackAppEvent('open');
 }
 
 function showLoading() {
@@ -2086,8 +2089,100 @@ function getShareMessage() {
   return `${getShareText()}\n${getCardUrl()}`;
 }
 
+// ============================================
+// ANALYTICS - Track employee app usage
+// ============================================
+function getAppVisitorId() {
+  try {
+    let id = localStorage.getItem('sufrin-app-visitor-id');
+    if (!id) {
+      id = 'app_' + crypto.randomUUID();
+      localStorage.setItem('sufrin-app-visitor-id', id);
+    }
+    return id;
+  } catch (e) {
+    return 'app_temp_' + Math.random().toString(36).substring(2, 15);
+  }
+}
+
+function getAppSessionId() {
+  try {
+    let id = sessionStorage.getItem('sufrin-app-session-id');
+    if (!id) {
+      id = 'app_s_' + crypto.randomUUID();
+      sessionStorage.setItem('sufrin-app-session-id', id);
+    }
+    return id;
+  } catch (e) {
+    return 'app_s_temp_' + Math.random().toString(36).substring(2, 15);
+  }
+}
+
+function getAppDeviceInfo() {
+  const ua = navigator.userAgent;
+  
+  let device_type = 'desktop';
+  if (/Mobi|Android|iPhone|iPod/.test(ua)) device_type = 'mobile';
+  else if (/iPad|Tablet/.test(ua)) device_type = 'tablet';
+  
+  let browser = 'other';
+  if (/Edg\//.test(ua)) browser = 'Edge';
+  else if (/Chrome\//.test(ua) && !/Edg\//.test(ua)) browser = 'Chrome';
+  else if (/Firefox\//.test(ua)) browser = 'Firefox';
+  else if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) browser = 'Safari';
+  else if (/OPR\/|Opera/.test(ua)) browser = 'Opera';
+  
+  let os = 'other';
+  if (/iPhone|iPad|iPod/.test(ua)) os = 'iOS';
+  else if (/Android/.test(ua)) os = 'Android';
+  else if (/Windows/.test(ua)) os = 'Windows';
+  else if (/Mac OS X/.test(ua)) os = 'macOS';
+  else if (/Linux/.test(ua)) os = 'Linux';
+  
+  return { device_type, browser, os };
+}
+
+async function trackAppEvent(eventType, metadata = {}) {
+  try {
+    if (!currentEmployee || !currentEmployee.username) {
+      return;
+    }
+    
+    const device = getAppDeviceInfo();
+    
+    // Mark events from the app with "app_" prefix so we can filter them
+    const event = {
+      card_username: currentEmployee.username,
+      event_type: 'app_' + eventType,
+      visitor_id: getAppVisitorId(),
+      session_id: getAppSessionId(),
+      source: 'app',
+      referrer: null,
+      device_type: device.device_type,
+      browser: device.browser,
+      os: device.os,
+      page_path: window.location.pathname + window.location.search,
+      metadata: Object.keys(metadata).length > 0 ? metadata : null
+    };
+    
+    supabase.from('analytics_events').insert(event)
+      .then(({ error }) => {
+        if (error) {
+          console.warn('[App Analytics] Failed:', error.message);
+        } else {
+          console.log('[App Analytics] Tracked:', 'app_' + eventType);
+        }
+      });
+  } catch (err) {
+    console.warn('[App Analytics] Error:', err);
+  }
+}
+
 function shareNative() {
   console.log('[Share] shareNative clicked');
+  
+  // Track this
+  trackAppEvent('share_native');
   
   // Check support
   if (!navigator.share) {
@@ -2127,17 +2222,20 @@ function shareNative() {
 }
 
 function shareWhatsApp() {
+  trackAppEvent('share_whatsapp');
   const url = `https://wa.me/?text=${encodeURIComponent(getShareMessage())}`;
   window.open(url, '_blank');
 }
 
 function shareEmail() {
+  trackAppEvent('share_email');
   const subject = `כרטיס ביקור דיגיטלי - ${currentEmployee.full_name}`;
   const body = `שלום,\n\nמצורף קישור לכרטיס הביקור הדיגיטלי שלי:\n${getCardUrl()}\n\nתודה!`;
   window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function shareSMS() {
+  trackAppEvent('share_sms');
   // SMS link (works on mobile)
   const text = encodeURIComponent(getShareMessage());
   // iOS uses ?body=, Android uses ?body= too (newer Android)
@@ -2145,6 +2243,7 @@ function shareSMS() {
 }
 
 async function copyLink() {
+  trackAppEvent('share_copy_link');
   const url = getCardUrl();
   try {
     await navigator.clipboard.writeText(url);
