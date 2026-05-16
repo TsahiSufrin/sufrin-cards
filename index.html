@@ -1149,6 +1149,9 @@ async function loadCard() {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('card').classList.remove('hidden');
     document.getElementById('lang-toggle').classList.remove('hidden');
+    
+    // Track page view (fire-and-forget)
+    trackPageView();
 
   } catch (error) {
     console.error('Error loading card:', error);
@@ -1226,6 +1229,17 @@ function renderEmployeeData() {
   if (company.facebook_url) document.getElementById('facebook-link').href = company.facebook_url;
   if (company.linkedin_url) document.getElementById('linkedin-link').href = company.linkedin_url;
   
+  // ============================================
+  // Click tracking - attach to all action buttons
+  // ============================================
+  attachClickTracker('whatsapp-link', 'whatsapp');
+  attachClickTracker('phone-link', 'call');
+  attachClickTracker('email-link', 'email');
+  attachClickTracker('instagram-link', 'instagram');
+  attachClickTracker('facebook-link', 'facebook');
+  attachClickTracker('linkedin-link', 'linkedin');
+  // Save contact button is handled in saveContact() function directly
+  
   // Update translatable button texts
   document.getElementById('btn-save-contact-text').textContent = t('saveContact');
   document.getElementById('whatsapp-text').textContent = t('whatsapp');
@@ -1279,6 +1293,10 @@ function renderOfficeSection() {
   document.getElementById('office-waze').href = wazeUrl;
   document.getElementById('office-maps').href = mapsUrl;
   
+  // Track clicks on navigation
+  attachClickTracker('office-waze', 'navigate', { provider: 'waze' });
+  attachClickTracker('office-maps', 'navigate', { provider: 'maps' });
+  
   // Show the section
   officeSection.classList.remove('hidden');
 }
@@ -1305,6 +1323,9 @@ function showError(titleKey, messageKey) {
 // ============================================
 function saveContact() {
   if (!currentEmployee || !currentCompany) return;
+  
+  // Track this event
+  trackEvent('save_contact');
 
   const emp = currentEmployee;
   const company = currentCompany;
@@ -1359,6 +1380,147 @@ function showToast(message) {
   toast.textContent = message;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Format phone number for WhatsApp/wa.me URL
+// Handles Israeli formats: 0XX, 05X, +972, 972, with/without dashes/spaces
+// ============================================
+// ANALYTICS - Privacy-respecting event tracking
+// ============================================
+
+// Get or create anonymous visitor ID (persists across sessions)
+function getVisitorId() {
+  try {
+    let id = localStorage.getItem('sufrin-visitor-id');
+    if (!id) {
+      id = 'v_' + crypto.randomUUID();
+      localStorage.setItem('sufrin-visitor-id', id);
+    }
+    return id;
+  } catch (e) {
+    // Fallback if localStorage not available
+    return 'v_session_' + Math.random().toString(36).substring(2, 15);
+  }
+}
+
+// Get or create session ID (only for current session)
+function getSessionId() {
+  try {
+    let id = sessionStorage.getItem('sufrin-session-id');
+    if (!id) {
+      id = 's_' + crypto.randomUUID();
+      sessionStorage.setItem('sufrin-session-id', id);
+    }
+    return id;
+  } catch (e) {
+    return 's_temp_' + Math.random().toString(36).substring(2, 15);
+  }
+}
+
+// Detect traffic source
+function detectSource() {
+  const params = new URLSearchParams(window.location.search);
+  
+  // Explicit source parameter (for QR/NFC tagging in future)
+  const explicitSource = params.get('src') || params.get('source') || params.get('utm_source');
+  if (explicitSource) return explicitSource.toLowerCase();
+  
+  // Detect from referrer
+  const ref = document.referrer.toLowerCase();
+  if (!ref) return 'direct';  // No referrer = direct/QR/NFC
+  if (ref.includes('whatsapp') || ref.includes('wa.me')) return 'whatsapp';
+  if (ref.includes('facebook') || ref.includes('fb.com')) return 'facebook';
+  if (ref.includes('instagram')) return 'instagram';
+  if (ref.includes('linkedin')) return 'linkedin';
+  if (ref.includes('twitter') || ref.includes('x.com')) return 'twitter';
+  if (ref.includes('google')) return 'google';
+  if (ref.includes('bing')) return 'bing';
+  if (ref.includes('mail') || ref.includes('outlook') || ref.includes('gmail')) return 'email';
+  if (ref.includes('card.sufrin.io') || ref.includes('sufrin.io')) return 'internal';
+  return 'other';
+}
+
+// Detect device info from user agent
+function detectDeviceInfo() {
+  const ua = navigator.userAgent;
+  
+  let device_type = 'desktop';
+  if (/Mobi|Android|iPhone|iPod/.test(ua)) device_type = 'mobile';
+  else if (/iPad|Tablet/.test(ua)) device_type = 'tablet';
+  
+  let browser = 'other';
+  if (/Edg\//.test(ua)) browser = 'Edge';
+  else if (/Chrome\//.test(ua) && !/Edg\//.test(ua)) browser = 'Chrome';
+  else if (/Firefox\//.test(ua)) browser = 'Firefox';
+  else if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) browser = 'Safari';
+  else if (/OPR\/|Opera/.test(ua)) browser = 'Opera';
+  
+  let os = 'other';
+  if (/iPhone|iPad|iPod/.test(ua)) os = 'iOS';
+  else if (/Android/.test(ua)) os = 'Android';
+  else if (/Windows/.test(ua)) os = 'Windows';
+  else if (/Mac OS X/.test(ua)) os = 'macOS';
+  else if (/Linux/.test(ua)) os = 'Linux';
+  
+  return { device_type, browser, os };
+}
+
+// Main tracking function
+async function trackEvent(eventType, metadata = {}) {
+  try {
+    if (!currentEmployee || !currentEmployee.username) {
+      console.log('[Analytics] No employee context, skipping event');
+      return;
+    }
+    
+    const device = detectDeviceInfo();
+    
+    const event = {
+      card_username: currentEmployee.username,
+      event_type: eventType,
+      visitor_id: getVisitorId(),
+      session_id: getSessionId(),
+      source: detectSource(),
+      referrer: document.referrer || null,
+      device_type: device.device_type,
+      browser: device.browser,
+      os: device.os,
+      page_path: window.location.pathname + window.location.search,
+      metadata: Object.keys(metadata).length > 0 ? metadata : null
+    };
+    
+    // Fire and forget - don't block UI for analytics
+    supabase.from('analytics_events').insert(event)
+      .then(({ error }) => {
+        if (error) {
+          console.warn('[Analytics] Failed to insert event:', error.message);
+        } else {
+          console.log('[Analytics] Tracked:', eventType);
+        }
+      });
+  } catch (err) {
+    // Never let analytics break the page
+    console.warn('[Analytics] Error:', err);
+  }
+}
+
+// Track page view automatically after card loads
+function trackPageView() {
+  trackEvent('view');
+}
+
+// Attach click tracker to a link/button (fires before navigation)
+function attachClickTracker(elementId, eventType, metadata = {}) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  
+  // Remove existing listener if any (avoid duplicates)
+  const newEl = el.cloneNode(true);
+  el.parentNode.replaceChild(newEl, el);
+  
+  newEl.addEventListener('click', () => {
+    trackEvent(eventType, metadata);
+  });
 }
 
 // Format phone number for WhatsApp/wa.me URL
