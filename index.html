@@ -1490,7 +1490,7 @@ async function trackEvent(eventType, metadata = {}) {
     };
     
     // Fire and forget - don't block UI for analytics
-    supabase.from('analytics_events').insert(event)
+    sb.from('analytics_events').insert(event)
       .then(({ error }) => {
         if (error) {
           console.warn('[Analytics] Failed to insert event:', error.message);
