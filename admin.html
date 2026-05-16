@@ -2730,6 +2730,9 @@ function showAdmin() {
   
   loadEmployees();
   loadCompanySettings();
+  
+  // Restore last active tab (if user refreshed while on another tab)
+  restoreActiveTab();
 }
 
 function switchTab(tab) {
@@ -2740,6 +2743,13 @@ function switchTab(tab) {
   document.getElementById('tab-offices').classList.toggle('hidden', tab !== 'offices');
   document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
   
+  // Save current tab to localStorage to persist across page refreshes
+  try {
+    localStorage.setItem('sufrin-admin-active-tab', tab);
+  } catch (e) {
+    // localStorage might be disabled - silently continue
+  }
+  
   // Load analytics data when switching to that tab
   if (tab === 'analytics') {
     loadAnalytics();
@@ -2748,6 +2758,18 @@ function switchTab(tab) {
   // Load offices when switching to that tab
   if (tab === 'offices') {
     loadOffices();
+  }
+}
+
+// Restore the last active tab on page load
+function restoreActiveTab() {
+  try {
+    const savedTab = localStorage.getItem('sufrin-admin-active-tab');
+    if (savedTab && ['employees', 'analytics', 'offices', 'settings'].includes(savedTab) && savedTab !== 'employees') {
+      switchTab(savedTab);
+    }
+  } catch (e) {
+    // Default to employees tab (already active by default)
   }
 }
 
