@@ -702,6 +702,344 @@ body {
 }
 
 /* ================================================
+   ANALYTICS DETAIL MODAL
+   ================================================ */
+
+.modal-detail {
+  max-width: 720px;
+  width: 95%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.modal-detail-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, var(--ink), var(--ink-light));
+  color: white;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.modal-detail-header .modal-close {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.modal-detail-header .modal-close:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.detail-header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.detail-header-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--ink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,0.2);
+}
+
+.detail-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-header-name {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.detail-header-title {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+
+.modal-detail-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Summary cards row */
+.detail-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .detail-summary-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.detail-summary-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+}
+
+.detail-summary-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.detail-summary-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.detail-summary-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Section */
+.detail-section {
+  margin-bottom: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.detail-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detail-section-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Stat list */
+.detail-stat-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .detail-stat-list { grid-template-columns: 1fr; }
+}
+
+.detail-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.detail-stat-row.detail-stat-inactive {
+  opacity: 0.4;
+}
+
+.detail-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.detail-stat-icon {
+  font-size: 16px;
+}
+
+.detail-stat-value {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  min-width: 28px;
+  text-align: left;
+}
+
+/* Daily chart */
+.detail-chart {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 16px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.chart-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.chart-bar-stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.chart-bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  transition: opacity 0.2s ease;
+}
+
+.chart-bar:hover {
+  opacity: 0.7;
+}
+
+.chart-bar-views {
+  background: var(--gold);
+}
+
+.chart-bar-clicks {
+  background: #16a34a;
+}
+
+.chart-bar-label {
+  font-size: 9px;
+  color: var(--muted);
+  height: 12px;
+  font-weight: 500;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.detail-chart-empty {
+  background: var(--bg-soft);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Time patterns */
+.detail-time-patterns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .detail-time-patterns { grid-template-columns: 1fr; }
+}
+
+.detail-time-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.detail-time-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.detail-time-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-time-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.detail-time-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.muted-text {
+  color: var(--muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ================================================
    EMPLOYEES LIST
    ================================================ */
 .section-header {
@@ -2706,10 +3044,8 @@ function renderDevicesDistribution(viewEvents) {
 }
 
 function showEmployeeDetail(username) {
-  // For now, just show events for this employee
   const empEvents = analyticsData.filter(e => e.card_username === username);
   const emp = employees.find(e => e.username === username);
-  const empName = emp?.full_name || username;
   
   // Group events by type
   const byType = {};
@@ -2717,30 +3053,325 @@ function showEmployeeDetail(username) {
     byType[e.event_type] = (byType[e.event_type] || 0) + 1;
   });
   
-  const eventNames = {
-    'view': '👁️ צפייה',
-    'call': '📞 התקשרות',
-    'whatsapp': '💬 WhatsApp',
-    'email': '📧 אימייל',
-    'save_contact': '👤 שמירה לאנשי קשר',
-    'navigate': '📍 ניווט',
-    'instagram': '📷 Instagram',
-    'facebook': '📘 Facebook',
-    'linkedin': '💼 LinkedIn',
-    'app_open': '📱 פתיחת אפליקציה',
-    'app_share_native': '📤 שיתוף (Native)',
-    'app_share_whatsapp': '📤 שיתוף WhatsApp',
-    'app_share_email': '📤 שיתוף אימייל',
-    'app_share_sms': '📤 שיתוף SMS',
-    'app_share_copy_link': '📤 העתקת קישור'
+  // Helper to get count for type (returns 0 if not exists)
+  const cnt = (type) => byType[type] || 0;
+  
+  // Card events
+  const totalViews = cnt('view');
+  const uniqueVisitors = new Set(empEvents.filter(e => e.event_type === 'view').map(e => e.visitor_id)).size;
+  const totalCardClicks = ['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin']
+    .reduce((sum, t) => sum + cnt(t), 0);
+  const engagementRate = totalViews > 0 ? Math.round((totalCardClicks / totalViews) * 100) : 0;
+  
+  // App events
+  const totalAppOpens = cnt('app_open');
+  const totalAppShares = ['app_share_native', 'app_share_whatsapp', 'app_share_email', 'app_share_sms', 'app_share_copy_link']
+    .reduce((sum, t) => sum + cnt(t), 0);
+  
+  // Compute time-based stats from view events
+  const viewEvents = empEvents.filter(e => e.event_type === 'view');
+  const hourCounts = {};
+  const dayCounts = {};
+  const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+  
+  viewEvents.forEach(e => {
+    const d = new Date(e.created_at);
+    const hour = d.getHours();
+    const day = d.getDay();
+    hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+    dayCounts[day] = (dayCounts[day] || 0) + 1;
+  });
+  
+  // Find peak hour
+  let peakHour = null;
+  let peakHourCount = 0;
+  Object.entries(hourCounts).forEach(([h, c]) => {
+    if (c > peakHourCount) {
+      peakHourCount = c;
+      peakHour = parseInt(h);
+    }
+  });
+  
+  // Find peak day
+  let peakDay = null;
+  let peakDayCount = 0;
+  Object.entries(dayCounts).forEach(([d, c]) => {
+    if (c > peakDayCount) {
+      peakDayCount = c;
+      peakDay = parseInt(d);
+    }
+  });
+  
+  // Last activity
+  const lastActivity = empEvents.length > 0 
+    ? new Date(empEvents.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0].created_at)
+    : null;
+  
+  // Build modal HTML
+  const photoHtml = emp?.photo_url 
+    ? `<img src="${escapeHtml(emp.photo_url)}" alt="">`
+    : `<span>${escapeHtml((emp?.full_name || username).charAt(0))}</span>`;
+  const displayName = emp?.full_name || username;
+  const displayTitle = emp?.title || '';
+  
+  // Card events list
+  const cardEventsRows = [
+    { type: 'view', icon: '👁️', label: 'צפיות' },
+    { type: '_unique_visitors', icon: '👥', label: 'צופים ייחודיים', customCount: uniqueVisitors },
+    { type: 'call', icon: '📞', label: 'התקשרויות' },
+    { type: 'whatsapp', icon: '💬', label: 'WhatsApp' },
+    { type: 'email', icon: '📧', label: 'אימייל' },
+    { type: 'save_contact', icon: '👤', label: 'שמירה לאנשי קשר' },
+    { type: 'navigate', icon: '📍', label: 'ניווט (Maps/Waze)' },
+    { type: 'instagram', icon: '📷', label: 'Instagram' },
+    { type: 'facebook', icon: '📘', label: 'Facebook' },
+    { type: 'linkedin', icon: '💼', label: 'LinkedIn' }
+  ];
+  
+  const appEventsRows = [
+    { type: 'app_open', icon: '📱', label: 'פתיחות אפליקציה' },
+    { type: 'app_share_native', icon: '📤', label: 'שיתוף עם מישהו (Native)' },
+    { type: 'app_share_whatsapp', icon: '💬', label: 'שיתוף WhatsApp' },
+    { type: 'app_share_email', icon: '📧', label: 'שיתוף אימייל' },
+    { type: 'app_share_sms', icon: '💬', label: 'שיתוף SMS' },
+    { type: 'app_share_copy_link', icon: '🔗', label: 'העתקת קישור' }
+  ];
+  
+  const buildEventRow = (row) => {
+    const count = row.customCount !== undefined ? row.customCount : cnt(row.type);
+    const inactive = count === 0;
+    return `
+      <div class="detail-stat-row ${inactive ? 'detail-stat-inactive' : ''}">
+        <div class="detail-stat-label">
+          <span class="detail-stat-icon">${row.icon}</span>
+          <span>${row.label}</span>
+        </div>
+        <div class="detail-stat-value">${count}</div>
+      </div>
+    `;
   };
   
-  const breakdown = Object.entries(byType)
-    .sort((a, b) => b[1] - a[1])
-    .map(([type, count]) => `${eventNames[type] || type}: ${count}`)
-    .join('\n');
+  const modalHtml = `
+    <div class="modal-overlay" id="detail-modal-overlay" onclick="closeDetailModal(event)">
+      <div class="modal modal-detail" onclick="event.stopPropagation()">
+        <!-- Header -->
+        <div class="modal-detail-header">
+          <button class="modal-close" onclick="closeDetailModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="detail-header-content">
+            <div class="detail-header-avatar">${photoHtml}</div>
+            <div>
+              <div class="detail-header-name">${escapeHtml(displayName)}</div>
+              <div class="detail-header-title">${escapeHtml(displayTitle)}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Body -->
+        <div class="modal-detail-body">
+          
+          <!-- Summary cards -->
+          <div class="detail-summary-cards">
+            <div class="detail-summary-card">
+              <div class="detail-summary-icon">👁️</div>
+              <div class="detail-summary-value">${totalViews}</div>
+              <div class="detail-summary-label">צפיות</div>
+            </div>
+            <div class="detail-summary-card">
+              <div class="detail-summary-icon">🖱️</div>
+              <div class="detail-summary-value">${totalCardClicks}</div>
+              <div class="detail-summary-label">לחיצות</div>
+            </div>
+            <div class="detail-summary-card">
+              <div class="detail-summary-icon">⚡</div>
+              <div class="detail-summary-value">${engagementRate}%</div>
+              <div class="detail-summary-label">Engagement</div>
+            </div>
+            <div class="detail-summary-card">
+              <div class="detail-summary-icon">📱</div>
+              <div class="detail-summary-value">${totalAppOpens}</div>
+              <div class="detail-summary-label">פתיחות אפליקציה</div>
+            </div>
+          </div>
+          
+          <!-- Card activity -->
+          <div class="detail-section">
+            <div class="detail-section-title">
+              <span>📍 פעולות בכרטיס הביקור</span>
+              <span class="detail-section-meta">מה לקוחות עשו</span>
+            </div>
+            <div class="detail-stat-list">
+              ${cardEventsRows.map(buildEventRow).join('')}
+            </div>
+          </div>
+          
+          <!-- App activity -->
+          <div class="detail-section">
+            <div class="detail-section-title">
+              <span>🚀 שימוש העובד באפליקציה</span>
+              <span class="detail-section-meta">פעולות שהעובד עצמו ביצע</span>
+            </div>
+            <div class="detail-stat-list">
+              ${appEventsRows.map(buildEventRow).join('')}
+            </div>
+          </div>
+          
+          <!-- Daily chart -->
+          <div class="detail-section">
+            <div class="detail-section-title">
+              <span>📈 פעילות יומית</span>
+              <span class="detail-section-meta">צפיות לאורך זמן</span>
+            </div>
+            ${buildDailyChart(empEvents)}
+          </div>
+          
+          <!-- Time patterns -->
+          <div class="detail-section">
+            <div class="detail-section-title">
+              <span>⏰ דפוסי זמן</span>
+              <span class="detail-section-meta">מתי הכי פעיל</span>
+            </div>
+            <div class="detail-time-patterns">
+              <div class="detail-time-card">
+                <div class="detail-time-icon">⏰</div>
+                <div class="detail-time-content">
+                  <div class="detail-time-label">שעת שיא</div>
+                  <div class="detail-time-value">
+                    ${peakHour !== null 
+                      ? `${peakHour.toString().padStart(2, '0')}:00 - ${(peakHour + 1).toString().padStart(2, '0')}:00`
+                      : '<span class="muted-text">אין נתונים</span>'
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="detail-time-card">
+                <div class="detail-time-icon">📅</div>
+                <div class="detail-time-content">
+                  <div class="detail-time-label">יום פעיל</div>
+                  <div class="detail-time-value">
+                    ${peakDay !== null 
+                      ? `יום ${dayNames[peakDay]}`
+                      : '<span class="muted-text">אין נתונים</span>'
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="detail-time-card">
+                <div class="detail-time-icon">🕐</div>
+                <div class="detail-time-content">
+                  <div class="detail-time-label">פעילות אחרונה</div>
+                  <div class="detail-time-value">
+                    ${lastActivity 
+                      ? formatRelativeTime(lastActivity)
+                      : '<span class="muted-text">אין נתונים</span>'
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  `;
   
-  alert(`📊 פירוט עבור ${empName}\n\n${breakdown}\n\nסה"כ אירועים: ${empEvents.length}`);
+  // Add modal to body
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = modalHtml;
+  document.body.appendChild(wrapper.firstElementChild);
+}
+
+function closeDetailModal(event) {
+  if (event && event.target.id !== 'detail-modal-overlay' && !event.target.closest('.modal-close')) return;
+  const modal = document.getElementById('detail-modal-overlay');
+  if (modal) modal.remove();
+}
+
+function formatRelativeTime(date) {
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'לפני פחות מדקה';
+  if (diff < 3600) return `לפני ${Math.floor(diff / 60)} דקות`;
+  if (diff < 86400) return `לפני ${Math.floor(diff / 3600)} שעות`;
+  if (diff < 604800) return `לפני ${Math.floor(diff / 86400)} ימים`;
+  if (diff < 2592000) return `לפני ${Math.floor(diff / 604800)} שבועות`;
+  return date.toLocaleDateString('he-IL');
+}
+
+function buildDailyChart(empEvents) {
+  // Group events by date for the last 30 days
+  const daysToShow = 30;
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  
+  // Build empty buckets
+  const buckets = {};
+  for (let i = 0; i < daysToShow; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    buckets[key] = { views: 0, clicks: 0 };
+  }
+  
+  const clickTypes = ['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin'];
+  
+  empEvents.forEach(e => {
+    const key = e.created_at.split('T')[0];
+    if (buckets[key]) {
+      if (e.event_type === 'view') buckets[key].views++;
+      else if (clickTypes.includes(e.event_type)) buckets[key].clicks++;
+    }
+  });
+  
+  const sortedKeys = Object.keys(buckets).sort();
+  const maxValue = Math.max(...sortedKeys.map(k => buckets[k].views + buckets[k].clicks), 1);
+  
+  // Check if we have any data
+  const totalEvents = sortedKeys.reduce((sum, k) => sum + buckets[k].views + buckets[k].clicks, 0);
+  
+  if (totalEvents === 0) {
+    return `<div class="detail-chart-empty">אין נתונים להצגה ב-30 הימים האחרונים</div>`;
+  }
+  
+  // Build bars HTML
+  const barsHtml = sortedKeys.map(key => {
+    const d = buckets[key];
+    const date = new Date(key);
+    const totalHeight = ((d.views + d.clicks) / maxValue) * 100;
+    const viewsHeight = (d.views / maxValue) * 100;
+    const clicksHeight = (d.clicks / maxValue) * 100;
+    const dayLabel = date.getDate();
+    const showLabel = date.getDate() === 1 || date.getDate() === 15 || sortedKeys.indexOf(key) === sortedKeys.length - 1;
+    
+    return `
+      <div class="chart-bar-container" title="${date.toLocaleDateString('he-IL')}: ${d.views} צפיות, ${d.clicks} לחיצות">
+        <div class="chart-bar-stack">
+          ${d.clicks > 0 ? `<div class="chart-bar chart-bar-clicks" style="height:${clicksHeight}%"></div>` : ''}
+          ${d.views > 0 ? `<div class="chart-bar chart-bar-views" style="height:${viewsHeight}%"></div>` : ''}
+        </div>
+        ${showLabel ? `<div class="chart-bar-label">${dayLabel}</div>` : '<div class="chart-bar-label"></div>'}
+      </div>
+    `;
+  }).join('');
+  
+  return `
+    <div class="detail-chart">
+      <div class="chart-bars">${barsHtml}</div>
+      <div class="chart-legend">
+        <div class="chart-legend-item">
+          <div class="chart-legend-dot" style="background:var(--gold)"></div>
+          <span>צפיות</span>
+        </div>
+        <div class="chart-legend-item">
+          <div class="chart-legend-dot" style="background:#16a34a"></div>
+          <span>לחיצות</span>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // ============================================
