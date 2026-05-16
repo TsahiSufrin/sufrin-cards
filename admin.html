@@ -546,6 +546,86 @@ body {
   font-weight: 500;
 }
 
+/* Wide table with many columns */
+.stats-table-wrapper {
+  overflow-x: auto;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+
+.employees-stats-table-wide {
+  min-width: 900px;
+}
+
+.employees-stats-table-wide th,
+.employees-stats-table-wide td {
+  padding: 10px 8px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.employees-stats-table-wide .col-employee {
+  text-align: right;
+  min-width: 160px;
+}
+
+.employees-stats-table-wide .col-num {
+  text-align: center;
+  min-width: 60px;
+}
+
+.employees-stats-table-wide .col-engagement {
+  min-width: 100px;
+}
+
+.employees-stats-table-wide .col-trend {
+  text-align: center;
+  min-width: 70px;
+}
+
+.employees-stats-table-wide .col-days {
+  text-align: center;
+  min-width: 80px;
+}
+
+.employees-stats-table-wide .col-activity {
+  text-align: center;
+  min-width: 95px;
+}
+
+/* Trend indicators */
+.trend-up {
+  color: #16a34a;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.trend-down {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.trend-flat {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.trend-none {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.stats-table-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 10px 0 0;
+  font-style: italic;
+}
+
 .emp-stats-name {
   display: flex;
   align-items: center;
@@ -2834,6 +2914,20 @@ function renderAnalytics() {
 }
 
 function renderEmployeesStats(events) {
+  const clickTypes = ['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin'];
+  const appShareTypes = ['app_share_native', 'app_share_whatsapp', 'app_share_email', 'app_share_sms', 'app_share_copy_link'];
+  
+  // Calculate previous period for trend comparison
+  // The events we received are filtered by current period; we need to fetch previous period separately
+  // For simplicity, we'll calculate trend within the same time window split in half
+  const now = Date.now();
+  let periodMs;
+  if (currentAnalyticsPeriod === 'all') {
+    periodMs = null; // No trend for "all time"
+  } else {
+    periodMs = currentAnalyticsPeriod * 24 * 60 * 60 * 1000;
+  }
+  
   // Group by employee
   const byEmp = {};
   
@@ -2842,16 +2936,61 @@ function renderEmployeesStats(events) {
       byEmp[e.card_username] = {
         username: e.card_username,
         views: 0,
+        views_prev: 0,  // Previous half-period for trend
         unique_visitors: new Set(),
-        clicks: 0
+        clicks: 0,
+        app_opens: 0,
+        app_shares: 0,
+        last_activity: null,
+        active_days: new Set()
       };
     }
     
+    const stat = byEmp[e.card_username];
+    const eventTime = new Date(e.created_at).getTime();
+    const dayKey = e.created_at.split('T')[0];
+    
+    // Track active days
+    stat.active_days.add(dayKey);
+    
+    // Track last activity
+    if (!stat.last_activity || eventTime > stat.last_activity) {
+      stat.last_activity = eventTime;
+    }
+    
+    // Determine if this event is in the "recent half" or "previous half" for trend
+    const isRecent = periodMs ? (now - eventTime) <= (periodMs / 2) : true;
+    
     if (e.event_type === 'view') {
-      byEmp[e.card_username].views++;
-      byEmp[e.card_username].unique_visitors.add(e.visitor_id);
-    } else if (['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin'].includes(e.event_type)) {
-      byEmp[e.card_username].clicks++;
+      stat.views++;
+      stat.unique_visitors.add(e.visitor_id);
+      if (periodMs) {
+        if (isRecent) stat.views++;  // Already counted, but track separately:
+      }
+      // Track previous-half views for trend
+      if (periodMs && !isRecent) stat.views_prev++;
+    } else if (clickTypes.includes(e.event_type)) {
+      stat.clicks++;
+    } else if (e.event_type === 'app_open') {
+      stat.app_opens++;
+    } else if (appShareTypes.includes(e.event_type)) {
+      stat.app_shares++;
+    }
+  });
+  
+  // Fix: re-calculate views_prev correctly
+  Object.values(byEmp).forEach(stat => {
+    stat.views_prev = 0;
+    stat.views_recent = 0;
+  });
+  events.filter(e => e.event_type === 'view').forEach(e => {
+    const stat = byEmp[e.card_username];
+    if (!stat) return;
+    const eventTime = new Date(e.created_at).getTime();
+    if (periodMs) {
+      const isRecent = (now - eventTime) <= (periodMs / 2);
+      if (isRecent) stat.views_recent++;
+      else stat.views_prev++;
     }
   });
   
@@ -2862,8 +3001,14 @@ function renderEmployeesStats(events) {
       byEmp[emp.username] = {
         username: emp.username,
         views: 0,
+        views_prev: 0,
+        views_recent: 0,
         unique_visitors: new Set(),
-        clicks: 0
+        clicks: 0,
+        app_opens: 0,
+        app_shares: 0,
+        last_activity: null,
+        active_days: new Set()
       };
     }
   });
@@ -2871,10 +3016,30 @@ function renderEmployeesStats(events) {
   // Convert to array and add employee data
   const rows = Object.values(byEmp).map(stats => {
     const emp = employees.find(e => e.username === stats.username);
+    
+    // Calculate trend
+    let trend = null;
+    if (periodMs && (stats.views_recent + stats.views_prev) > 0) {
+      if (stats.views_prev === 0 && stats.views_recent > 0) {
+        trend = { dir: 'up', text: 'חדש' };
+      } else if (stats.views_prev > 0) {
+        const change = ((stats.views_recent - stats.views_prev) / stats.views_prev) * 100;
+        if (Math.abs(change) < 5) {
+          trend = { dir: 'flat', text: '~' };
+        } else if (change > 0) {
+          trend = { dir: 'up', text: `+${Math.round(change)}%` };
+        } else {
+          trend = { dir: 'down', text: `${Math.round(change)}%` };
+        }
+      }
+    }
+    
     return {
       ...stats,
       unique_visitors: stats.unique_visitors.size,
       engagement: stats.views > 0 ? Math.round((stats.clicks / stats.views) * 100) : 0,
+      active_days: stats.active_days.size,
+      trend,
       employee: emp
     };
   }).sort((a, b) => {
@@ -2889,61 +3054,106 @@ function renderEmployeesStats(events) {
     return '<div class="empty-state-desc">אין עובדים פעילים</div>';
   }
   
-  // Find max for normalization
+  // Find max for engagement bar normalization
   const maxEngagement = Math.max(...rows.map(r => r.engagement), 100);
   
+  // Calculate period days for "active days" display
+  const periodDaysTotal = currentAnalyticsPeriod === 'all' 
+    ? null 
+    : currentAnalyticsPeriod;
+  
   return `
-    <table class="employees-stats-table">
-      <thead>
-        <tr>
-          <th>עובד</th>
-          <th style="text-align:center">צפיות</th>
-          <th style="text-align:center">ייחודיים</th>
-          <th style="text-align:center">לחיצות</th>
-          <th>Engagement</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.map(row => {
-          const emp = row.employee;
-          const photoHtml = emp?.photo_url 
-            ? `<img src="${escapeHtml(emp.photo_url)}" alt="">`
-            : `<span>${escapeHtml((emp?.full_name || row.username).charAt(0))}</span>`;
-          const displayName = emp?.full_name || row.username;
-          const displayTitle = emp?.title || '';
-          const engagementPct = (row.engagement / maxEngagement) * 100;
-          const isInactive = row.views === 0 && row.clicks === 0;
-          
-          return `
-            <tr class="clickable-row ${isInactive ? 'inactive-row' : ''}" onclick="showEmployeeDetail('${escapeHtml(row.username)}')">
-              <td>
-                <div class="emp-stats-name">
-                  <div class="emp-stats-avatar">${photoHtml}</div>
-                  <div>
-                    <div class="emp-stats-info-name">${escapeHtml(displayName)}</div>
-                    <div class="emp-stats-info-title">${escapeHtml(displayTitle)}</div>
+    <div class="stats-table-wrapper">
+      <table class="employees-stats-table employees-stats-table-wide">
+        <thead>
+          <tr>
+            <th class="col-employee">עובד</th>
+            <th class="col-num">👁️ צפיות</th>
+            <th class="col-num">👥 ייחודיים</th>
+            <th class="col-num">🖱️ לחיצות</th>
+            <th class="col-num">📱 אפלי'</th>
+            <th class="col-num">🚀 שיתופים</th>
+            <th class="col-engagement">Engagement</th>
+            <th class="col-trend">📈 מגמה</th>
+            <th class="col-days">📅 ימים פעילים</th>
+            <th class="col-activity">🕐 פעילות</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(row => {
+            const emp = row.employee;
+            const photoHtml = emp?.photo_url 
+              ? `<img src="${escapeHtml(emp.photo_url)}" alt="">`
+              : `<span>${escapeHtml((emp?.full_name || row.username).charAt(0))}</span>`;
+            const displayName = emp?.full_name || row.username;
+            const displayTitle = emp?.title || '';
+            const engagementPct = (row.engagement / maxEngagement) * 100;
+            const isInactive = row.views === 0 && row.clicks === 0 && row.app_opens === 0;
+            
+            // Activity time formatting
+            let activityText = '—';
+            let activityClass = 'muted-text';
+            if (row.last_activity) {
+              activityText = formatRelativeTime(new Date(row.last_activity));
+              activityClass = '';
+            }
+            
+            // Active days display
+            let activeDaysText = '—';
+            if (row.active_days > 0) {
+              if (periodDaysTotal) {
+                activeDaysText = `${row.active_days}/${periodDaysTotal}`;
+              } else {
+                activeDaysText = `${row.active_days}`;
+              }
+            }
+            
+            // Trend display
+            let trendHtml = '<span class="trend-none">—</span>';
+            if (row.trend) {
+              const trendClass = `trend-${row.trend.dir}`;
+              const trendIcon = row.trend.dir === 'up' ? '↗' : 
+                                row.trend.dir === 'down' ? '↘' : '→';
+              trendHtml = `<span class="${trendClass}">${trendIcon} ${row.trend.text}</span>`;
+            }
+            
+            return `
+              <tr class="clickable-row ${isInactive ? 'inactive-row' : ''}" onclick="showEmployeeDetail('${escapeHtml(row.username)}')">
+                <td class="col-employee">
+                  <div class="emp-stats-name">
+                    <div class="emp-stats-avatar">${photoHtml}</div>
+                    <div>
+                      <div class="emp-stats-info-name">${escapeHtml(displayName)}</div>
+                      <div class="emp-stats-info-title">${escapeHtml(displayTitle)}</div>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.views}</td>
-              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.unique_visitors}</td>
-              <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.clicks}</td>
-              <td>
-                ${row.views === 0 
-                  ? '<span style="color: var(--muted); font-size: 12px; font-style: italic;">אין נתונים</span>'
-                  : `<div class="engagement-bar">
-                      <div class="engagement-bar-track">
-                        <div class="engagement-bar-fill" style="width:${engagementPct}%"></div>
-                      </div>
-                      <div class="engagement-bar-text">${row.engagement}%</div>
-                    </div>`
-                }
-              </td>
-            </tr>
-          `;
-        }).join('')}
-      </tbody>
-    </table>
+                </td>
+                <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.views}</td>
+                <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.unique_visitors}</td>
+                <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.clicks}</td>
+                <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.app_opens}</td>
+                <td class="emp-stats-num ${isInactive ? 'inactive-num' : ''}">${row.app_shares}</td>
+                <td class="col-engagement">
+                  ${row.views === 0 
+                    ? '<span class="muted-text" style="font-size: 11px;">—</span>'
+                    : `<div class="engagement-bar">
+                        <div class="engagement-bar-track">
+                          <div class="engagement-bar-fill" style="width:${engagementPct}%"></div>
+                        </div>
+                        <div class="engagement-bar-text">${row.engagement}%</div>
+                      </div>`
+                  }
+                </td>
+                <td class="col-trend">${trendHtml}</td>
+                <td class="col-days emp-stats-num ${isInactive ? 'inactive-num' : ''}" style="font-size:13px;">${activeDaysText}</td>
+                <td class="col-activity"><span class="${activityClass}" style="font-size:11px;">${activityText}</span></td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="stats-table-hint">💡 לחץ על שורה לקבלת פירוט מלא</div>
   `;
 }
 
