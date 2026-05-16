@@ -402,6 +402,293 @@ body {
 }
 
 /* ================================================
+   ANALYTICS
+   ================================================ */
+
+.analytics-period-selector {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  padding: 4px;
+  border: 1px solid var(--line);
+}
+
+.period-btn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.period-btn:hover { color: var(--ink); }
+
+.period-btn.active {
+  background: var(--ink);
+  color: white;
+}
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.stat-card-value {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-card-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-card-meta.positive { color: #16a34a; }
+.stat-card-meta.negative { color: #dc2626; }
+
+.analytics-section {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.analytics-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Employees comparison table */
+.employees-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employees-stats-table th {
+  text-align: right;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.employees-stats-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.employees-stats-table tr:last-child td { border-bottom: none; }
+
+.employees-stats-table tr.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.employees-stats-table tr.clickable-row:hover {
+  background: var(--bg-soft);
+}
+
+.emp-stats-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.emp-stats-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--ink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bg-card);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 0 0 1px var(--gold-border);
+}
+
+.emp-stats-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.emp-stats-info-name {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.emp-stats-info-title {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.emp-stats-num {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 16px;
+  text-align: center;
+}
+
+.engagement-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.engagement-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  max-width: 80px;
+}
+
+.engagement-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #4ade80);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.engagement-bar-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  min-width: 35px;
+}
+
+/* Two columns for charts */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+/* Source / Device list */
+.distribution-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.distribution-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.distribution-label {
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 90px;
+  font-weight: 500;
+}
+
+.distribution-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.distribution-bar-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.distribution-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  min-width: 40px;
+  text-align: left;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+
+.empty-state-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.empty-state-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.empty-state-desc {
+  font-size: 13px;
+}
+
+/* ================================================
    EMPLOYEES LIST
    ================================================ */
 .section-header {
@@ -1471,6 +1758,7 @@ html[dir="ltr"] .locked-card::after {
   
   <nav class="admin-tabs">
     <button class="admin-tab active" data-tab="employees" onclick="switchTab('employees')">עובדים</button>
+    <button class="admin-tab" data-tab="analytics" onclick="switchTab('analytics')">📊 אנליטיקס</button>
     <button class="admin-tab" data-tab="offices" onclick="switchTab('offices')">משרדים</button>
     <button class="admin-tab" data-tab="settings" onclick="switchTab('settings')">הגדרות חברה</button>
   </nav>
@@ -1494,6 +1782,29 @@ html[dir="ltr"] .locked-card::after {
         <div class="loading-state">
           <div class="loading-spinner-large"></div>
           <p style="color: var(--muted); font-size: 13px;">טוען עובדים...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Analytics Tab -->
+    <div id="tab-analytics" class="hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">📊 אנליטיקס</h2>
+          <p class="section-subtitle" id="analytics-subtitle">—</p>
+        </div>
+        <div class="analytics-period-selector">
+          <button class="period-btn" data-period="7" onclick="switchAnalyticsPeriod(7)">7 ימים</button>
+          <button class="period-btn active" data-period="30" onclick="switchAnalyticsPeriod(30)">30 ימים</button>
+          <button class="period-btn" data-period="90" onclick="switchAnalyticsPeriod(90)">90 ימים</button>
+          <button class="period-btn" data-period="all" onclick="switchAnalyticsPeriod('all')">הכל</button>
+        </div>
+      </div>
+      
+      <div id="analytics-content">
+        <div class="loading-state">
+          <div class="loading-spinner-large"></div>
+          <p style="color: var(--muted); font-size: 13px;">טוען נתונים...</p>
         </div>
       </div>
     </div>
@@ -1994,13 +2305,416 @@ function switchTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
   document.getElementById('tab-employees').classList.toggle('hidden', tab !== 'employees');
+  document.getElementById('tab-analytics').classList.toggle('hidden', tab !== 'analytics');
   document.getElementById('tab-offices').classList.toggle('hidden', tab !== 'offices');
   document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
+  
+  // Load analytics data when switching to that tab
+  if (tab === 'analytics') {
+    loadAnalytics();
+  }
   
   // Load offices when switching to that tab
   if (tab === 'offices') {
     loadOffices();
   }
+}
+
+// ============================================
+// EMPLOYEES
+// ============================================
+
+// ============================================
+// ANALYTICS
+// ============================================
+
+let currentAnalyticsPeriod = 30;
+let analyticsData = null;
+
+function switchAnalyticsPeriod(period) {
+  currentAnalyticsPeriod = period;
+  
+  // Update active button
+  document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.period == period);
+  });
+  
+  // Reload data
+  loadAnalytics();
+}
+
+async function loadAnalytics() {
+  const content = document.getElementById('analytics-content');
+  const subtitle = document.getElementById('analytics-subtitle');
+  
+  content.innerHTML = `
+    <div class="loading-state">
+      <div class="loading-spinner-large"></div>
+      <p style="color: var(--muted); font-size: 13px;">טוען נתונים...</p>
+    </div>
+  `;
+  
+  try {
+    // Build date filter
+    let dateFilter = '';
+    let periodLabel = 'הכל';
+    if (currentAnalyticsPeriod !== 'all') {
+      const daysAgo = new Date();
+      daysAgo.setDate(daysAgo.getDate() - currentAnalyticsPeriod);
+      dateFilter = daysAgo.toISOString();
+      periodLabel = `${currentAnalyticsPeriod} ימים אחרונים`;
+    }
+    
+    subtitle.textContent = periodLabel;
+    
+    // Build the base query
+    let query = sb.from('analytics_events').select('*');
+    if (dateFilter) {
+      query = query.gte('created_at', dateFilter);
+    }
+    
+    const { data: events, error } = await query;
+    
+    if (error) throw error;
+    
+    analyticsData = events || [];
+    
+    if (analyticsData.length === 0) {
+      content.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-title">אין נתונים עדיין</div>
+          <div class="empty-state-desc">נתונים יופיעו כאן ברגע שלקוחות יתחילו לצפות בכרטיסים</div>
+        </div>
+      `;
+      return;
+    }
+    
+    renderAnalytics();
+    
+  } catch (error) {
+    console.error('Load analytics error:', error);
+    content.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <div class="empty-state-title">שגיאה בטעינת נתונים</div>
+        <div class="empty-state-desc">${error.message || 'נסה שוב'}</div>
+      </div>
+    `;
+  }
+}
+
+function renderAnalytics() {
+  const events = analyticsData;
+  const content = document.getElementById('analytics-content');
+  
+  // Filter views vs clicks
+  const viewEvents = events.filter(e => e.event_type === 'view');
+  const clickEventTypes = ['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin'];
+  const clickEvents = events.filter(e => clickEventTypes.includes(e.event_type));
+  
+  // Calculate stats
+  const totalViews = viewEvents.length;
+  const uniqueVisitors = new Set(viewEvents.map(e => e.visitor_id)).size;
+  const totalClicks = clickEvents.length;
+  const engagementRate = totalViews > 0 ? Math.round((totalClicks / totalViews) * 100) : 0;
+  
+  // Build summary cards
+  const summaryCardsHtml = `
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          צפיות
+        </div>
+        <div class="stat-card-value">${totalViews.toLocaleString('he-IL')}</div>
+        <div class="stat-card-meta">${uniqueVisitors.toLocaleString('he-IL')} צופים ייחודיים</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm10 7v-2a4 4 0 0 0-3-3.87M4 17.99V20a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.01M9.5 13a4.5 4.5 0 0 0-4.5 4.5"/></svg>
+          לחיצות
+        </div>
+        <div class="stat-card-value">${totalClicks.toLocaleString('he-IL')}</div>
+        <div class="stat-card-meta">פעולות שלקוחות לחצו</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Engagement
+        </div>
+        <div class="stat-card-value">${engagementRate}%</div>
+        <div class="stat-card-meta">לחיצות לכל צפייה</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          פעולות
+        </div>
+        <div class="stat-card-value">${events.length.toLocaleString('he-IL')}</div>
+        <div class="stat-card-meta">סך כל האירועים</div>
+      </div>
+    </div>
+  `;
+  
+  // Employees comparison
+  const employeesStatsHtml = renderEmployeesStats(events);
+  
+  // Sources distribution
+  const sourcesHtml = renderSourcesDistribution(viewEvents);
+  
+  // Devices distribution
+  const devicesHtml = renderDevicesDistribution(viewEvents);
+  
+  // Compose the final dashboard
+  content.innerHTML = `
+    ${summaryCardsHtml}
+    
+    <div class="analytics-section">
+      <div class="analytics-section-title">📊 השוואת עובדים</div>
+      ${employeesStatsHtml}
+    </div>
+    
+    <div class="charts-grid">
+      <div class="analytics-section">
+        <div class="analytics-section-title">🌐 מקורות תנועה</div>
+        ${sourcesHtml}
+      </div>
+      
+      <div class="analytics-section">
+        <div class="analytics-section-title">📱 מכשירים</div>
+        ${devicesHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderEmployeesStats(events) {
+  // Group by employee
+  const byEmp = {};
+  
+  events.forEach(e => {
+    if (!byEmp[e.card_username]) {
+      byEmp[e.card_username] = {
+        username: e.card_username,
+        views: 0,
+        unique_visitors: new Set(),
+        clicks: 0
+      };
+    }
+    
+    if (e.event_type === 'view') {
+      byEmp[e.card_username].views++;
+      byEmp[e.card_username].unique_visitors.add(e.visitor_id);
+    } else if (['call', 'whatsapp', 'email', 'save_contact', 'navigate', 'instagram', 'facebook', 'linkedin'].includes(e.event_type)) {
+      byEmp[e.card_username].clicks++;
+    }
+  });
+  
+  // Convert to array and add employee data
+  const rows = Object.values(byEmp).map(stats => {
+    const emp = employees.find(e => e.username === stats.username);
+    return {
+      ...stats,
+      unique_visitors: stats.unique_visitors.size,
+      engagement: stats.views > 0 ? Math.round((stats.clicks / stats.views) * 100) : 0,
+      employee: emp
+    };
+  }).sort((a, b) => b.views - a.views);
+  
+  if (rows.length === 0) {
+    return '<div class="empty-state-desc">אין נתונים</div>';
+  }
+  
+  // Find max for normalization
+  const maxEngagement = Math.max(...rows.map(r => r.engagement), 100);
+  
+  return `
+    <table class="employees-stats-table">
+      <thead>
+        <tr>
+          <th>עובד</th>
+          <th style="text-align:center">צפיות</th>
+          <th style="text-align:center">ייחודיים</th>
+          <th style="text-align:center">לחיצות</th>
+          <th>Engagement</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(row => {
+          const emp = row.employee;
+          const photoHtml = emp?.photo_url 
+            ? `<img src="${escapeHtml(emp.photo_url)}" alt="">`
+            : `<span>${escapeHtml((emp?.full_name || row.username).charAt(0))}</span>`;
+          const displayName = emp?.full_name || row.username;
+          const displayTitle = emp?.title || '';
+          const engagementPct = (row.engagement / maxEngagement) * 100;
+          
+          return `
+            <tr class="clickable-row" onclick="showEmployeeDetail('${escapeHtml(row.username)}')">
+              <td>
+                <div class="emp-stats-name">
+                  <div class="emp-stats-avatar">${photoHtml}</div>
+                  <div>
+                    <div class="emp-stats-info-name">${escapeHtml(displayName)}</div>
+                    <div class="emp-stats-info-title">${escapeHtml(displayTitle)}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="emp-stats-num">${row.views}</td>
+              <td class="emp-stats-num">${row.unique_visitors}</td>
+              <td class="emp-stats-num">${row.clicks}</td>
+              <td>
+                <div class="engagement-bar">
+                  <div class="engagement-bar-track">
+                    <div class="engagement-bar-fill" style="width:${engagementPct}%"></div>
+                  </div>
+                  <div class="engagement-bar-text">${row.engagement}%</div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderSourcesDistribution(viewEvents) {
+  if (viewEvents.length === 0) {
+    return '<div class="empty-state-desc">אין נתוני מקורות</div>';
+  }
+  
+  // Group by source
+  const bySrc = {};
+  viewEvents.forEach(e => {
+    const src = e.source || 'other';
+    bySrc[src] = (bySrc[src] || 0) + 1;
+  });
+  
+  // Friendly names
+  const sourceNames = {
+    'direct': 'ישיר / NFC / QR',
+    'whatsapp': 'WhatsApp',
+    'facebook': 'Facebook',
+    'instagram': 'Instagram',
+    'linkedin': 'LinkedIn',
+    'twitter': 'Twitter',
+    'google': 'Google',
+    'bing': 'Bing',
+    'email': 'אימייל',
+    'internal': 'פנימי',
+    'app': 'אפליקציה',
+    'other': 'אחר'
+  };
+  
+  const rows = Object.entries(bySrc).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(...rows.map(r => r[1]));
+  
+  return `
+    <div class="distribution-list">
+      ${rows.map(([src, count]) => {
+        const pct = (count / max) * 100;
+        const total = viewEvents.length;
+        const sharePct = Math.round((count / total) * 100);
+        return `
+          <div class="distribution-row">
+            <div class="distribution-label">${escapeHtml(sourceNames[src] || src)}</div>
+            <div class="distribution-bar-track">
+              <div class="distribution-bar-fill" style="width:${pct}%"></div>
+            </div>
+            <div class="distribution-value">${count} (${sharePct}%)</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderDevicesDistribution(viewEvents) {
+  if (viewEvents.length === 0) {
+    return '<div class="empty-state-desc">אין נתוני מכשירים</div>';
+  }
+  
+  // Group by device + OS
+  const byDevice = {};
+  viewEvents.forEach(e => {
+    const key = `${e.os || 'other'}`;
+    byDevice[key] = (byDevice[key] || 0) + 1;
+  });
+  
+  const osIcons = {
+    'iOS': '🍎',
+    'Android': '🤖',
+    'macOS': '💻',
+    'Windows': '🖥️',
+    'Linux': '🐧',
+    'other': '📱'
+  };
+  
+  const rows = Object.entries(byDevice).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(...rows.map(r => r[1]));
+  
+  return `
+    <div class="distribution-list">
+      ${rows.map(([os, count]) => {
+        const pct = (count / max) * 100;
+        const total = viewEvents.length;
+        const sharePct = Math.round((count / total) * 100);
+        const icon = osIcons[os] || '📱';
+        return `
+          <div class="distribution-row">
+            <div class="distribution-label">${icon} ${escapeHtml(os)}</div>
+            <div class="distribution-bar-track">
+              <div class="distribution-bar-fill" style="width:${pct}%"></div>
+            </div>
+            <div class="distribution-value">${count} (${sharePct}%)</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function showEmployeeDetail(username) {
+  // For now, just show events for this employee
+  const empEvents = analyticsData.filter(e => e.card_username === username);
+  const emp = employees.find(e => e.username === username);
+  const empName = emp?.full_name || username;
+  
+  // Group events by type
+  const byType = {};
+  empEvents.forEach(e => {
+    byType[e.event_type] = (byType[e.event_type] || 0) + 1;
+  });
+  
+  const eventNames = {
+    'view': '👁️ צפייה',
+    'call': '📞 התקשרות',
+    'whatsapp': '💬 WhatsApp',
+    'email': '📧 אימייל',
+    'save_contact': '👤 שמירה לאנשי קשר',
+    'navigate': '📍 ניווט',
+    'instagram': '📷 Instagram',
+    'facebook': '📘 Facebook',
+    'linkedin': '💼 LinkedIn',
+    'app_open': '📱 פתיחת אפליקציה',
+    'app_share_native': '📤 שיתוף (Native)',
+    'app_share_whatsapp': '📤 שיתוף WhatsApp',
+    'app_share_email': '📤 שיתוף אימייל',
+    'app_share_sms': '📤 שיתוף SMS',
+    'app_share_copy_link': '📤 העתקת קישור'
+  };
+  
+  const breakdown = Object.entries(byType)
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, count]) => `${eventNames[type] || type}: ${count}`)
+    .join('\n');
+  
+  alert(`📊 פירוט עבור ${empName}\n\n${breakdown}\n\nסה"כ אירועים: ${empEvents.length}`);
 }
 
 // ============================================
