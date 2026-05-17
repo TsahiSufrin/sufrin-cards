@@ -2326,11 +2326,9 @@ html[dir="ltr"] .locked-card::after {
           </div>
         </div>
         
-        <div class="form-group">
-          <label class="form-label" for="emp-username">שם משתמש (URL) <span style="color:var(--error)">*</span></label>
-          <input class="form-input" type="text" id="emp-username" dir="ltr" required pattern="[a-z0-9_-]+" minlength="2" maxlength="30" placeholder="tsahi">
-          <p style="font-size:11px;color:var(--muted);margin-top:4px;">אותיות קטנות באנגלית, מספרים, מקפים. למשל: card.sufrin.io/?u=<strong id="username-preview">tsahi</strong></p>
-        </div>
+        <!-- Username is hidden - auto-generated from English first name -->
+        <input type="hidden" id="emp-username" pattern="[a-z0-9_-]+" minlength="2" maxlength="30">
+        <span id="username-preview" style="display:none;">username</span>
         
         <div class="form-group">
           <label class="form-label" for="emp-name">שם מלא <span style="color:var(--error)">*</span></label>
@@ -3820,7 +3818,7 @@ function shareAppLink(event, channel, employeeName, employeeContact, username) {
 // EMPLOYEE MODAL
 // ============================================
 
-function openEmployeeModal(empId = null) {
+async function openEmployeeModal(empId = null) {
   editingEmployee = empId ? employees.find(e => e.id === empId) : null;
   pendingPhotoFile = null;
   pendingPhotoRemove = false;
@@ -3829,8 +3827,12 @@ function openEmployeeModal(empId = null) {
   const title = document.getElementById('employee-modal-title');
   const deleteBtn = document.getElementById('btn-delete-employee');
   
-  // Load offices into dropdown if not loaded yet
-  loadOfficesForDropdown();
+  // Show modal first (immediate UI feedback)
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  
+  // Load offices into dropdown (await to ensure offices are loaded BEFORE setting default)
+  await loadOfficesForDropdown();
   
   if (editingEmployee) {
     title.textContent = 'עריכת עובד';
@@ -3845,23 +3847,17 @@ function openEmployeeModal(empId = null) {
     title.textContent = 'עובד חדש';
     deleteBtn.classList.add('hidden');
     clearEmployeeForm();
-    // Auto-fill defaults for new employees
-    setTimeout(() => {
-      // Auto-select main office
-      const mainOffice = offices.find(o => o.is_main);
-      if (mainOffice) {
-        document.getElementById('emp-office').value = mainOffice.id;
-      }
-      // Auto-calculate next display_order (max + 1)
-      const maxOrder = employees.length > 0 
-        ? Math.max(...employees.map(e => e.display_order || 0))
-        : 0;
-      document.getElementById('emp-order').value = maxOrder + 1;
-    }, 100);
+    // Auto-fill defaults for new employees - offices are now loaded
+    const mainOffice = offices.find(o => o.is_main);
+    if (mainOffice) {
+      document.getElementById('emp-office').value = mainOffice.id;
+    }
+    // Auto-calculate next display_order (max + 1)
+    const maxOrder = employees.length > 0 
+      ? Math.max(...employees.map(e => e.display_order || 0))
+      : 0;
+    document.getElementById('emp-order').value = maxOrder + 1;
   }
-  
-  modal.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
 }
 
 async function loadOfficesForDropdown() {
@@ -3986,6 +3982,20 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
   e.preventDefault();
   
   const btn = document.getElementById('btn-save-employee');
+  
+  // Validate username was generated (from English name)
+  const usernameValue = document.getElementById('emp-username').value.trim();
+  if (!usernameValue || usernameValue.length < 2) {
+    showToast('יש למלא שם פרטי באנגלית (שם המשתמש נוצר ממנו)', 'error');
+    document.getElementById('emp-name-en').focus();
+    return;
+  }
+  if (!/^[a-z0-9_-]+$/.test(usernameValue)) {
+    showToast('שם המשתמש לא תקין - בדוק את השם הפרטי באנגלית', 'error');
+    document.getElementById('emp-name-en').focus();
+    return;
+  }
+  
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div>';
   
