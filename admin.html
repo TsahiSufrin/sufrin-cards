@@ -2984,11 +2984,8 @@ function renderEmployeesStats(events) {
     if (e.event_type === 'view') {
       stat.views++;
       stat.unique_visitors.add(e.visitor_id);
-      if (periodMs) {
-        if (isRecent) stat.views++;  // Already counted, but track separately:
-      }
-      // Track previous-half views for trend
-      if (periodMs && !isRecent) stat.views_prev++;
+      // Note: views_recent / views_prev for the trend are calculated separately
+      // in the dedicated loop below, so we do NOT touch them here.
     } else if (clickTypes.includes(e.event_type)) {
       stat.clicks++;
     } else if (e.event_type === 'app_open') {
